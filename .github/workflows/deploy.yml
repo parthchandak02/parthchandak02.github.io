@@ -31,10 +31,13 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
           
       - name: Install dependencies
         run: npm ci
+        
+      - name: Update browserslist database
+        run: npx browserslist@latest --update-db
         
       - name: Setup Pages
         id: pages
@@ -45,6 +48,7 @@ jobs:
           
       - name: Build with Gatsby
         env:
+          NODE_OPTIONS: "--max_old_space_size=4096"
           PREFIX_PATHS: 'true'
         run: npm run build
         
