@@ -79,6 +79,8 @@
     "prettier": "^2.2.1"
   },
   "overrides": {
-    "graphql": "^15.8.0"
+    "graphql": "^15.8.0",
+    "postcss": "^8.2.15",
+    "postcss-loader": "^4.3.0"
   }
 }
