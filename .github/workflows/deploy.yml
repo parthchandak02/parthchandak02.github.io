@@ -26,56 +26,37 @@ jobs:
     runs-on: ubuntu-22.04
     env:
       GATSBY_TELEMETRY_DISABLED: 1
+      NODE_OPTIONS: "--openssl-legacy-provider --max_old_space_size=4096"
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         
-      - name: Setup Node.js
+      - name: Setup Node.js 18
         uses: actions/setup-node@v4
         with:
-          node-version: '16.20.2'
+          node-version: '18'
           cache: 'npm'
           
-      - name: Verify Node and npm versions
-        run: |
-          node --version
-          npm --version
-          
-      - name: Clean npm cache
-        run: npm cache clean --force
-        
-      - name: Remove package-lock.json and node_modules
-        run: |
-          rm -f package-lock.json
-          rm -rf node_modules
-        
       - name: Install dependencies
-        run: npm install --legacy-peer-deps
+        run: npm install
         
-      - name: Update browserslist database
-        run: npx browserslist@latest --update-db
-        
-      - name: Setup Pages
-        id: pages
-        uses: actions/configure-pages@v5
-        with:
-          # Automatically inject pathPrefix in your Gatsby configuration file.
-          static_site_generator: gatsby
-          
-      - name: Clean Gatsby cache
+      - name: Clear Gatsby cache
         run: npm run clean
         
-      - name: Build with Gatsby
-        env:
-          PREFIX_PATHS: 'true'
-        run: npm run build
+      - name: Update browserslist
+        run: npx browserslist@latest --update-db
         
+      - name: Build Gatsby site
+        run: npm run build
+        env:
+          NODE_ENV: production
+          
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./public
 
-  # Deployment job
+  # Deploy job
   deploy:
     environment:
       name: github-pages
