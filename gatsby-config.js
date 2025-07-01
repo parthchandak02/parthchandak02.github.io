@@ -5,7 +5,7 @@ module.exports = {
     title: 'Parth Chandak',
     description:
       'Parth Chandak is a creative technologist working on cutting-edge user experiences (HW & SW) for autonomous vehicles in dense urban environments.',
-    siteUrl: 'https://parthchandak.com', // No trailing slash allowed!
+    siteUrl: 'https://parthchandak02.github.io', // No trailing slash allowed!
     image: '/og.png', // Path to your image you placed in the 'static' folder
   },
   plugins: [
