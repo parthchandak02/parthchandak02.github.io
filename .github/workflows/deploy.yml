@@ -31,7 +31,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '16'
           
       - name: Clean npm cache
         run: npm cache clean --force
@@ -52,12 +52,12 @@ jobs:
       - name: Clean Gatsby cache
         run: npm run clean
         
-      - name: Build with Gatsby (verbose)
+      - name: Build with Gatsby
         env:
-          NODE_OPTIONS: "--max_old_space_size=4096"
+          NODE_OPTIONS: "--openssl-legacy-provider --max_old_space_size=4096"
           PREFIX_PATHS: 'true'
           GATSBY_TELEMETRY_DISABLED: 1
-        run: npm run build -- --verbose
+        run: npm run build
         
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
