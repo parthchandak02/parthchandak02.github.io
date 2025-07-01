@@ -23,7 +23,9 @@ concurrency:
 jobs:
   # Build job
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
+    env:
+      GATSBY_TELEMETRY_DISABLED: 1
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -31,13 +33,24 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '16'
+          node-version: '16.20.2'
+          cache: 'npm'
+          
+      - name: Verify Node and npm versions
+        run: |
+          node --version
+          npm --version
           
       - name: Clean npm cache
         run: npm cache clean --force
         
+      - name: Remove package-lock.json and node_modules
+        run: |
+          rm -f package-lock.json
+          rm -rf node_modules
+        
       - name: Install dependencies
-        run: npm install
+        run: npm install --legacy-peer-deps
         
       - name: Update browserslist database
         run: npx browserslist@latest --update-db
@@ -54,9 +67,7 @@ jobs:
         
       - name: Build with Gatsby
         env:
-          NODE_OPTIONS: "--openssl-legacy-provider --max_old_space_size=4096"
           PREFIX_PATHS: 'true'
-          GATSBY_TELEMETRY_DISABLED: 1
         run: npm run build
         
       - name: Upload artifact
@@ -69,7 +80,7 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     needs: build
     steps:
       - name: Deploy to GitHub Pages
