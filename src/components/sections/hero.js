@@ -335,7 +335,7 @@ const StyledHeroSection = styled.section`
       }
 
       .wrapper {
-        ${({ theme }) => theme.mixins.boxShadow};
+        ${({ theme }) => theme.mixins.boxShadow}
         display: block;
         position: relative;
         width: 100%;
@@ -354,42 +354,50 @@ const StyledHeroSection = styled.section`
 
           .img {
             filter: none;
-            mix-blend-mode: normal;
+          }
+
+          &:before {
+            opacity: 0;
           }
         }
 
         .img {
           position: relative;
           border-radius: var(--border-radius);
-          mix-blend-mode: multiply;
           filter: grayscale(100%) contrast(1);
           transition: var(--transition);
-        }
-
-        &:before,
-        &:after {
-          content: '';
+          z-index: 3;
           display: block;
-          position: absolute;
           width: 100%;
-          height: 100%;
-          border-radius: var(--border-radius);
-          transition: var(--transition);
         }
 
         &:before {
+          content: '';
+          position: absolute;
           top: 0;
           left: 0;
+          width: 100%;
+          height: 100%;
           background-color: var(--navy);
-          mix-blend-mode: screen;
+          border-radius: var(--border-radius);
+          opacity: 0.8;
+          z-index: 2;
+          transition: var(--transition);
         }
 
         &:after {
+          content: '';
+          position: absolute;
           border: 2px solid var(--green);
           top: 14px;
           left: 14px;
-          z-index: -1;
+          width: 100%;
+          height: 100%;
+          border-radius: var(--border-radius);
+          z-index: 1;
           opacity: 0.8;
+          pointer-events: none;
+          transition: var(--transition);
         }
       }
     }
