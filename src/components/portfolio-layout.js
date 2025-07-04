@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import {
   SiPython,
@@ -19,6 +19,51 @@ import { MdPrecisionManufacturing } from 'react-icons/md';
 
 const PortfolioLayout = ({ children }) => {
   const [activeSection, setActiveSection] = useState('about');
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Check if device is mobile/tablet and set viewport height
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    // Mobile viewport height fix
+    const setVH = () => {
+      const vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty('--vh', `${vh}px`);
+    };
+
+    checkMobile();
+    setVH();
+
+    const handleResize = () => {
+      checkMobile();
+      setVH(); // Update viewport height on resize
+    };
+
+    window.addEventListener('resize', handleResize);
+    window.addEventListener('orientationchange', setVH);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('orientationchange', setVH);
+    };
+  }, []);
+
+  // Reset navigation button styles when active section changes
+  useEffect(() => {
+    // Reset all navigation buttons to default state
+    const navButtons = document.querySelectorAll('.nav-button');
+    navButtons.forEach(button => {
+      const itemId = button.getAttribute('data-item-id');
+      if (itemId === activeSection) {
+        button.style.color = '#ff6b6b';
+      } else {
+        button.style.color = '#888';
+        button.style.background = 'none';
+      }
+    });
+  }, [activeSection]);
 
   // Scroll to section instead of just filtering
   const scrollToSection = sectionId => {
@@ -39,15 +84,14 @@ const PortfolioLayout = ({ children }) => {
     }
   };
 
-  // Pass the active section to children for filtering
-  const childrenWithProps = React.Children.map(children, child => {
+  // Pass the active section to children for filtering - memoized to prevent unnecessary re-renders
+  const childrenWithProps = useMemo(() => React.Children.map(children, child => {
     if (React.isValidElement(child)) {
       return React.cloneElement(child, { activeFilter: activeSection });
     }
     return child;
-  });
+  }), [children, activeSection]);
 
-  const [headerText, setHeaderText] = useState('');
   const [roleTypewriterText, setRoleTypewriterText] = useState('');
   const [skillTextStates, setSkillTextStates] = useState({});
   const [hoveredCategory, setHoveredCategory] = useState(null);
@@ -55,16 +99,20 @@ const PortfolioLayout = ({ children }) => {
   const [isTypingRole, setIsTypingRole] = useState(false);
 
   const roles = [
-    'an engineer',
-    'an inventor',
-    'a team leader',
-    'a creative technologist',
-    'a researcher',
+    'Engineer',
+    'Inventor',
+    'Team leader',
+    'Creative technologist',
+    'Researcher',
+    'Prototyper',
+    'Entrepreneur',
+    'Designer',
+    'Maker',
+    'Developer',
   ];
 
   const staticText =
     'I specialize in cutting-edge human-computer interaction. I bridge hardware and software to create innovative user experiences.';
-  const headerGreeting = 'Hi, my name is';
 
   const skillCategories = [
     {
@@ -177,30 +225,11 @@ const PortfolioLayout = ({ children }) => {
       });
     };
 
-    // Stage 1: Type header text (defined after startRoleAnimation)
-    const startHeaderAnimation = () => {
-      let headerIndex = 0;
-      const headerTimer = setInterval(() => {
-        if (headerIndex < headerGreeting.length) {
-          setHeaderText(headerGreeting.slice(0, headerIndex + 1));
-          headerIndex++;
-        } else {
-          clearInterval(headerTimer);
-          // Stage 2: Show name after header is complete + delay
-          setTimeout(() => {
-            setNameVisible(true);
-            // Stage 3: Start role animation after name settles
-            setTimeout(() => {
-              startRoleAnimation();
-            }, 1200); // Wait for name animation to fully complete
-          }, 500); // Pause after header
-        }
-      }, 100); // Slightly slower for readability
-
-      cleanup.push(() => clearInterval(headerTimer));
-    };
-
-    startHeaderAnimation();
+    // Skip header animation and go straight to name and role
+    setNameVisible(true);
+    setTimeout(() => {
+      startRoleAnimation();
+    }, 800); // Start role animation after name appears
 
     return () => {
       cleanup.forEach(cleanupFn => cleanupFn());
@@ -217,151 +246,157 @@ const PortfolioLayout = ({ children }) => {
     skillCategories.forEach((category, categoryIndex) => {
       category.skills.forEach((skill, skillIndex) => {
         const skillKey = `${categoryIndex}-${skillIndex}`;
-        initialStates[skillKey] = false; // Start with icon only
+        initialStates[skillKey] = false;
 
-        // Create random timer for each skill (5 to 15 seconds - faster and more engaging)
-        const randomInterval = Math.random() * 10000 + 5000;
-        const randomDelay = Math.random() * 10000; // Random initial delay up to 10 seconds
+        // Create individual timer for each skill with random delays
+        const randomInitialDelay = Math.random() * 20000; // 0-20 seconds initial delay
+        const randomInterval = 30000 + Math.random() * 30000; // 30-60 seconds interval
 
-        const timeout = setTimeout(() => {
-          const intervalTimer = setInterval(() => {
+        const initialTimeout = setTimeout(() => {
+          // Start the repeating animation for this skill
+          const skillInterval = setInterval(() => {
             setSkillTextStates(prev => ({
               ...prev,
-              [skillKey]: !prev[skillKey],
+              [skillKey]: true,
             }));
+
+            // Hide after 3 seconds
+            setTimeout(() => {
+              setSkillTextStates(prev => ({
+                ...prev,
+                [skillKey]: false,
+              }));
+            }, 3000);
           }, randomInterval);
 
-          intervals.push(intervalTimer);
-        }, randomDelay);
+          intervals.push(skillInterval);
+        }, randomInitialDelay);
 
-        timeouts.push(timeout);
+        timeouts.push(initialTimeout);
       });
     });
 
     setSkillTextStates(initialStates);
 
     return () => {
-      timeouts.forEach(timer => clearTimeout(timer));
-      intervals.forEach(timer => clearInterval(timer));
+      timeouts.forEach(timeout => clearTimeout(timeout));
+      intervals.forEach(interval => clearInterval(interval));
     };
   }, []);
 
   const navigationItems = [
-    { id: 'about', label: 'ABOUT', number: '00' },
-    { id: 'Experience', label: 'EXPERIENCE', number: '01' },
-    { id: 'Projects', label: 'PROJECTS', number: '02' },
-    { id: 'Research', label: 'RESEARCH', number: '03' },
-    { id: 'Awards', label: 'AWARDS', number: '04' },
-    { id: 'Community Service', label: 'COMMUNITY', number: '05' },
-    { id: 'Media & Press', label: 'MEDIA', number: '06' },
-    { id: 'contact', label: 'CONTACT', number: '07' },
+    { number: '00', label: 'ABOUT', id: 'about' },
+    { number: '01', label: 'EXPERIENCE', id: 'experience' },
+    { number: '02', label: 'RESEARCH', id: 'research' },
+    { number: '03', label: 'PROJECTS', id: 'projects' },
+    { number: '04', label: 'MEDIA', id: 'media' },
+    { number: '05', label: 'COMMUNITY', id: 'community' },
+    { number: '06', label: 'AWARDS', id: 'awards' },
+    { number: '07', label: 'CONTACT', id: 'contact' },
   ];
 
   const socialLinks = [
     {
       name: 'LinkedIn',
-      url: 'https://linkedin.com/in/parthchandak',
+      url: 'https://linkedin.com/in/parth-chandak',
       icon: (
-        <svg
-          style={{ width: 'clamp(10px, 3vw, 14px)', height: 'clamp(10px, 3vw, 14px)' }}
-          fill="currentColor"
-          viewBox="0 0 24 24">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
           <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
         </svg>
       ),
     },
     {
       name: 'GitHub',
-      url: 'https://github.com/parthchandak',
+      url: 'https://github.com/parth-chandak',
       icon: (
-        <svg
-          style={{ width: 'clamp(10px, 3vw, 14px)', height: 'clamp(10px, 3vw, 14px)' }}
-          fill="currentColor"
-          viewBox="0 0 24 24">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
           <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
         </svg>
       ),
     },
     {
       name: 'Calendar',
-      url: 'https://calendly.com/parthchandak',
+      url: 'https://calendly.com/parth-chandak',
       icon: (
-        <svg
-          style={{ width: 'clamp(10px, 3vw, 14px)', height: 'clamp(10px, 3vw, 14px)' }}
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24">
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-          />
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z" />
         </svg>
       ),
     },
     {
       name: 'Email',
-      url: 'mailto:parthchandak02@gmail.com',
+      url: 'mailto:parth.chandak@example.com',
       icon: (
-        <svg
-          style={{ width: 'clamp(10px, 3vw, 14px)', height: 'clamp(10px, 3vw, 14px)' }}
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24">
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-          />
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
         </svg>
       ),
     },
   ];
 
+  // Common glass styles for sidebars
+  const getGlassStyles = (isMobileBar = false) => ({
+    background: isMobileBar ? 'rgba(255, 255, 255, 0.05)' : 'rgba(255, 255, 255, 0.03)',
+    border: isMobileBar
+      ? '1px solid rgba(255, 255, 255, 0.12)'
+      : '1px solid rgba(255, 255, 255, 0.08)',
+    backdropFilter: 'blur(20px) saturate(180%)',
+    WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+    borderRadius: isMobileBar ? '20px' : 'clamp(16px, 3vw, 24px)',
+    zIndex: 1000,
+    boxShadow: isMobileBar
+      ? `
+       0 25px 50px rgba(0, 0, 0, 0.5),
+       0 12px 40px rgba(255, 255, 255, 0.08),
+       inset 0 1px 0 rgba(255, 255, 255, 0.15),
+       inset 0 -1px 0 rgba(255, 255, 255, 0.05)
+     `
+      : `
+       0 20px 40px rgba(0, 0, 0, 0.4),
+       0 8px 32px rgba(255, 255, 255, 0.05),
+       inset 0 1px 0 rgba(255, 255, 255, 0.1),
+       inset 0 -1px 0 rgba(255, 255, 255, 0.03)
+     `,
+    transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+  });
+
   return (
-    <div
-      style={{
-        background: 'linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #000000 100%)',
-        color: 'white',
-        minHeight: '100vh',
-        fontFamily:
-          '"Inter", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif',
-        display: 'flex',
-      }}>
-      {/* Left Sidebar - Floating Glass */}
+    <div className="main-container" style={{ position: 'relative', minHeight: '100vh' }}>
+      {/* Left Navigation - Responsive */}
       <div
-        className="glass left-sidebar"
+        className="left-sidebar"
         style={{
           position: 'fixed',
-          left: 'clamp(0.5rem, 2vw, 2rem)',
-          top: '50%',
-          transform: 'translateY(-50%)',
-          width: 'clamp(80px, 20vw, 200px)',
-          height: 'clamp(420px, 50vh, 500px)',
-          background: 'rgba(255, 255, 255, 0.03)',
-          border: '1px solid rgba(255, 255, 255, 0.08)',
-          backdropFilter: 'blur(20px) saturate(180%)',
-          WebkitBackdropFilter: 'blur(20px) saturate(180%)',
-          borderRadius: 'clamp(16px, 3vw, 24px)',
           zIndex: 1000,
-          padding: 'clamp(1.5rem, 3vw, 2.5rem) clamp(0.75rem, 1.5vw, 1rem)',
-          boxShadow: `
-            0 20px 40px rgba(0, 0, 0, 0.4),
-            0 8px 32px rgba(255, 255, 255, 0.05),
-            inset 0 1px 0 rgba(255, 255, 255, 0.1),
-            inset 0 -1px 0 rgba(255, 255, 255, 0.03)
-          `,
-          transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
+          ...(isMobile
+            ? {
+              // Mobile: Top horizontal bar - proper centering with equal margins
+              top: '1rem',
+              left: '1rem',
+              right: '1rem',
+              width: 'auto', // Let it size naturally
+              height: 'auto',
+              padding: '1rem',
+              minHeight: '100px', // Ensure enough height for 2 rows
+            }
+            : {
+              // Desktop: Left vertical bar - proper centering
+              top: '2rem',
+              left: '2rem',
+              bottom: '2rem',
+              width: 'clamp(120px, 15vw, 180px)',
+              height: 'auto',
+              padding: '2rem 1.5rem',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+            }),
+          ...getGlassStyles(isMobile),
         }}
         onMouseEnter={e => {
           e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
           e.currentTarget.style.border = '1px solid rgba(255, 255, 255, 0.12)';
-          e.currentTarget.style.transform = 'translateY(-50%) scale(1.02)';
+          e.currentTarget.style.transform = 'scale(1.02)';
           e.currentTarget.style.boxShadow = `
             0 25px 50px rgba(0, 0, 0, 0.5),
             0 12px 40px rgba(255, 107, 107, 0.1),
@@ -372,7 +407,7 @@ const PortfolioLayout = ({ children }) => {
         onMouseLeave={e => {
           e.currentTarget.style.background = 'rgba(255, 255, 255, 0.03)';
           e.currentTarget.style.border = '1px solid rgba(255, 255, 255, 0.08)';
-          e.currentTarget.style.transform = 'translateY(-50%) scale(1)';
+          e.currentTarget.style.transform = 'scale(1)';
           e.currentTarget.style.boxShadow = `
             0 20px 40px rgba(0, 0, 0, 0.4),
             0 8px 32px rgba(255, 255, 255, 0.05),
@@ -380,53 +415,101 @@ const PortfolioLayout = ({ children }) => {
             inset 0 -1px 0 rgba(255, 255, 255, 0.03)
           `;
         }}>
-        <nav style={{ marginTop: '0.5rem' }}>
-          {navigationItems.map(item => (
-            <button
-              key={item.id}
-              onClick={() => scrollToSection(item.id)}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                width: '100%',
-                padding: '0.75rem 0',
-                background: 'none',
-                border: 'none',
-                color: activeSection === item.id ? '#ff6b6b' : '#888',
-                fontSize: 'clamp(0.75rem, 2vw, 0.85rem)',
-                fontWeight: '500',
-                textAlign: 'left',
-                cursor: 'pointer',
-                transition: 'all 0.3s ease',
-                fontFamily: '"JetBrains Mono", "SF Mono", Monaco, Consolas, monospace',
-                letterSpacing: '0.05em',
-                borderRadius: '8px',
-              }}
-              onMouseEnter={e => {
-                if (activeSection !== item.id) {
-                  e.target.style.color = '#bbb';
-                  e.target.style.background = 'rgba(255, 255, 255, 0.02)';
+        <nav style={{ width: '100%', height: '100%' }}>
+          <div
+            style={{
+              display: 'grid',
+              ...(isMobile
+                ? {
+                  // Mobile: 4 columns, 2 rows to fit all 8 items
+                  gridTemplateColumns: 'repeat(4, 1fr)',
+                  gridTemplateRows: 'repeat(2, 1fr)',
+                  gap: '0.5rem',
+                  alignItems: 'center',
+                  justifyItems: 'center',
+                  width: '100%',
+                  height: '100%',
                 }
-              }}
-              onMouseLeave={e => {
-                if (activeSection !== item.id) {
-                  e.target.style.color = '#888';
-                  e.target.style.background = 'none';
-                }
-              }}>
-              <span
+                : {
+                  // Desktop: Single column vertical layout
+                  gridTemplateColumns: '1fr',
+                  gridTemplateRows: 'repeat(8, 1fr)',
+                  gap: '0.5rem',
+                  alignItems: 'center',
+                  justifyItems: 'stretch',
+                  width: '100%',
+                  height: '100%',
+                }),
+            }}>
+            {navigationItems.map(item => (
+              <button
+                key={item.id}
+                className="nav-button"
+                data-item-id={item.id}
+                onClick={() => scrollToSection(item.id)}
                 style={{
-                  color: '#ff6b6b',
-                  marginRight: '0.75rem',
-                  fontSize: '0.75rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: isMobile ? 'center' : 'flex-start',
+                  width: '100%',
+                  height: '100%',
+                  padding: isMobile ? '0.5rem 0.25rem' : '0.75rem 0',
+                  margin: '0',
+                  background: 'none',
+                  border: 'none',
+                  color: activeSection === item.id ? '#ff6b6b' : '#888',
+                  cursor: 'pointer',
+                  fontSize: isMobile ? '0.55rem' : 'clamp(0.7rem, 1.8vw, 0.85rem)',
                   fontWeight: '600',
-                  minWidth: '20px',
+                  fontFamily:
+                    '"JetBrains Mono", "SF Mono", "Fira Code", "Cascadia Code", Consolas, monospace',
+                  transition: 'all 0.3s ease',
+                  borderRadius: '8px',
+                  whiteSpace: 'nowrap',
+                  textAlign: 'center',
+                  flexDirection: isMobile ? 'column' : 'row',
+                  gap: isMobile ? '0.1rem' : '0.5rem',
+                }}
+                onMouseEnter={e => {
+                  if (activeSection !== item.id) {
+                    e.currentTarget.style.color = '#bbb';
+                    if (isMobile) {
+                      e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
+                    }
+                  }
+                }}
+                onMouseLeave={e => {
+                  // Always reset to the correct state based on active section
+                  if (activeSection === item.id) {
+                    e.currentTarget.style.color = '#ff6b6b';
+                  } else {
+                    e.currentTarget.style.color = '#888';
+                  }
+                  if (isMobile) {
+                    e.currentTarget.style.background = 'none';
+                  }
                 }}>
-                {item.number}
-              </span>
-              <span className="nav-label">{item.label}</span>
-            </button>
-          ))}
+                <span
+                  style={{
+                    color: '#ff6b6b',
+                    fontSize: isMobile ? '0.5rem' : '0.75rem',
+                    fontWeight: '700',
+                    lineHeight: '1',
+                  }}>
+                  {item.number}
+                </span>
+                <span
+                  className="nav-label"
+                  style={{
+                    fontSize: isMobile ? '0.45rem' : 'inherit',
+                    lineHeight: isMobile ? '1' : 'inherit',
+                    fontWeight: isMobile ? '500' : '600',
+                  }}>
+                  {item.label}
+                </span>
+              </button>
+            ))}
+          </div>
         </nav>
       </div>
 
@@ -434,8 +517,21 @@ const PortfolioLayout = ({ children }) => {
       <div
         className="main-content"
         style={{
-          marginLeft: 'clamp(96px, 24vw, 240px)',
-          marginRight: 'clamp(82px, 10vw, 128px)',
+          ...(isMobile
+            ? {
+              // Mobile: Account for top and bottom bars with proper spacing
+              marginTop: '8rem', // Account for taller grid navigation
+              marginBottom: '6rem',
+              marginLeft: '1rem',
+              marginRight: '1rem',
+            }
+            : {
+              // Desktop: Account for left and right sidebars with equal spacing
+              marginLeft: 'clamp(140px, 18vw, 200px)',
+              marginRight: 'clamp(90px, 8vw, 110px)',
+              marginTop: '2rem',
+              marginBottom: '2rem',
+            }),
           flex: 1,
           padding: '0 clamp(1rem, 3vw, 2rem)',
         }}>
@@ -452,31 +548,13 @@ const PortfolioLayout = ({ children }) => {
             margin: '0 auto',
           }}>
           <div style={{ width: '100%' }}>
-            <p
-              style={{
-                color: '#ff6b6b',
-                fontSize: '1rem',
-                marginBottom: '1rem',
-                fontFamily: '"JetBrains Mono", "SF Mono", Monaco, Consolas, monospace',
-                minHeight: '1.5rem',
-              }}>
-              {headerText}
-              <span
-                style={{
-                  opacity: headerText.length === headerGreeting.length ? 0 : 1,
-                  animation: 'blink 1s infinite',
-                  color: '#ff6b6b',
-                }}>
-                _
-              </span>
-            </p>
-
             <h1
               style={{
                 fontSize: 'clamp(3rem, 8vw, 5rem)',
                 fontWeight: '700',
                 marginBottom: '0.5rem',
-                fontFamily: '"Space Grotesk", "SF Pro Display", system-ui, sans-serif',
+                fontFamily:
+                  '"Space Grotesk", "SF Pro Display", -apple-system, BlinkMacSystemFont, system-ui, sans-serif',
                 background: 'linear-gradient(135deg, #ffffff 0%, #ff6b6b 100%)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
@@ -494,14 +572,15 @@ const PortfolioLayout = ({ children }) => {
               style={{
                 fontSize: 'clamp(1.2rem, 3vw, 1.5rem)',
                 marginBottom: '2rem',
-                fontFamily: '"JetBrains Mono", "SF Mono", Monaco, Consolas, monospace',
+                fontFamily:
+                  '"JetBrains Mono", "SF Mono", "Fira Code", "Cascadia Code", Consolas, monospace',
                 color: '#ff6b6b',
                 opacity: nameVisible ? 1 : 0,
                 transform: nameVisible ? 'translateY(0)' : 'translateY(20px)',
                 transition: 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.3s',
                 minHeight: '2rem',
               }}>
-              I am {roleTypewriterText}
+              {roleTypewriterText}
               <span
                 style={{
                   opacity: isTypingRole ? 1 : 0,
@@ -515,13 +594,18 @@ const PortfolioLayout = ({ children }) => {
             {/* Description section without typewriter */}
             <div
               style={{
-                fontSize: 'clamp(1rem, 2.5vw, 1.2rem)',
-                lineHeight: 1.6,
-                color: '#cccccc',
+                fontSize: 'clamp(1.1rem, 2.8vw, 1.3rem)',
+                lineHeight: 1.65,
+                color: '#e2e8f0',
                 marginBottom: '3rem',
+                fontFamily:
+                  '"Inter", "SF Pro Text", -apple-system, BlinkMacSystemFont, system-ui, sans-serif',
+                fontWeight: '400',
+                letterSpacing: '0.01em',
                 opacity: nameVisible ? 1 : 0,
                 transform: nameVisible ? 'translateY(0)' : 'translateY(20px)',
                 transition: 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.6s',
+                textShadow: '0 2px 4px rgba(0, 0, 0, 0.3)',
               }}>
               {staticText}
             </div>
@@ -616,7 +700,7 @@ const PortfolioLayout = ({ children }) => {
                                 border: currentColors.border,
                                 color: currentColors.color,
                                 fontFamily:
-                                  '"JetBrains Mono", "SF Mono", Monaco, Consolas, monospace',
+                                  '"JetBrains Mono", "SF Mono", "Fira Code", "Cascadia Code", Consolas, monospace',
                                 animation: `fadeInUp 0.6s ease ${totalIndex * 0.1}s both`,
                                 transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
                                 overflow: 'hidden',
@@ -631,30 +715,25 @@ const PortfolioLayout = ({ children }) => {
                                 e.currentTarget.style.background = 'rgba(255, 107, 107, 0.15)';
                                 e.currentTarget.style.border = '1px solid rgba(255, 107, 107, 0.4)';
                                 e.currentTarget.style.color = '#ff6b6b';
-                                e.currentTarget.style.transform = 'translateY(-2px) scale(1.05)';
+                                e.currentTarget.style.maxWidth = '200px';
+                                e.currentTarget.style.paddingRight = '1rem';
                               }}
                               onMouseLeave={e => {
-                                // Reset to current state colors (automatic or default)
-                                const resetColors = getSkillColors();
-                                e.currentTarget.style.background = resetColors.background;
-                                e.currentTarget.style.border = resetColors.border;
-                                e.currentTarget.style.color = resetColors.color;
-                                e.currentTarget.style.transform = 'translateY(0) scale(1)';
+                                // Return to automatic state colors
+                                const colors = getSkillColors();
+                                e.currentTarget.style.background = colors.background;
+                                e.currentTarget.style.border = colors.border;
+                                e.currentTarget.style.color = colors.color;
+                                e.currentTarget.style.maxWidth = isExpanded ? '200px' : '40px';
+                                e.currentTarget.style.paddingRight = isExpanded ? '1rem' : '0.5rem';
                               }}>
-                              <IconComponent
-                                size={16}
-                                style={{
-                                  flexShrink: 0,
-                                  transition: 'all 0.3s ease',
-                                }}
-                              />
+                              <IconComponent size={16} style={{ flexShrink: 0 }} />
                               <span
                                 style={{
-                                  marginLeft: isExpanded ? '0.5rem' : '0',
+                                  marginLeft: '0.5rem',
                                   opacity: isExpanded ? 1 : 0,
-                                  maxWidth: isExpanded ? '150px' : '0',
-                                  transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-                                  overflow: 'hidden',
+                                  transform: isExpanded ? 'translateX(0)' : 'translateX(-10px)',
+                                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                                   whiteSpace: 'nowrap',
                                 }}>
                                 {skill.name}
@@ -671,43 +750,51 @@ const PortfolioLayout = ({ children }) => {
           </div>
         </section>
 
-        {/* Timeline Content */}
-        <div style={{ paddingTop: '4rem' }}>{childrenWithProps}</div>
+        {/* Timeline Section */}
+        <div id="timeline-section">{childrenWithProps}</div>
       </div>
 
-      {/* Right Sidebar - Floating Glass */}
+      {/* Right Social Links - Responsive */}
       <div
-        className="glass right-sidebar"
+        className="right-sidebar"
         style={{
           position: 'fixed',
-          right: 'clamp(0.5rem, 2vw, 2rem)',
-          top: '50%',
-          transform: 'translateY(-50%)',
-          width: 'clamp(66px, 8vw, 88px)',
-          height: 'clamp(420px, 50vh, 500px)',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          gap: '0.75rem',
-          padding: 'clamp(1.5rem, 3vw, 2.5rem) clamp(11px, 1.5vw, 22px)',
-          background: 'rgba(255, 255, 255, 0.03)',
-          border: '1px solid rgba(255, 255, 255, 0.08)',
-          backdropFilter: 'blur(20px) saturate(180%)',
-          WebkitBackdropFilter: 'blur(20px) saturate(180%)',
-          borderRadius: 'clamp(16px, 3vw, 24px)',
           zIndex: 1000,
-          boxShadow: `
-            0 20px 40px rgba(0, 0, 0, 0.4),
-            0 8px 32px rgba(255, 255, 255, 0.05),
-            inset 0 1px 0 rgba(255, 255, 255, 0.1),
-            inset 0 -1px 0 rgba(255, 255, 255, 0.03)
-          `,
-          transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+          ...(isMobile
+            ? {
+              // Mobile: Bottom horizontal bar - proper centering with equal margins
+              bottom: '1rem',
+              left: '1rem',
+              right: '1rem',
+              width: 'auto', // Let it size naturally
+              height: 'auto',
+              padding: '1rem',
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'center',
+              alignItems: 'center',
+              gap: '1.5rem',
+            }
+            : {
+              // Desktop: Right vertical bar - proper centering
+              top: '2rem',
+              right: '2rem',
+              bottom: '2rem',
+              width: 'clamp(60px, 6vw, 80px)',
+              height: 'auto',
+              padding: '2rem 1rem',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '1rem',
+            }),
+          ...getGlassStyles(isMobile),
         }}
         onMouseEnter={e => {
           e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
           e.currentTarget.style.border = '1px solid rgba(255, 255, 255, 0.12)';
-          e.currentTarget.style.transform = 'translateY(-50%) scale(1.02)';
+          e.currentTarget.style.transform = 'scale(1.02)';
           e.currentTarget.style.boxShadow = `
             0 25px 50px rgba(0, 0, 0, 0.5),
             0 12px 40px rgba(255, 107, 107, 0.1),
@@ -718,7 +805,7 @@ const PortfolioLayout = ({ children }) => {
         onMouseLeave={e => {
           e.currentTarget.style.background = 'rgba(255, 255, 255, 0.03)';
           e.currentTarget.style.border = '1px solid rgba(255, 255, 255, 0.08)';
-          e.currentTarget.style.transform = 'translateY(-50%) scale(1)';
+          e.currentTarget.style.transform = 'scale(1)';
           e.currentTarget.style.boxShadow = `
             0 20px 40px rgba(0, 0, 0, 0.4),
             0 8px 32px rgba(255, 255, 255, 0.05),
@@ -726,7 +813,7 @@ const PortfolioLayout = ({ children }) => {
             inset 0 -1px 0 rgba(255, 255, 255, 0.03)
           `;
         }}>
-        {socialLinks.map((link, index) => (
+        {socialLinks.map(link => (
           <a
             key={link.name}
             href={link.url}
@@ -736,16 +823,15 @@ const PortfolioLayout = ({ children }) => {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              width: '44px',
-              height: '44px',
+              width: '40px',
+              height: '40px',
               color: '#888',
               background: 'none',
               border: 'none',
               borderRadius: '8px',
               transition: 'all 0.3s ease',
               padding: '0',
-              margin: '0 auto',
-              marginBottom: index < socialLinks.length - 1 ? '0.75rem' : '0',
+              margin: '0',
             }}
             onMouseEnter={e => {
               e.target.style.color = '#ff6b6b';
@@ -838,40 +924,81 @@ const PortfolioLayout = ({ children }) => {
           }
         }
 
+        /* Mobile-specific styles */
         @media (max-width: 768px) {
-          .left-sidebar {
-            width: 80px !important;
-            left: 1rem !important;
-            padding: 1.5rem 0.75rem !important;
-            height: 420px !important;
-          }
-
           .nav-label {
-            display: none;
+            font-size: 0.5rem !important;
+            line-height: 1.1 !important;
           }
-
-          .left-sidebar nav button {
-            justify-content: center !important;
-            padding: 0.6rem 0 !important;
+        }
+        
+        /* Extra small screens (iPhone SE, etc.) */
+        @media (max-width: 430px) {
+          .nav-label {
+            font-size: 0.45rem !important;
+            line-height: 1 !important;
           }
-
-          .left-sidebar nav button span:first-child {
-            margin-right: 0 !important;
-            min-width: auto !important;
+        }
+        
+        /* Very narrow screens */
+        @media (max-width: 375px) {
+          .nav-label {
+            font-size: 0.4rem !important;
           }
-
-          .main-content {
-            margin-left: 96px !important;
-            margin-right: 82px !important;
-            padding: 0 1rem !important;
-          }
-
+        }
+          
+          /* Enhanced glass effect for mobile bars */
+          .left-sidebar,
           .right-sidebar {
-            right: 1rem !important;
-            padding: 1.5rem 11px !important;
-            width: 66px !important;
-            height: 420px !important;
+            backdrop-filter: blur(25px) saturate(200%) !important;
+            -webkit-backdrop-filter: blur(25px) saturate(200%) !important;
+            box-shadow: 
+              0 30px 60px rgba(0, 0, 0, 0.6),
+              0 15px 45px rgba(255, 255, 255, 0.1),
+              inset 0 2px 0 rgba(255, 255, 255, 0.2),
+              inset 0 -2px 0 rgba(255, 255, 255, 0.08) !important;
           }
+          
+          /* Special styling for top navigation bar */
+          .left-sidebar {
+            z-index: 1001 !important;
+          }
+          
+          /* Ensure navigation items fit properly */
+          .left-sidebar nav > div {
+            width: 100% !important;
+          }
+          
+          .left-sidebar nav button {
+            min-height: 40px !important;
+            flex-direction: column !important;
+            gap: 0.1rem !important;
+          }
+          
+          /* Add subtle glow effect for mobile */
+          .left-sidebar::before,
+          .right-sidebar::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, 
+              rgba(255, 107, 107, 0.1) 0%, 
+              rgba(255, 255, 255, 0.05) 50%, 
+              rgba(255, 107, 107, 0.1) 100%);
+            border-radius: 22px;
+            z-index: -1;
+            opacity: 0.6;
+          }
+        }
+
+        /* Ensure smooth transitions for all responsive changes */
+        .left-sidebar,
+        .right-sidebar,
+        .main-content {
+          transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1) !important;
         }
       `}</style>
     </div>

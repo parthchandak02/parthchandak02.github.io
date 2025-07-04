@@ -1,11 +1,11 @@
 import React from 'react';
 import PortfolioLayout from '../components/portfolio-layout';
-import LiquidBackground from '../components/liquid-background';
+import BackgroundManager from '../components/background-manager';
 import InteractiveTimeline from '../components/interactive-timeline';
 
 const IndexPage = () => (
   <>
-    <LiquidBackground />
+    <BackgroundManager />
     <PortfolioLayout>
       <InteractiveTimeline />
     </PortfolioLayout>

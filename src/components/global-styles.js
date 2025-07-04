@@ -3,10 +3,10 @@ import React from 'react';
 const GlobalStyles = () => {
   const styles = `
     :root {
-      /* Modern Font Stack */
-      --font-heading: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      --font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+      /* Premium Modern Font Stack */
+      --font-heading: 'Space Grotesk', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --font-body: 'Inter', 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --font-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace;
       
       /* Glass UI Colors */
       --glass-bg: rgba(255, 255, 255, 0.08);
@@ -40,21 +40,38 @@ const GlobalStyles = () => {
       font-size: 16px;
       scroll-behavior: smooth;
       background: #000000 !important;
+      /* Mobile viewport height fixes */
+      height: 100%;
+      height: -webkit-fill-available;
+      min-height: 100vh;
+      min-height: 100dvh; /* Dynamic viewport height for modern browsers */
     }
 
     body {
       font-family: var(--font-body);
-      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #000000 100%);
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #000000 100%) !important;
       color: var(--text-primary);
-      line-height: 1.6;
+      line-height: 1.65;
       overflow-x: hidden;
+      font-weight: 400;
+      letter-spacing: 0.01em;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      /* Mobile viewport height fixes */
+      min-height: 100vh;
+      min-height: -webkit-fill-available;
+      min-height: 100dvh; /* Dynamic viewport height for modern browsers */
+      /* Ensure dark background fallbacks */
+      background-color: #000000 !important;
     }
 
     h1, h2, h3, h4, h5, h6 {
       font-family: var(--font-heading);
       font-weight: 600;
-      line-height: 1.2;
-      letter-spacing: -0.025em;
+      line-height: 1.25;
+      letter-spacing: -0.02em;
+      text-rendering: optimizeLegibility;
     }
 
     /* Glass morphism utility classes */
@@ -127,11 +144,38 @@ const GlobalStyles = () => {
     html, body, #___gatsby, #gatsby-focus-wrapper {
       background: #000000 !important;
       min-height: 100vh;
+      min-height: calc(var(--vh, 1vh) * 100); /* Use custom property for accurate mobile height */
+      min-height: 100dvh; /* Dynamic viewport height for modern browsers */
     }
 
     /* Override any potential white backgrounds */
     div, section, main, article, aside {
       background-color: transparent;
+    }
+
+    /* Ensure main container uses full viewport height */
+    .main-container {
+      min-height: 100vh;
+      min-height: calc(var(--vh, 1vh) * 100);
+      min-height: 100dvh;
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #000000 100%) !important;
+    }
+
+    /* Additional mobile-specific fixes */
+    @media screen and (max-width: 768px) {
+      html, body {
+        height: 100%;
+        height: -webkit-fill-available;
+        overflow-x: hidden;
+      }
+      
+      body {
+        position: relative;
+        min-height: 100vh;
+        min-height: calc(var(--vh, 1vh) * 100);
+        min-height: 100dvh;
+        background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #000000 100%) !important;
+      }
     }
   `;
 
