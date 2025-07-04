@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { initScrollBounceProtection } from '../utils/preventScrollBounce';
+import Tag from './tag';
 import {
   SiPython,
   SiJavascript,
@@ -33,9 +33,6 @@ const PortfolioLayout = ({ children }) => {
     const handleResize = () => {
       checkMobile();
     };
-
-    // 🚫 Initialize scroll bounce protection to prevent Safari mobile white space issue
-    initScrollBounceProtection();
 
     window.addEventListener('resize', handleResize);
 
@@ -93,6 +90,7 @@ const PortfolioLayout = ({ children }) => {
   const [roleTypewriterText, setRoleTypewriterText] = useState('');
   const [skillTextStates, setSkillTextStates] = useState({});
   const [hoveredCategory, setHoveredCategory] = useState(null);
+  const [skillHoverStates, setSkillHoverStates] = useState({});
   const [nameVisible, setNameVisible] = useState(false);
   const [isTypingRole, setIsTypingRole] = useState(false);
 
@@ -663,80 +661,42 @@ const PortfolioLayout = ({ children }) => {
                           const showThisSkillText = skillTextStates[skillKey] ?? false;
                           const isExpanded = isCategoryHovered || showThisSkillText;
 
-                          // Different colors for automatic vs hover expansion
-                          const getSkillColors = () => {
-                            if (showThisSkillText && !isCategoryHovered) {
-                              // Automatic expansion - light red
-                              return {
-                                background: 'rgba(255, 107, 107, 0.08)',
-                                border: '1px solid rgba(255, 107, 107, 0.2)',
-                                color: '#ff9999', // Light red
-                              };
-                            }
-                            // Default state
-                            return {
-                              background: 'rgba(255, 255, 255, 0.05)',
-                              border: '1px solid rgba(255, 255, 255, 0.1)',
-                              color: '#cccccc',
-                            };
-                          };
-
-                          const currentColors = getSkillColors();
+                          // Track hover state for this specific skill
+                          const isHovered = skillHoverStates[skillKey] || false;
+                          const shouldShowText = isExpanded || isHovered;
 
                           return (
-                            <div
+                            <Tag
                               key={skill.name}
-                              className="glass"
+                              variant={showThisSkillText && !isCategoryHovered ? 'accent' : 'skill'}
+                              size="medium"
+                              icon={IconComponent}
+                              onHoverExpand={hovered => {
+                                setSkillHoverStates(prev => ({
+                                  ...prev,
+                                  [skillKey]: hovered,
+                                }));
+                              }}
                               style={{
-                                display: 'inline-flex',
-                                alignItems: 'center',
-                                padding: '0.5rem',
-                                paddingRight: isExpanded ? '1rem' : '0.5rem',
-                                borderRadius: '20px',
-                                fontSize: '0.8rem',
-                                background: currentColors.background,
-                                border: currentColors.border,
-                                color: currentColors.color,
-                                fontFamily:
-                                  '"JetBrains Mono", "SF Mono", "Fira Code", "Cascadia Code", Consolas, monospace',
                                 animation: `fadeInUp 0.6s ease ${totalIndex * 0.1}s both`,
-                                transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-                                overflow: 'hidden',
-                                whiteSpace: 'nowrap',
-                                cursor: 'pointer',
                                 minWidth: '40px',
-                                maxWidth: isExpanded ? '200px' : '40px',
-                                width: isExpanded ? 'auto' : '40px',
-                              }}
-                              onMouseEnter={e => {
-                                // Hover state - strong red color (always the same)
-                                e.currentTarget.style.background = 'rgba(255, 107, 107, 0.15)';
-                                e.currentTarget.style.border = '1px solid rgba(255, 107, 107, 0.4)';
-                                e.currentTarget.style.color = '#ff6b6b';
-                                e.currentTarget.style.maxWidth = '200px';
-                                e.currentTarget.style.paddingRight = '1rem';
-                              }}
-                              onMouseLeave={e => {
-                                // Return to automatic state colors
-                                const colors = getSkillColors();
-                                e.currentTarget.style.background = colors.background;
-                                e.currentTarget.style.border = colors.border;
-                                e.currentTarget.style.color = colors.color;
-                                e.currentTarget.style.maxWidth = isExpanded ? '200px' : '40px';
-                                e.currentTarget.style.paddingRight = isExpanded ? '1rem' : '0.5rem';
+                                maxWidth: shouldShowText ? '200px' : '40px',
+                                width: shouldShowText ? 'auto' : '40px',
+                                overflow: 'hidden',
+                                paddingRight: shouldShowText ? '1rem' : '0.5rem',
+                                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                               }}>
-                              <IconComponent size={16} style={{ flexShrink: 0 }} />
                               <span
                                 style={{
                                   marginLeft: '0.5rem',
-                                  opacity: isExpanded ? 1 : 0,
-                                  transform: isExpanded ? 'translateX(0)' : 'translateX(-10px)',
+                                  opacity: shouldShowText ? 1 : 0,
+                                  transform: shouldShowText ? 'translateX(0)' : 'translateX(-10px)',
                                   transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                                   whiteSpace: 'nowrap',
                                 }}>
                                 {skill.name}
                               </span>
-                            </div>
+                            </Tag>
                           );
                         })}
                       </div>

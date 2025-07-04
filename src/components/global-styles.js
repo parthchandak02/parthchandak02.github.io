@@ -37,24 +37,7 @@ const GlobalStyles = () => {
     }
 
     /* 🎯 CRITICAL: Immediate dark screen - prevents any white flash */
-    html::before {
-      content: '';
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: #000000;
-      z-index: 10000;
-      pointer-events: none;
-      opacity: 1;
-      transition: opacity 0.1s ease;
-    }
 
-    html.loaded::before {
-      opacity: 0;
-      pointer-events: none;
-    }
 
     html {
       font-size: 16px;
@@ -70,6 +53,7 @@ const GlobalStyles = () => {
     body {
       font-family: var(--font-body);
       background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #000000 100%) !important;
+      background-color: #000000 !important;
       color: var(--text-primary);
       line-height: 1.65;
       overflow-x: hidden;
@@ -82,13 +66,24 @@ const GlobalStyles = () => {
       min-height: 100vh; /* Fallback for older browsers */
       min-height: -webkit-fill-available;
       min-height: 100dvh; /* Dynamic viewport height - fixes Safari mobile white padding */
-      /* 🚫 PREVENT SCROLL BOUNCE & WHITE SPACE SCROLLING */
-      overscroll-behavior: none; /* Prevents scroll chaining and bounce effects */
-      overscroll-behavior-y: none; /* Specifically prevents vertical scroll bounce */
-      /* Ensure dark background fallbacks */
-      background-color: #000000 !important;
+      /* 🎨 SEAMLESS DARK BACKGROUND - extends infinitely beyond content boundaries */
+      min-height: 200vh; /* Extends background way beyond content */
       margin: 0;
       padding: 0;
+      position: relative;
+    }
+
+    /* Additional background layer for body to ensure seamless dark experience */
+    body::before {
+      content: '';
+      position: fixed;
+      top: -200vh;
+      left: -200vw;
+      right: -200vw;
+      bottom: -200vh;
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #000000 100%);
+      z-index: -9998;
+      pointer-events: none;
     }
 
     h1, h2, h3, h4, h5, h6 {
@@ -165,15 +160,29 @@ const GlobalStyles = () => {
       background: rgba(255, 255, 255, 0.3);
     }
 
-    /* Ensure consistent dark background everywhere */
+    /* 🎨 SEAMLESS DARK BACKGROUND - extends infinitely beyond content boundaries */
     html, body, #___gatsby, #gatsby-focus-wrapper {
       background: #000000 !important;
+      background-color: #000000 !important;
       min-height: 100vh; /* Fallback for older browsers */
       min-height: 100dvh; /* Dynamic viewport height - fixes Safari mobile white padding */
-      /* 🚫 PREVENT SCROLL BOUNCE & WHITE SPACE SCROLLING */
-      overscroll-behavior: none; /* Prevents scroll chaining and bounce effects */
+      /* Extend background infinitely in all directions */
+      min-height: 200vh; /* Extends background way beyond content */
       margin: 0;
       padding: 0;
+    }
+
+    /* Ensure the root document background extends beyond scroll boundaries */
+    html::before {
+      content: '';
+      position: fixed;
+      top: -100vh;
+      left: -100vw;
+      right: -100vw;
+      bottom: -100vh;
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #000000 100%);
+      z-index: -9999;
+      pointer-events: none;
     }
 
     /* Override any potential white backgrounds */
@@ -227,15 +236,16 @@ const GlobalStyles = () => {
       }
     }
 
-    /* Additional mobile-specific fixes */
+    /* 🎨 MOBILE SEAMLESS BACKGROUND - extends beyond overscroll boundaries */
     @media screen and (max-width: 768px) {
       html, body {
         height: 100%;
         height: -webkit-fill-available;
         overflow-x: hidden;
-        /* Force dark background on mobile */
+        /* Force dark background on mobile - extends beyond overscroll */
         background: #000000 !important;
         background-color: #000000 !important;
+        min-height: 300vh; /* Extra height for overscroll areas */
       }
       
       body {
@@ -245,8 +255,22 @@ const GlobalStyles = () => {
         min-height: 100dvh; /* Dynamic viewport height - fixes Safari mobile white padding */
         /* 🎯 iOS Safe Area Support for Mobile */
         min-height: calc(100% + env(safe-area-inset-top));
+        min-height: 300vh; /* Extra height for seamless overscroll experience */
         padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
         background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #000000 100%) !important;
+      }
+
+      /* Mobile-specific background extension for overscroll areas */
+      body::after {
+        content: '';
+        position: fixed;
+        top: -300vh;
+        left: -100vw;
+        right: -100vw;
+        bottom: -300vh;
+        background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #000000 100%);
+        z-index: -9997;
+        pointer-events: none;
       }
       
       /* Fix for iOS Safari bottom padding */

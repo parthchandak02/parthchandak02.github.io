@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { graphql, useStaticQuery } from 'gatsby';
 import PropTypes from 'prop-types';
 import TimelineIcon from './timeline-icon';
+import Tag from './tag';
 
 // Import company logos
 import arthLogo from '../images/company-logos/arth-systems-logo.png';
@@ -354,36 +355,12 @@ const InteractiveTimeline = React.memo(({ activeFilter = 'about' }) => {
                       flexWrap: 'wrap',
                       gap: '0.5rem',
                     }}>
-                    <span
-                      style={{
-                        fontSize: '0.75rem',
-                        fontFamily:
-                          '"JetBrains Mono", "SF Mono", "Fira Code", "Cascadia Code", Consolas, monospace',
-                        fontWeight: '600',
-                        textTransform: 'uppercase',
-                        letterSpacing: '0.05em',
-                        color: '#888',
-                        padding: '0.25rem 0.75rem',
-                        background: 'rgba(255, 255, 255, 0.03)',
-                        borderRadius: '6px',
-                        border: '1px solid rgba(255, 255, 255, 0.1)',
-                      }}>
+                    <Tag variant="category" size="small">
                       {item.category}
-                    </span>
-                    <time
-                      style={{
-                        fontSize: '0.85rem',
-                        fontFamily:
-                          '"JetBrains Mono", "SF Mono", "Fira Code", "Cascadia Code", Consolas, monospace',
-                        fontWeight: '500',
-                        color: '#888',
-                        padding: '0.25rem 0.75rem',
-                        background: 'rgba(255, 255, 255, 0.05)',
-                        borderRadius: '6px',
-                        border: '1px solid rgba(255, 255, 255, 0.1)',
-                      }}>
+                    </Tag>
+                    <Tag variant="time" size="small">
                       {item.range}
-                    </time>
+                    </Tag>
                   </div>
 
                   {/* Title */}
