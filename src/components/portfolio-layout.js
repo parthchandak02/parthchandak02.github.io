@@ -1039,25 +1039,33 @@ const PortfolioLayout = ({ children }) => {
           .timeline-container {
             /* Full width on mobile with minimal padding */
             max-width: 100% !important;
-            padding: 0 !important;
+            padding: 0 0.75rem !important;
             margin: 0 !important;
           }
           
           /* Adjust timeline items for mobile */
           .timeline-item {
-            padding-left: 3.5rem !important;
+            padding-left: 4rem !important;
             margin-bottom: 2rem !important;
           }
           
-          /* Timeline cards on mobile */
+          /* Timeline cards on mobile - prevent overlap with icons */
           .timeline-item .glass {
-            margin: 0 0.5rem !important;
+            margin-left: 0.5rem !important;
+            margin-right: 0 !important;
             padding: 1.25rem !important;
           }
           
-          /* Adjust vertical line for mobile */
-          .timeline-container > div:first-child {
-            left: 1.25rem !important;
+          /* Fix vertical line positioning for mobile */
+          .timeline-line {
+            left: 1.5rem !important;
+            transform: translateX(-50%) !important;
+          }
+          
+          /* Fix timeline icon positioning for mobile */
+          .timeline-icon {
+            left: 1.5rem !important;
+            transform: translateX(-50%) !important;
           }
         }
       `}</style>

@@ -217,6 +217,7 @@ const InteractiveTimeline = React.memo(({ activeFilter = 'about' }) => {
           style={{ maxWidth: '900px', margin: '0 auto', position: 'relative' }}>
           {/* Vertical line */}
           <div
+            className="timeline-line"
             style={{
               position: 'absolute',
               left: '1.5rem',
@@ -280,7 +281,7 @@ const InteractiveTimeline = React.memo(({ activeFilter = 'about' }) => {
                 }}>
                 {/* Timeline Icon */}
                 <div
-                  className="glass"
+                  className="glass timeline-icon"
                   style={{
                     position: 'absolute',
                     left: '1.5rem',
