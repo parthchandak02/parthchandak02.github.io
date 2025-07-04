@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import styled, { keyframes } from 'styled-components';
+import styled, { keyframes, css } from 'styled-components';
 
 const drawSquare = keyframes`
   0% {
@@ -65,9 +65,9 @@ const LoaderContainer = styled.div`
 
   ${props =>
     props.isComplete &&
-    `
-    animation: ${fadeOut} 0.5s ease-out forwards;
-  `}
+    css`
+      animation: ${fadeOut} 0.5s ease-out forwards;
+    `}
 `;
 
 const AnimatedSVG = styled.svg`

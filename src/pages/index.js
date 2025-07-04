@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import SEO from '../components/seo';
 import PortfolioLayout from '../components/portfolio-layout';
 import BackgroundManager from '../components/background-manager';
 import InteractiveTimeline from '../components/interactive-timeline';
@@ -26,6 +27,7 @@ const IndexPage = () => {
 
   return (
     <>
+      <SEO />
       <BackgroundManager />
       <PortfolioLayout>
         <InteractiveTimeline />

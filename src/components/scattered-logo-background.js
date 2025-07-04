@@ -240,14 +240,17 @@ const ScatteredLogoBackground = ({
       className={`scattered-logo-background ${className}`}
       style={{
         position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
         zIndex: -1,
         pointerEvents: 'none',
         // Add dark background base
         background: 'linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #000000 100%)',
+        // 🎯 iOS Safe Area Support - Extend to full viewport
+        top: 'calc(0px - env(safe-area-inset-top))',
+        left: 'calc(0px - env(safe-area-inset-left))',
+        right: 'calc(0px - env(safe-area-inset-right))',
+        bottom: 'calc(0px - env(safe-area-inset-bottom))',
+        width: 'calc(100% + env(safe-area-inset-left) + env(safe-area-inset-right))',
+        height: 'calc(100% + env(safe-area-inset-top) + env(safe-area-inset-bottom))',
         ...style,
       }}>
       <canvas

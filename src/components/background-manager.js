@@ -82,14 +82,17 @@ const BackgroundManager = ({ className = '', style = {}, onBackgroundChange = nu
       className={`background-manager ${className}`}
       style={{
         position: 'fixed',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100%',
         zIndex: -1,
         pointerEvents: 'none',
         // Ensure dark background fallback
         background: 'linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #000000 100%)',
+        // 🎯 iOS Safe Area Support - Extend background to full viewport
+        top: 'calc(0px - env(safe-area-inset-top))',
+        left: 'calc(0px - env(safe-area-inset-left))',
+        right: 'calc(0px - env(safe-area-inset-right))',
+        bottom: 'calc(0px - env(safe-area-inset-bottom))',
+        width: 'calc(100% + env(safe-area-inset-left) + env(safe-area-inset-right))',
+        height: 'calc(100% + env(safe-area-inset-top) + env(safe-area-inset-bottom))',
         ...style,
       }}>
       {/* Render the current background */}
