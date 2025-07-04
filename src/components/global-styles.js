@@ -45,6 +45,9 @@ const GlobalStyles = () => {
       height: -webkit-fill-available;
       min-height: 100vh;
       min-height: 100dvh; /* Dynamic viewport height for modern browsers */
+      /* 🎯 iOS Safe Area Support */
+      min-height: calc(100% + env(safe-area-inset-top));
+      padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
     }
 
     body {
@@ -62,6 +65,8 @@ const GlobalStyles = () => {
       min-height: 100vh;
       min-height: -webkit-fill-available;
       min-height: 100dvh; /* Dynamic viewport height for modern browsers */
+      /* 🎯 iOS Safe Area Support */
+      min-height: calc(100% + env(safe-area-inset-top));
       /* Ensure dark background fallbacks */
       background-color: #000000 !important;
     }
@@ -161,12 +166,52 @@ const GlobalStyles = () => {
       background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #000000 100%) !important;
     }
 
+    /* 🎯 iOS Safe Area Insets Support */
+    @supports (padding-top: constant(safe-area-inset-top)) {
+      html {
+        --safe-area-inset-top: constant(safe-area-inset-top);
+        --safe-area-inset-right: constant(safe-area-inset-right);
+        --safe-area-inset-bottom: constant(safe-area-inset-bottom);
+        --safe-area-inset-left: constant(safe-area-inset-left);
+      }
+    }
+
+    @supports (padding-top: env(safe-area-inset-top)) {
+      html {
+        --safe-area-inset-top: env(safe-area-inset-top);
+        --safe-area-inset-right: env(safe-area-inset-right);
+        --safe-area-inset-bottom: env(safe-area-inset-bottom);
+        --safe-area-inset-left: env(safe-area-inset-left);
+      }
+    }
+
+    /* PWA Display Mode Specific Styles */
+    @media (display-mode: standalone) {
+      html, body {
+        height: 100%;
+        min-height: 100vh;
+        min-height: calc(100% + env(safe-area-inset-top));
+        background: #000000 !important;
+      }
+    }
+
+    @media (display-mode: fullscreen) {
+      html, body {
+        height: 100%;
+        min-height: 100vh;
+        background: #000000 !important;
+      }
+    }
+
     /* Additional mobile-specific fixes */
     @media screen and (max-width: 768px) {
       html, body {
         height: 100%;
         height: -webkit-fill-available;
         overflow-x: hidden;
+        /* Force dark background on mobile */
+        background: #000000 !important;
+        background-color: #000000 !important;
       }
       
       body {
@@ -174,7 +219,30 @@ const GlobalStyles = () => {
         min-height: 100vh;
         min-height: calc(var(--vh, 1vh) * 100);
         min-height: 100dvh;
+        /* 🎯 iOS Safe Area Support for Mobile */
+        min-height: calc(100% + env(safe-area-inset-top));
+        padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
         background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #000000 100%) !important;
+      }
+      
+      /* Fix for iOS Safari bottom padding */
+      .safe-bottom {
+        padding-bottom: env(safe-area-inset-bottom);
+      }
+    }
+
+    /* iOS Specific Fixes */
+    @media screen and (-webkit-min-device-pixel-ratio: 2) {
+      html, body {
+        background: #000000 !important;
+        background-color: #000000 !important;
+      }
+    }
+
+    /* Fix for iOS status bar area */
+    @media screen and (orientation: landscape) and (max-width: 896px) {
+      html {
+        padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
       }
     }
   `;

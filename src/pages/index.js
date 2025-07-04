@@ -1,15 +1,37 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import PortfolioLayout from '../components/portfolio-layout';
 import BackgroundManager from '../components/background-manager';
 import InteractiveTimeline from '../components/interactive-timeline';
+import LogoLoader from '../components/logo-loader';
 
-const IndexPage = () => (
-  <>
-    <BackgroundManager />
-    <PortfolioLayout>
-      <InteractiveTimeline />
-    </PortfolioLayout>
-  </>
-);
+const IndexPage = () => {
+  const [isLoading, setIsLoading] = useState(true);
+
+  const handleLoadingComplete = () => {
+    setIsLoading(false);
+  };
+
+  // Only show loading on client side
+  useEffect(() => {
+    // Small delay to ensure smooth transition
+    const timer = setTimeout(() => {
+      setIsLoading(true);
+    }, 100);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (isLoading) {
+    return <LogoLoader onComplete={handleLoadingComplete} />;
+  }
+
+  return (
+    <>
+      <BackgroundManager />
+      <PortfolioLayout>
+        <InteractiveTimeline />
+      </PortfolioLayout>
+    </>
+  );
+};
 
 export default IndexPage;
