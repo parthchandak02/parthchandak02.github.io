@@ -272,6 +272,7 @@ const InteractiveTimeline = React.memo(({ activeFilter = 'about' }) => {
             filteredData.map((item, index) => (
               <div
                 key={index}
+                className="timeline-item"
                 style={{
                   position: 'relative',
                   paddingLeft: '4rem',

@@ -1026,6 +1026,40 @@ const PortfolioLayout = ({ children }) => {
         .timeline-container {
           max-width: min(900px, calc(100vw - 400px)) !important;
         }
+
+        /* Mobile-specific timeline fixes */
+        @media (max-width: 768px) {
+          .main-content {
+            /* Override desktop spacing for mobile - give timeline more breathing room */
+            marginLeft: 0.5rem !important;
+            marginRight: 0.5rem !important;
+            padding: 0 0.5rem !important;
+          }
+          
+          .timeline-container {
+            /* Full width on mobile with minimal padding */
+            max-width: 100% !important;
+            padding: 0 !important;
+            margin: 0 !important;
+          }
+          
+          /* Adjust timeline items for mobile */
+          .timeline-item {
+            padding-left: 3.5rem !important;
+            margin-bottom: 2rem !important;
+          }
+          
+          /* Timeline cards on mobile */
+          .timeline-item .glass {
+            margin: 0 0.5rem !important;
+            padding: 1.25rem !important;
+          }
+          
+          /* Adjust vertical line for mobile */
+          .timeline-container > div:first-child {
+            left: 1.25rem !important;
+          }
+        }
       `}</style>
     </div>
   );
