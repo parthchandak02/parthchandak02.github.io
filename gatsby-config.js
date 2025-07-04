@@ -6,6 +6,12 @@ module.exports = {
     siteUrl: 'https://parthchandak02.github.io', // No trailing slash allowed!
     image: '/og.png', // Path to your image you placed in the 'static' folder
   },
+  // 🎯 Development optimizations to reduce white screens
+  flags: {
+    FAST_DEV: true,
+    PRESERVE_WEBPACK_CACHE: true,
+    PARALLEL_SOURCING: true,
+  },
   plugins: [
     `gatsby-plugin-react-helmet`,
     {

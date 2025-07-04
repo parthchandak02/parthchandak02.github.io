@@ -38,11 +38,8 @@ const SEO = ({ title, description, image, pathname, children }) => {
       <meta name="description" content={seo.description} />
       <meta name="image" content={seo.image} />
 
-      {/* 🎯 CRUCIAL: Mobile & iOS Meta Tags */}
-      <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no"
-      />
+      {/* 🎯 CRUCIAL: Mobile & iOS Meta Tags - DVH viewport fix */}
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 
       {/* iOS PWA Meta Tags */}
       <meta name="apple-mobile-web-app-capable" content="yes" />

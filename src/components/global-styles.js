@@ -36,18 +36,35 @@ const GlobalStyles = () => {
       box-sizing: border-box;
     }
 
+    /* 🎯 CRITICAL: Immediate dark screen - prevents any white flash */
+    html::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #000000;
+      z-index: 10000;
+      pointer-events: none;
+      opacity: 1;
+      transition: opacity 0.1s ease;
+    }
+
+    html.loaded::before {
+      opacity: 0;
+      pointer-events: none;
+    }
+
     html {
       font-size: 16px;
       scroll-behavior: smooth;
       background: #000000 !important;
-      /* Mobile viewport height fixes */
+      /* 🎯 SAFARI MOBILE WHITE PADDING FIX - Use dvh for seamless viewport */
       height: 100%;
       height: -webkit-fill-available;
-      min-height: 100vh;
-      min-height: 100dvh; /* Dynamic viewport height for modern browsers */
-      /* 🎯 iOS Safe Area Support */
-      min-height: calc(100% + env(safe-area-inset-top));
-      padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+      min-height: 100vh; /* Fallback for older browsers */
+      min-height: 100dvh; /* Dynamic viewport height - fixes Safari mobile white padding */
     }
 
     body {
@@ -61,14 +78,14 @@ const GlobalStyles = () => {
       text-rendering: optimizeLegibility;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
-      /* Mobile viewport height fixes */
-      min-height: 100vh;
+      /* 🎯 SAFARI MOBILE WHITE PADDING FIX - Use dvh for seamless viewport */
+      min-height: 100vh; /* Fallback for older browsers */
       min-height: -webkit-fill-available;
-      min-height: 100dvh; /* Dynamic viewport height for modern browsers */
-      /* 🎯 iOS Safe Area Support */
-      min-height: calc(100% + env(safe-area-inset-top));
+      min-height: 100dvh; /* Dynamic viewport height - fixes Safari mobile white padding */
       /* Ensure dark background fallbacks */
       background-color: #000000 !important;
+      margin: 0;
+      padding: 0;
     }
 
     h1, h2, h3, h4, h5, h6 {
@@ -148,9 +165,10 @@ const GlobalStyles = () => {
     /* Ensure consistent dark background everywhere */
     html, body, #___gatsby, #gatsby-focus-wrapper {
       background: #000000 !important;
-      min-height: 100vh;
-      min-height: calc(var(--vh, 1vh) * 100); /* Use custom property for accurate mobile height */
-      min-height: 100dvh; /* Dynamic viewport height for modern browsers */
+      min-height: 100vh; /* Fallback for older browsers */
+      min-height: 100dvh; /* Dynamic viewport height - fixes Safari mobile white padding */
+      margin: 0;
+      padding: 0;
     }
 
     /* Override any potential white backgrounds */
@@ -160,10 +178,11 @@ const GlobalStyles = () => {
 
     /* Ensure main container uses full viewport height */
     .main-container {
-      min-height: 100vh;
-      min-height: calc(var(--vh, 1vh) * 100);
-      min-height: 100dvh;
+      min-height: 100vh; /* Fallback for older browsers */
+      min-height: 100dvh; /* Dynamic viewport height - fixes Safari mobile white padding */
       background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #000000 100%) !important;
+      margin: 0;
+      padding: 0;
     }
 
     /* 🎯 iOS Safe Area Insets Support */
@@ -216,9 +235,9 @@ const GlobalStyles = () => {
       
       body {
         position: relative;
-        min-height: 100vh;
+        min-height: 100vh; /* Fallback for older browsers */
         min-height: calc(var(--vh, 1vh) * 100);
-        min-height: 100dvh;
+        min-height: 100dvh; /* Dynamic viewport height - fixes Safari mobile white padding */
         /* 🎯 iOS Safe Area Support for Mobile */
         min-height: calc(100% + env(safe-area-inset-top));
         padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
@@ -236,6 +255,10 @@ const GlobalStyles = () => {
       html, body {
         background: #000000 !important;
         background-color: #000000 !important;
+        min-height: 100vh; /* Fallback for older browsers */
+        min-height: 100dvh; /* Dynamic viewport height - fixes Safari mobile white padding */
+        margin: 0;
+        padding: 0;
       }
     }
 
@@ -244,6 +267,46 @@ const GlobalStyles = () => {
       html {
         padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
       }
+    }
+
+    /* 🎯 Gatsby Webpack Overlay Dark Theme */
+    #webpack-dev-server-client-overlay {
+      background: #000000 !important;
+      color: #ffffff !important;
+    }
+
+    #webpack-dev-server-client-overlay div {
+      background: #000000 !important;
+      color: #ffffff !important;
+    }
+
+    /* Target Gatsby's development overlay */
+    [data-gatsby-overlay] {
+      background: #000000 !important;
+      color: #ffffff !important;
+    }
+
+    [data-gatsby-overlay] * {
+      background: transparent !important;
+      color: #ffffff !important;
+    }
+
+    /* Target any generic overlay */
+    .overlay, .development-overlay {
+      background: #000000 !important;
+      color: #ffffff !important;
+    }
+
+    /* Override Fast Refresh overlay */
+    [id*="webpack"], [class*="webpack"], [id*="overlay"], [class*="overlay"] {
+      background: #000000 !important;
+      color: #ffffff !important;
+    }
+
+    /* Target the specific "Preparing requested page" overlay */
+    div[style*="position: fixed"][style*="z-index"] {
+      background: #000000 !important;
+      color: #ffffff !important;
     }
   `;
 

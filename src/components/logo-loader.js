@@ -55,7 +55,8 @@ const LoaderContainer = styled.div`
   top: 0;
   left: 0;
   width: 100vw;
-  height: 100vh;
+  height: 100vh; /* Fallback for older browsers */
+  height: 100dvh; /* Dynamic viewport height - fixes Safari mobile white padding */
   background: #000;
   display: flex;
   align-items: center;
@@ -106,6 +107,11 @@ const LogoLoader = ({ onComplete }) => {
   const [isComplete, setIsComplete] = useState(false);
 
   useEffect(() => {
+    // Remove the immediate dark overlay once React has loaded
+    if (typeof document !== 'undefined') {
+      document.documentElement.classList.add('loaded');
+    }
+
     // Animation duration + small delay
     const timer = setTimeout(() => {
       setIsComplete(true);

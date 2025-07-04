@@ -21,32 +21,22 @@ const PortfolioLayout = ({ children }) => {
   const [activeSection, setActiveSection] = useState('about');
   const [isMobile, setIsMobile] = useState(false);
 
-  // Check if device is mobile/tablet and set viewport height
+  // Check if device is mobile/tablet
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth <= 768);
     };
 
-    // Mobile viewport height fix
-    const setVH = () => {
-      const vh = window.innerHeight * 0.01;
-      document.documentElement.style.setProperty('--vh', `${vh}px`);
-    };
-
     checkMobile();
-    setVH();
 
     const handleResize = () => {
       checkMobile();
-      setVH(); // Update viewport height on resize
     };
 
     window.addEventListener('resize', handleResize);
-    window.addEventListener('orientationchange', setVH);
 
     return () => {
       window.removeEventListener('resize', handleResize);
-      window.removeEventListener('orientationchange', setVH);
     };
   }, []);
 
@@ -365,7 +355,7 @@ const PortfolioLayout = ({ children }) => {
   });
 
   return (
-    <div className="main-container" style={{ position: 'relative', minHeight: '100vh' }}>
+    <div className="main-container" style={{ position: 'relative', minHeight: '100dvh' }}>
       {/* Left Navigation - Responsive */}
       <div
         className="left-sidebar"
@@ -542,7 +532,7 @@ const PortfolioLayout = ({ children }) => {
         {/* Hero Section */}
         <section
           style={{
-            minHeight: '100vh',
+            minHeight: '100dvh', // Dynamic viewport height - fixes Safari mobile white padding
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',

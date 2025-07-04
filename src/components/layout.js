@@ -10,7 +10,7 @@ const Layout = ({ children }) => (
       style={{
         margin: 0,
         padding: 0,
-        minHeight: '100vh',
+        minHeight: '100dvh', // Dynamic viewport height - fixes Safari mobile white padding
       }}>
       <PortfolioLayout>{children}</PortfolioLayout>
     </div>

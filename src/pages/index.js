@@ -7,21 +7,27 @@ import LogoLoader from '../components/logo-loader';
 
 const IndexPage = () => {
   const [isLoading, setIsLoading] = useState(true);
+  const [shouldShowLoader, setShouldShowLoader] = useState(false);
 
   const handleLoadingComplete = () => {
     setIsLoading(false);
   };
 
-  // Only show loading on client side
+  // Manage loading states more efficiently
   useEffect(() => {
-    // Small delay to ensure smooth transition
-    const timer = setTimeout(() => {
-      setIsLoading(true);
-    }, 100);
-    return () => clearTimeout(timer);
+    // Prevent flash of white content
+    setShouldShowLoader(true);
+
+    // Auto-complete loading if it takes too long (fallback)
+    const fallbackTimer = setTimeout(() => {
+      setIsLoading(false);
+    }, 5000); // 5 second max loading time
+
+    return () => clearTimeout(fallbackTimer);
   }, []);
 
-  if (isLoading) {
+  // Show loader during initial load
+  if (isLoading && shouldShowLoader) {
     return <LogoLoader onComplete={handleLoadingComplete} />;
   }
 

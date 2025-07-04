@@ -161,7 +161,7 @@ const InteractiveTimeline = React.memo(({ activeFilter = 'about' }) => {
       id="timeline-section"
       style={{
         background: 'transparent',
-        minHeight: '100vh',
+        minHeight: '100dvh', // Dynamic viewport height - fixes Safari mobile white padding
         padding: '0',
       }}>
       {/* Show contact section or timeline */}
