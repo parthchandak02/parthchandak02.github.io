@@ -85,12 +85,16 @@ const PortfolioLayout = ({ children }) => {
   };
 
   // Pass the active section to children for filtering - memoized to prevent unnecessary re-renders
-  const childrenWithProps = useMemo(() => React.Children.map(children, child => {
-    if (React.isValidElement(child)) {
-      return React.cloneElement(child, { activeFilter: activeSection });
-    }
-    return child;
-  }), [children, activeSection]);
+  const childrenWithProps = useMemo(
+    () =>
+      React.Children.map(children, child => {
+        if (React.isValidElement(child)) {
+          return React.cloneElement(child, { activeFilter: activeSection });
+        }
+        return child;
+      }),
+    [children, activeSection],
+  );
 
   const [roleTypewriterText, setRoleTypewriterText] = useState('');
   const [skillTextStates, setSkillTextStates] = useState({});
@@ -526,14 +530,14 @@ const PortfolioLayout = ({ children }) => {
               marginRight: '1rem',
             }
             : {
-              // Desktop: Account for left and right sidebars with equal spacing
-              marginLeft: 'clamp(140px, 18vw, 200px)',
-              marginRight: 'clamp(90px, 8vw, 110px)',
+              // Desktop: Account for left and right sidebars with generous spacing
+              marginLeft: 'clamp(200px, 22vw, 280px)', // Increased from 18vw to 22vw
+              marginRight: 'clamp(120px, 12vw, 160px)', // Increased from 8vw to 12vw
               marginTop: '2rem',
               marginBottom: '2rem',
             }),
           flex: 1,
-          padding: '0 clamp(1rem, 3vw, 2rem)',
+          padding: '0 clamp(1.5rem, 4vw, 3rem)',
         }}>
         {/* Hero Section */}
         <section
@@ -999,6 +1003,28 @@ const PortfolioLayout = ({ children }) => {
         .right-sidebar,
         .main-content {
           transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        }
+
+        /* Additional responsive spacing adjustments */
+        @media (min-width: 769px) and (max-width: 1200px) {
+          .main-content {
+            margin-left: max(200px, 20vw) !important;
+            margin-right: max(120px, 10vw) !important;
+            padding: 0 2rem !important;
+          }
+        }
+
+        @media (min-width: 1201px) {
+          .main-content {
+            margin-left: max(240px, 22vw) !important;
+            margin-right: max(140px, 12vw) !important;
+            padding: 0 3rem !important;
+          }
+        }
+
+        /* Ensure timeline content doesn't get too close to sidebars */
+        .timeline-container {
+          max-width: min(900px, calc(100vw - 400px)) !important;
         }
       `}</style>
     </div>

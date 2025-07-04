@@ -212,7 +212,9 @@ const InteractiveTimeline = React.memo(({ activeFilter = 'about' }) => {
           </div>
         </div>
       ) : (
-        <div style={{ maxWidth: '1000px', margin: '0 auto', position: 'relative' }}>
+        <div
+          className="timeline-container"
+          style={{ maxWidth: '900px', margin: '0 auto', position: 'relative' }}>
           {/* Vertical line */}
           <div
             style={{
