@@ -1,9 +1,0 @@
-export { default as Hero } from './hero';
-export { default as Jobs } from './jobs';
-export { default as Featured } from './featured';
-export { default as Research } from './research';
-export { default as Awards } from './awards';
-export { default as Community } from './community';
-export { default as Media } from './media';
-export { default as Contact } from './contact';
-export { default as Resume } from './resume'; 

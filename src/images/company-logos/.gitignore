@@ -1,0 +1,8 @@
+# Temporary Python virtual environment
+temp-python-env/
+*.pyc
+__pycache__/
+.DS_Store
+
+# Processed images (keep originals only)
+processed-*/

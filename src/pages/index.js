@@ -1,29 +1,15 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import { Layout, Hero, Jobs, Featured, Research, Awards, Community, Media, Contact } from '@components';
+import PortfolioLayout from '../components/portfolio-layout';
+import LiquidBackground from '../components/liquid-background';
+import InteractiveTimeline from '../components/interactive-timeline';
 
-const StyledMainContainer = styled.main`
-  counter-reset: section;
-`;
-
-const IndexPage = ({ location }) => (
-  <Layout location={location}>
-    <StyledMainContainer className="fillHeight">
-      <Hero />
-      <Jobs />
-      <Featured />
-      <Research />
-      <Awards />
-      <Community />
-      <Media />
-      <Contact />
-    </StyledMainContainer>
-  </Layout>
+const IndexPage = () => (
+  <>
+    <LiquidBackground />
+    <PortfolioLayout>
+      <InteractiveTimeline />
+    </PortfolioLayout>
+  </>
 );
-
-IndexPage.propTypes = {
-  location: PropTypes.object.isRequired,
-};
 
 export default IndexPage;
