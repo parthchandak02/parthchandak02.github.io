@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
+import LogoLoader from './logo-loader';
 import {
   SiPython,
   SiJavascript,
@@ -20,6 +21,7 @@ import { MdPrecisionManufacturing } from 'react-icons/md';
 const PortfolioLayout = ({ children }) => {
   const [activeSection, setActiveSection] = useState('about');
   const [isMobile, setIsMobile] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Check if device is mobile/tablet and set viewport height
   useEffect(() => {
@@ -64,6 +66,11 @@ const PortfolioLayout = ({ children }) => {
       }
     });
   }, [activeSection]);
+
+  // Handle loading completion
+  const handleLoadingComplete = () => {
+    setIsLoading(false);
+  };
 
   // Scroll to section instead of just filtering
   const scrollToSection = sectionId => {
@@ -365,496 +372,503 @@ const PortfolioLayout = ({ children }) => {
   });
 
   return (
-    <div className="main-container" style={{ position: 'relative', minHeight: '100vh' }}>
-      {/* Left Navigation - Responsive */}
-      <div
-        className="left-sidebar"
-        style={{
-          position: 'fixed',
-          zIndex: 1000,
-          ...(isMobile
-            ? {
-              // Mobile: Top horizontal bar - proper centering with equal margins
-              top: '1rem',
-              left: '1rem',
-              right: '1rem',
-              width: 'auto', // Let it size naturally
-              height: 'auto',
-              padding: '1rem',
-              minHeight: '100px', // Ensure enough height for 2 rows
-            }
-            : {
-              // Desktop: Left vertical bar - proper centering
-              top: '2rem',
-              left: '2rem',
-              bottom: '2rem',
-              width: 'clamp(120px, 15vw, 180px)',
-              height: 'auto',
-              padding: '2rem 1.5rem',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-            }),
-          ...getGlassStyles(isMobile),
-        }}
-        onMouseEnter={e => {
-          e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
-          e.currentTarget.style.border = '1px solid rgba(255, 255, 255, 0.12)';
-          e.currentTarget.style.transform = 'scale(1.02)';
-          e.currentTarget.style.boxShadow = `
+    <>
+      {isLoading && <LogoLoader onComplete={handleLoadingComplete} />}
+      <div className="main-container" style={{ position: 'relative', minHeight: '100vh' }}>
+        {/* Left Navigation - Responsive */}
+        <div
+          className="left-sidebar"
+          style={{
+            position: 'fixed',
+            zIndex: 1000,
+            ...(isMobile
+              ? {
+                // Mobile: Top horizontal bar - proper centering with equal margins
+                top: '1rem',
+                left: '1rem',
+                right: '1rem',
+                width: 'auto', // Let it size naturally
+                height: 'auto',
+                padding: '1rem',
+                minHeight: '100px', // Ensure enough height for 2 rows
+              }
+              : {
+                // Desktop: Left vertical bar - proper centering
+                top: '2rem',
+                left: '2rem',
+                bottom: '2rem',
+                width: 'clamp(120px, 15vw, 180px)',
+                height: 'auto',
+                padding: '2rem 1.5rem',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+              }),
+            ...getGlassStyles(isMobile),
+          }}
+          onMouseEnter={e => {
+            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
+            e.currentTarget.style.border = '1px solid rgba(255, 255, 255, 0.12)';
+            e.currentTarget.style.transform = 'scale(1.02)';
+            e.currentTarget.style.boxShadow = `
             0 25px 50px rgba(0, 0, 0, 0.5),
             0 12px 40px rgba(255, 107, 107, 0.1),
             inset 0 1px 0 rgba(255, 255, 255, 0.15),
             inset 0 -1px 0 rgba(255, 255, 255, 0.05)
           `;
-        }}
-        onMouseLeave={e => {
-          e.currentTarget.style.background = 'rgba(255, 255, 255, 0.03)';
-          e.currentTarget.style.border = '1px solid rgba(255, 255, 255, 0.08)';
-          e.currentTarget.style.transform = 'scale(1)';
-          e.currentTarget.style.boxShadow = `
+          }}
+          onMouseLeave={e => {
+            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.03)';
+            e.currentTarget.style.border = '1px solid rgba(255, 255, 255, 0.08)';
+            e.currentTarget.style.transform = 'scale(1)';
+            e.currentTarget.style.boxShadow = `
             0 20px 40px rgba(0, 0, 0, 0.4),
             0 8px 32px rgba(255, 255, 255, 0.05),
             inset 0 1px 0 rgba(255, 255, 255, 0.1),
             inset 0 -1px 0 rgba(255, 255, 255, 0.03)
           `;
-        }}>
-        <nav style={{ width: '100%', height: '100%' }}>
-          <div
+          }}>
+          <nav style={{ width: '100%', height: '100%' }}>
+            <div
+              style={{
+                display: 'grid',
+                ...(isMobile
+                  ? {
+                    // Mobile: 4 columns, 2 rows to fit all 8 items
+                    gridTemplateColumns: 'repeat(4, 1fr)',
+                    gridTemplateRows: 'repeat(2, 1fr)',
+                    gap: '0.5rem',
+                    alignItems: 'center',
+                    justifyItems: 'center',
+                    width: '100%',
+                    height: '100%',
+                  }
+                  : {
+                    // Desktop: Single column vertical layout
+                    gridTemplateColumns: '1fr',
+                    gridTemplateRows: 'repeat(8, 1fr)',
+                    gap: '0.5rem',
+                    alignItems: 'center',
+                    justifyItems: 'stretch',
+                    width: '100%',
+                    height: '100%',
+                  }),
+              }}>
+              {navigationItems.map(item => (
+                <button
+                  key={item.id}
+                  className="nav-button"
+                  data-item-id={item.id}
+                  onClick={() => scrollToSection(item.id)}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: isMobile ? 'center' : 'flex-start',
+                    width: '100%',
+                    height: '100%',
+                    padding: isMobile ? '0.5rem 0.25rem' : '0.75rem 0',
+                    margin: '0',
+                    background: 'none',
+                    border: 'none',
+                    color: activeSection === item.id ? '#ff6b6b' : '#888',
+                    cursor: 'pointer',
+                    fontSize: isMobile ? '0.55rem' : 'clamp(0.7rem, 1.8vw, 0.85rem)',
+                    fontWeight: '600',
+                    fontFamily:
+                      '"JetBrains Mono", "SF Mono", "Fira Code", "Cascadia Code", Consolas, monospace',
+                    transition: 'all 0.3s ease',
+                    borderRadius: '8px',
+                    whiteSpace: 'nowrap',
+                    textAlign: 'center',
+                    flexDirection: isMobile ? 'column' : 'row',
+                    gap: isMobile ? '0.1rem' : '0.5rem',
+                  }}
+                  onMouseEnter={e => {
+                    if (activeSection !== item.id) {
+                      e.currentTarget.style.color = '#bbb';
+                      if (isMobile) {
+                        e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
+                      }
+                    }
+                  }}
+                  onMouseLeave={e => {
+                    // Always reset to the correct state based on active section
+                    if (activeSection === item.id) {
+                      e.currentTarget.style.color = '#ff6b6b';
+                    } else {
+                      e.currentTarget.style.color = '#888';
+                    }
+                    if (isMobile) {
+                      e.currentTarget.style.background = 'none';
+                    }
+                  }}>
+                  <span
+                    style={{
+                      color: '#ff6b6b',
+                      fontSize: isMobile ? '0.5rem' : '0.75rem',
+                      fontWeight: '700',
+                      lineHeight: '1',
+                    }}>
+                    {item.number}
+                  </span>
+                  <span
+                    className="nav-label"
+                    style={{
+                      fontSize: isMobile ? '0.45rem' : 'inherit',
+                      lineHeight: isMobile ? '1' : 'inherit',
+                      fontWeight: isMobile ? '500' : '600',
+                    }}>
+                    {item.label}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </nav>
+        </div>
+
+        {/* Main Content */}
+        <div
+          className="main-content"
+          style={{
+            ...(isMobile
+              ? {
+                // Mobile: Account for top and bottom bars with proper spacing
+                marginTop: '8rem', // Account for taller grid navigation
+                marginBottom: '6rem',
+                marginLeft: '1rem',
+                marginRight: '1rem',
+              }
+              : {
+                // Desktop: Account for left and right sidebars with generous spacing
+                marginLeft: 'clamp(200px, 22vw, 280px)', // Increased from 18vw to 22vw
+                marginRight: 'clamp(120px, 12vw, 160px)', // Increased from 8vw to 12vw
+                marginTop: '2rem',
+                marginBottom: '2rem',
+              }),
+            flex: 1,
+            padding: '0 clamp(1.5rem, 4vw, 3rem)',
+          }}>
+          {/* Hero Section */}
+          <section
             style={{
-              display: 'grid',
-              ...(isMobile
-                ? {
-                  // Mobile: 4 columns, 2 rows to fit all 8 items
-                  gridTemplateColumns: 'repeat(4, 1fr)',
-                  gridTemplateRows: 'repeat(2, 1fr)',
-                  gap: '0.5rem',
-                  alignItems: 'center',
-                  justifyItems: 'center',
-                  width: '100%',
-                  height: '100%',
-                }
-                : {
-                  // Desktop: Single column vertical layout
-                  gridTemplateColumns: '1fr',
-                  gridTemplateRows: 'repeat(8, 1fr)',
-                  gap: '0.5rem',
-                  alignItems: 'center',
-                  justifyItems: 'stretch',
-                  width: '100%',
-                  height: '100%',
-                }),
+              minHeight: '100vh',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexDirection: 'column',
+              textAlign: 'left',
+              maxWidth: '800px',
+              margin: '0 auto',
             }}>
-            {navigationItems.map(item => (
-              <button
-                key={item.id}
-                className="nav-button"
-                data-item-id={item.id}
-                onClick={() => scrollToSection(item.id)}
+            <div style={{ width: '100%' }}>
+              <h1
                 style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: isMobile ? 'center' : 'flex-start',
-                  width: '100%',
-                  height: '100%',
-                  padding: isMobile ? '0.5rem 0.25rem' : '0.75rem 0',
-                  margin: '0',
-                  background: 'none',
-                  border: 'none',
-                  color: activeSection === item.id ? '#ff6b6b' : '#888',
-                  cursor: 'pointer',
-                  fontSize: isMobile ? '0.55rem' : 'clamp(0.7rem, 1.8vw, 0.85rem)',
-                  fontWeight: '600',
+                  fontSize: 'clamp(3rem, 8vw, 5rem)',
+                  fontWeight: '700',
+                  marginBottom: '0.5rem',
+                  fontFamily:
+                    '"Space Grotesk", "SF Pro Display", -apple-system, BlinkMacSystemFont, system-ui, sans-serif',
+                  background: 'linear-gradient(135deg, #ffffff 0%, #ff6b6b 100%)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                  opacity: nameVisible ? 1 : 0,
+                  transform: nameVisible
+                    ? 'translateY(0) scale(1)'
+                    : 'translateY(20px) scale(0.95)',
+                  transition: 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)',
+                  animation: nameVisible ? 'nameGlow 3s ease-in-out infinite alternate' : 'none',
+                }}>
+                Parth Chandak
+              </h1>
+
+              {/* Role section right after name */}
+              <div
+                style={{
+                  fontSize: 'clamp(1.2rem, 3vw, 1.5rem)',
+                  marginBottom: '2rem',
                   fontFamily:
                     '"JetBrains Mono", "SF Mono", "Fira Code", "Cascadia Code", Consolas, monospace',
-                  transition: 'all 0.3s ease',
-                  borderRadius: '8px',
-                  whiteSpace: 'nowrap',
-                  textAlign: 'center',
-                  flexDirection: isMobile ? 'column' : 'row',
-                  gap: isMobile ? '0.1rem' : '0.5rem',
-                }}
-                onMouseEnter={e => {
-                  if (activeSection !== item.id) {
-                    e.currentTarget.style.color = '#bbb';
-                    if (isMobile) {
-                      e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
-                    }
-                  }
-                }}
-                onMouseLeave={e => {
-                  // Always reset to the correct state based on active section
-                  if (activeSection === item.id) {
-                    e.currentTarget.style.color = '#ff6b6b';
-                  } else {
-                    e.currentTarget.style.color = '#888';
-                  }
-                  if (isMobile) {
-                    e.currentTarget.style.background = 'none';
-                  }
-                }}>
-                <span
-                  style={{
-                    color: '#ff6b6b',
-                    fontSize: isMobile ? '0.5rem' : '0.75rem',
-                    fontWeight: '700',
-                    lineHeight: '1',
-                  }}>
-                  {item.number}
-                </span>
-                <span
-                  className="nav-label"
-                  style={{
-                    fontSize: isMobile ? '0.45rem' : 'inherit',
-                    lineHeight: isMobile ? '1' : 'inherit',
-                    fontWeight: isMobile ? '500' : '600',
-                  }}>
-                  {item.label}
-                </span>
-              </button>
-            ))}
-          </div>
-        </nav>
-      </div>
-
-      {/* Main Content */}
-      <div
-        className="main-content"
-        style={{
-          ...(isMobile
-            ? {
-              // Mobile: Account for top and bottom bars with proper spacing
-              marginTop: '8rem', // Account for taller grid navigation
-              marginBottom: '6rem',
-              marginLeft: '1rem',
-              marginRight: '1rem',
-            }
-            : {
-              // Desktop: Account for left and right sidebars with generous spacing
-              marginLeft: 'clamp(200px, 22vw, 280px)', // Increased from 18vw to 22vw
-              marginRight: 'clamp(120px, 12vw, 160px)', // Increased from 8vw to 12vw
-              marginTop: '2rem',
-              marginBottom: '2rem',
-            }),
-          flex: 1,
-          padding: '0 clamp(1.5rem, 4vw, 3rem)',
-        }}>
-        {/* Hero Section */}
-        <section
-          style={{
-            minHeight: '100vh',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            flexDirection: 'column',
-            textAlign: 'left',
-            maxWidth: '800px',
-            margin: '0 auto',
-          }}>
-          <div style={{ width: '100%' }}>
-            <h1
-              style={{
-                fontSize: 'clamp(3rem, 8vw, 5rem)',
-                fontWeight: '700',
-                marginBottom: '0.5rem',
-                fontFamily:
-                  '"Space Grotesk", "SF Pro Display", -apple-system, BlinkMacSystemFont, system-ui, sans-serif',
-                background: 'linear-gradient(135deg, #ffffff 0%, #ff6b6b 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-                opacity: nameVisible ? 1 : 0,
-                transform: nameVisible ? 'translateY(0) scale(1)' : 'translateY(20px) scale(0.95)',
-                transition: 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)',
-                animation: nameVisible ? 'nameGlow 3s ease-in-out infinite alternate' : 'none',
-              }}>
-              Parth Chandak
-            </h1>
-
-            {/* Role section right after name */}
-            <div
-              style={{
-                fontSize: 'clamp(1.2rem, 3vw, 1.5rem)',
-                marginBottom: '2rem',
-                fontFamily:
-                  '"JetBrains Mono", "SF Mono", "Fira Code", "Cascadia Code", Consolas, monospace',
-                color: '#ff6b6b',
-                opacity: nameVisible ? 1 : 0,
-                transform: nameVisible ? 'translateY(0)' : 'translateY(20px)',
-                transition: 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.3s',
-                minHeight: '2rem',
-              }}>
-              {roleTypewriterText}
-              <span
-                style={{
-                  opacity: isTypingRole ? 1 : 0,
-                  animation: isTypingRole ? 'blink 1s infinite' : 'none',
                   color: '#ff6b6b',
+                  opacity: nameVisible ? 1 : 0,
+                  transform: nameVisible ? 'translateY(0)' : 'translateY(20px)',
+                  transition: 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.3s',
+                  minHeight: '2rem',
                 }}>
-                _
-              </span>
-            </div>
+                {roleTypewriterText}
+                <span
+                  style={{
+                    opacity: isTypingRole ? 1 : 0,
+                    animation: isTypingRole ? 'blink 1s infinite' : 'none',
+                    color: '#ff6b6b',
+                  }}>
+                  _
+                </span>
+              </div>
 
-            {/* Description section without typewriter */}
-            <div
-              style={{
-                fontSize: 'clamp(1.1rem, 2.8vw, 1.3rem)',
-                lineHeight: 1.65,
-                color: '#e2e8f0',
-                marginBottom: '3rem',
-                fontFamily:
-                  '"Inter", "SF Pro Text", -apple-system, BlinkMacSystemFont, system-ui, sans-serif',
-                fontWeight: '400',
-                letterSpacing: '0.01em',
-                opacity: nameVisible ? 1 : 0,
-                transform: nameVisible ? 'translateY(0)' : 'translateY(20px)',
-                transition: 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.6s',
-                textShadow: '0 2px 4px rgba(0, 0, 0, 0.3)',
-              }}>
-              {staticText}
-            </div>
+              {/* Description section without typewriter */}
+              <div
+                style={{
+                  fontSize: 'clamp(1.1rem, 2.8vw, 1.3rem)',
+                  lineHeight: 1.65,
+                  color: '#e2e8f0',
+                  marginBottom: '3rem',
+                  fontFamily:
+                    '"Inter", "SF Pro Text", -apple-system, BlinkMacSystemFont, system-ui, sans-serif',
+                  fontWeight: '400',
+                  letterSpacing: '0.01em',
+                  opacity: nameVisible ? 1 : 0,
+                  transform: nameVisible ? 'translateY(0)' : 'translateY(20px)',
+                  transition: 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.6s',
+                  textShadow: '0 2px 4px rgba(0, 0, 0, 0.3)',
+                }}>
+                {staticText}
+              </div>
 
-            <div style={{ marginBottom: '3rem' }}>
-              {skillCategories.map((category, categoryIndex) => {
-                const CategoryIcon = category.categoryIcon;
-                const isCategoryHovered = hoveredCategory === categoryIndex;
+              <div style={{ marginBottom: '3rem' }}>
+                {skillCategories.map((category, categoryIndex) => {
+                  const CategoryIcon = category.categoryIcon;
+                  const isCategoryHovered = hoveredCategory === categoryIndex;
 
-                return (
-                  <div key={category.title} style={{ marginBottom: '2rem' }}>
-                    <div
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '1rem',
-                        marginBottom: '0.75rem',
-                      }}>
-                      {/* Category Icon */}
+                  return (
+                    <div key={category.title} style={{ marginBottom: '2rem' }}>
                       <div
-                        className="glass"
                         style={{
                           display: 'flex',
                           alignItems: 'center',
-                          justifyContent: 'center',
-                          width: '40px',
-                          height: '40px',
-                          borderRadius: '12px',
-                          background: isCategoryHovered
-                            ? 'rgba(255, 107, 107, 0.15)'
-                            : 'rgba(255, 255, 255, 0.05)',
-                          border: isCategoryHovered
-                            ? '1px solid rgba(255, 107, 107, 0.4)'
-                            : '1px solid rgba(255, 255, 255, 0.1)',
-                          color: isCategoryHovered ? '#ff6b6b' : '#888',
-                          cursor: 'pointer',
-                          transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                          flexShrink: 0,
-                        }}
-                        onMouseEnter={() => setHoveredCategory(categoryIndex)}
-                        onMouseLeave={() => setHoveredCategory(null)}>
-                        <CategoryIcon size={18} />
-                      </div>
-
-                      {/* Skills Container */}
-                      <div
-                        style={{
-                          display: 'flex',
-                          flexWrap: 'wrap',
-                          gap: '0.5rem',
-                          flex: 1,
+                          gap: '1rem',
+                          marginBottom: '0.75rem',
                         }}>
-                        {category.skills.map((skill, skillIndex) => {
-                          const IconComponent = skill.icon;
-                          const totalIndex = categoryIndex * 10 + skillIndex;
-                          const skillKey = `${categoryIndex}-${skillIndex}`;
-                          const showThisSkillText = skillTextStates[skillKey] ?? false;
-                          const isExpanded = isCategoryHovered || showThisSkillText;
+                        {/* Category Icon */}
+                        <div
+                          className="glass"
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            width: '40px',
+                            height: '40px',
+                            borderRadius: '12px',
+                            background: isCategoryHovered
+                              ? 'rgba(255, 107, 107, 0.15)'
+                              : 'rgba(255, 255, 255, 0.05)',
+                            border: isCategoryHovered
+                              ? '1px solid rgba(255, 107, 107, 0.4)'
+                              : '1px solid rgba(255, 255, 255, 0.1)',
+                            color: isCategoryHovered ? '#ff6b6b' : '#888',
+                            cursor: 'pointer',
+                            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                            flexShrink: 0,
+                          }}
+                          onMouseEnter={() => setHoveredCategory(categoryIndex)}
+                          onMouseLeave={() => setHoveredCategory(null)}>
+                          <CategoryIcon size={18} />
+                        </div>
 
-                          // Different colors for automatic vs hover expansion
-                          const getSkillColors = () => {
-                            if (showThisSkillText && !isCategoryHovered) {
-                              // Automatic expansion - light red
+                        {/* Skills Container */}
+                        <div
+                          style={{
+                            display: 'flex',
+                            flexWrap: 'wrap',
+                            gap: '0.5rem',
+                            flex: 1,
+                          }}>
+                          {category.skills.map((skill, skillIndex) => {
+                            const IconComponent = skill.icon;
+                            const totalIndex = categoryIndex * 10 + skillIndex;
+                            const skillKey = `${categoryIndex}-${skillIndex}`;
+                            const showThisSkillText = skillTextStates[skillKey] ?? false;
+                            const isExpanded = isCategoryHovered || showThisSkillText;
+
+                            // Different colors for automatic vs hover expansion
+                            const getSkillColors = () => {
+                              if (showThisSkillText && !isCategoryHovered) {
+                                // Automatic expansion - light red
+                                return {
+                                  background: 'rgba(255, 107, 107, 0.08)',
+                                  border: '1px solid rgba(255, 107, 107, 0.2)',
+                                  color: '#ff9999', // Light red
+                                };
+                              }
+                              // Default state
                               return {
-                                background: 'rgba(255, 107, 107, 0.08)',
-                                border: '1px solid rgba(255, 107, 107, 0.2)',
-                                color: '#ff9999', // Light red
+                                background: 'rgba(255, 255, 255, 0.05)',
+                                border: '1px solid rgba(255, 255, 255, 0.1)',
+                                color: '#cccccc',
                               };
-                            }
-                            // Default state
-                            return {
-                              background: 'rgba(255, 255, 255, 0.05)',
-                              border: '1px solid rgba(255, 255, 255, 0.1)',
-                              color: '#cccccc',
                             };
-                          };
 
-                          const currentColors = getSkillColors();
+                            const currentColors = getSkillColors();
 
-                          return (
-                            <div
-                              key={skill.name}
-                              className="glass"
-                              style={{
-                                display: 'inline-flex',
-                                alignItems: 'center',
-                                padding: '0.5rem',
-                                paddingRight: isExpanded ? '1rem' : '0.5rem',
-                                borderRadius: '20px',
-                                fontSize: '0.8rem',
-                                background: currentColors.background,
-                                border: currentColors.border,
-                                color: currentColors.color,
-                                fontFamily:
-                                  '"JetBrains Mono", "SF Mono", "Fira Code", "Cascadia Code", Consolas, monospace',
-                                animation: `fadeInUp 0.6s ease ${totalIndex * 0.1}s both`,
-                                transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-                                overflow: 'hidden',
-                                whiteSpace: 'nowrap',
-                                cursor: 'pointer',
-                                minWidth: '40px',
-                                maxWidth: isExpanded ? '200px' : '40px',
-                                width: isExpanded ? 'auto' : '40px',
-                              }}
-                              onMouseEnter={e => {
-                                // Hover state - strong red color (always the same)
-                                e.currentTarget.style.background = 'rgba(255, 107, 107, 0.15)';
-                                e.currentTarget.style.border = '1px solid rgba(255, 107, 107, 0.4)';
-                                e.currentTarget.style.color = '#ff6b6b';
-                                e.currentTarget.style.maxWidth = '200px';
-                                e.currentTarget.style.paddingRight = '1rem';
-                              }}
-                              onMouseLeave={e => {
-                                // Return to automatic state colors
-                                const colors = getSkillColors();
-                                e.currentTarget.style.background = colors.background;
-                                e.currentTarget.style.border = colors.border;
-                                e.currentTarget.style.color = colors.color;
-                                e.currentTarget.style.maxWidth = isExpanded ? '200px' : '40px';
-                                e.currentTarget.style.paddingRight = isExpanded ? '1rem' : '0.5rem';
-                              }}>
-                              <IconComponent size={16} style={{ flexShrink: 0 }} />
-                              <span
+                            return (
+                              <div
+                                key={skill.name}
+                                className="glass"
                                 style={{
-                                  marginLeft: '0.5rem',
-                                  opacity: isExpanded ? 1 : 0,
-                                  transform: isExpanded ? 'translateX(0)' : 'translateX(-10px)',
-                                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                                  display: 'inline-flex',
+                                  alignItems: 'center',
+                                  padding: '0.5rem',
+                                  paddingRight: isExpanded ? '1rem' : '0.5rem',
+                                  borderRadius: '20px',
+                                  fontSize: '0.8rem',
+                                  background: currentColors.background,
+                                  border: currentColors.border,
+                                  color: currentColors.color,
+                                  fontFamily:
+                                    '"JetBrains Mono", "SF Mono", "Fira Code", "Cascadia Code", Consolas, monospace',
+                                  animation: `fadeInUp 0.6s ease ${totalIndex * 0.1}s both`,
+                                  transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+                                  overflow: 'hidden',
                                   whiteSpace: 'nowrap',
+                                  cursor: 'pointer',
+                                  minWidth: '40px',
+                                  maxWidth: isExpanded ? '200px' : '40px',
+                                  width: isExpanded ? 'auto' : '40px',
+                                }}
+                                onMouseEnter={e => {
+                                  // Hover state - strong red color (always the same)
+                                  e.currentTarget.style.background = 'rgba(255, 107, 107, 0.15)';
+                                  e.currentTarget.style.border =
+                                    '1px solid rgba(255, 107, 107, 0.4)';
+                                  e.currentTarget.style.color = '#ff6b6b';
+                                  e.currentTarget.style.maxWidth = '200px';
+                                  e.currentTarget.style.paddingRight = '1rem';
+                                }}
+                                onMouseLeave={e => {
+                                  // Return to automatic state colors
+                                  const colors = getSkillColors();
+                                  e.currentTarget.style.background = colors.background;
+                                  e.currentTarget.style.border = colors.border;
+                                  e.currentTarget.style.color = colors.color;
+                                  e.currentTarget.style.maxWidth = isExpanded ? '200px' : '40px';
+                                  e.currentTarget.style.paddingRight = isExpanded
+                                    ? '1rem'
+                                    : '0.5rem';
                                 }}>
-                                {skill.name}
-                              </span>
-                            </div>
-                          );
-                        })}
+                                <IconComponent size={16} style={{ flexShrink: 0 }} />
+                                <span
+                                  style={{
+                                    marginLeft: '0.5rem',
+                                    opacity: isExpanded ? 1 : 0,
+                                    transform: isExpanded ? 'translateX(0)' : 'translateX(-10px)',
+                                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                                    whiteSpace: 'nowrap',
+                                  }}>
+                                  {skill.name}
+                                </span>
+                              </div>
+                            );
+                          })}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
 
-        {/* Timeline Section */}
-        <div id="timeline-section">{childrenWithProps}</div>
-      </div>
+          {/* Timeline Section */}
+          <div id="timeline-section">{childrenWithProps}</div>
+        </div>
 
-      {/* Right Social Links - Responsive */}
-      <div
-        className="right-sidebar"
-        style={{
-          position: 'fixed',
-          zIndex: 1000,
-          ...(isMobile
-            ? {
-              // Mobile: Bottom horizontal bar - proper centering with equal margins
-              bottom: '1rem',
-              left: '1rem',
-              right: '1rem',
-              width: 'auto', // Let it size naturally
-              height: 'auto',
-              padding: '1rem',
-              display: 'flex',
-              flexDirection: 'row',
-              justifyContent: 'center',
-              alignItems: 'center',
-              gap: '1.5rem',
-            }
-            : {
-              // Desktop: Right vertical bar - proper centering
-              top: '2rem',
-              right: '2rem',
-              bottom: '2rem',
-              width: 'clamp(60px, 6vw, 80px)',
-              height: 'auto',
-              padding: '2rem 1rem',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '1rem',
-            }),
-          ...getGlassStyles(isMobile),
-        }}
-        onMouseEnter={e => {
-          e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
-          e.currentTarget.style.border = '1px solid rgba(255, 255, 255, 0.12)';
-          e.currentTarget.style.transform = 'scale(1.02)';
-          e.currentTarget.style.boxShadow = `
+        {/* Right Social Links - Responsive */}
+        <div
+          className="right-sidebar"
+          style={{
+            position: 'fixed',
+            zIndex: 1000,
+            ...(isMobile
+              ? {
+                // Mobile: Bottom horizontal bar - proper centering with equal margins
+                bottom: '1rem',
+                left: '1rem',
+                right: '1rem',
+                width: 'auto', // Let it size naturally
+                height: 'auto',
+                padding: '1rem',
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignItems: 'center',
+                gap: '1.5rem',
+              }
+              : {
+                // Desktop: Right vertical bar - proper centering
+                top: '2rem',
+                right: '2rem',
+                bottom: '2rem',
+                width: 'clamp(60px, 6vw, 80px)',
+                height: 'auto',
+                padding: '2rem 1rem',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '1rem',
+              }),
+            ...getGlassStyles(isMobile),
+          }}
+          onMouseEnter={e => {
+            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
+            e.currentTarget.style.border = '1px solid rgba(255, 255, 255, 0.12)';
+            e.currentTarget.style.transform = 'scale(1.02)';
+            e.currentTarget.style.boxShadow = `
             0 25px 50px rgba(0, 0, 0, 0.5),
             0 12px 40px rgba(255, 107, 107, 0.1),
             inset 0 1px 0 rgba(255, 255, 255, 0.15),
             inset 0 -1px 0 rgba(255, 255, 255, 0.05)
           `;
-        }}
-        onMouseLeave={e => {
-          e.currentTarget.style.background = 'rgba(255, 255, 255, 0.03)';
-          e.currentTarget.style.border = '1px solid rgba(255, 255, 255, 0.08)';
-          e.currentTarget.style.transform = 'scale(1)';
-          e.currentTarget.style.boxShadow = `
+          }}
+          onMouseLeave={e => {
+            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.03)';
+            e.currentTarget.style.border = '1px solid rgba(255, 255, 255, 0.08)';
+            e.currentTarget.style.transform = 'scale(1)';
+            e.currentTarget.style.boxShadow = `
             0 20px 40px rgba(0, 0, 0, 0.4),
             0 8px 32px rgba(255, 255, 255, 0.05),
             inset 0 1px 0 rgba(255, 255, 255, 0.1),
             inset 0 -1px 0 rgba(255, 255, 255, 0.03)
           `;
-        }}>
-        {socialLinks.map(link => (
-          <a
-            key={link.name}
-            href={link.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              width: '40px',
-              height: '40px',
-              color: '#888',
-              background: 'none',
-              border: 'none',
-              borderRadius: '8px',
-              transition: 'all 0.3s ease',
-              padding: '0',
-              margin: '0',
-            }}
-            onMouseEnter={e => {
-              e.target.style.color = '#ff6b6b';
-              e.target.style.background = 'rgba(255, 255, 255, 0.05)';
-              e.target.style.transform = 'scale(1.1)';
-            }}
-            onMouseLeave={e => {
-              e.target.style.color = '#888';
-              e.target.style.background = 'none';
-              e.target.style.transform = 'scale(1)';
-            }}
-            title={link.name}>
-            {link.icon}
-          </a>
-        ))}
-      </div>
+          }}>
+          {socialLinks.map(link => (
+            <a
+              key={link.name}
+              href={link.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: '40px',
+                height: '40px',
+                color: '#888',
+                background: 'none',
+                border: 'none',
+                borderRadius: '8px',
+                transition: 'all 0.3s ease',
+                padding: '0',
+                margin: '0',
+              }}
+              onMouseEnter={e => {
+                e.target.style.color = '#ff6b6b';
+                e.target.style.background = 'rgba(255, 255, 255, 0.05)';
+                e.target.style.transform = 'scale(1.1)';
+              }}
+              onMouseLeave={e => {
+                e.target.style.color = '#888';
+                e.target.style.background = 'none';
+                e.target.style.transform = 'scale(1)';
+              }}
+              title={link.name}>
+              {link.icon}
+            </a>
+          ))}
+        </div>
 
-      {/* Custom CSS for animations */}
-      <style jsx>{`
+        {/* Custom CSS for animations */}
+        <style jsx>{`
         @keyframes blink {
           0%,
           50% {
@@ -1069,7 +1083,8 @@ const PortfolioLayout = ({ children }) => {
           }
         }
       `}</style>
-    </div>
+      </div>
+    </>
   );
 };
 
