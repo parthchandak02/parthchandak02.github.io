@@ -52,7 +52,7 @@ const GlobalStyles = () => {
 
     body {
       font-family: var(--font-body);
-      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #000000 100%) !important;
+      background: #000000 !important;
       background-color: #000000 !important;
       color: var(--text-primary);
       line-height: 1.65;
@@ -62,6 +62,8 @@ const GlobalStyles = () => {
       text-rendering: optimizeLegibility;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
+      /* 🎯 OVERSCROLL BEHAVIOR - Disable vertical bounce while preserving horizontal navigation */
+      overscroll-behavior-y: none;
       /* 🎯 SAFARI MOBILE WHITE PADDING FIX - Use dvh for seamless viewport */
       min-height: 100vh; /* Fallback for older browsers */
       min-height: -webkit-fill-available;
@@ -81,7 +83,7 @@ const GlobalStyles = () => {
       left: -200vw;
       right: -200vw;
       bottom: -200vh;
-      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #000000 100%);
+      background: #000000;
       z-index: -9998;
       pointer-events: none;
     }
@@ -180,7 +182,7 @@ const GlobalStyles = () => {
       left: -100vw;
       right: -100vw;
       bottom: -100vh;
-      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #000000 100%);
+      background: #000000;
       z-index: -9999;
       pointer-events: none;
     }
@@ -194,7 +196,7 @@ const GlobalStyles = () => {
     .main-container {
       min-height: 100vh; /* Fallback for older browsers */
       min-height: 100dvh; /* Dynamic viewport height - fixes Safari mobile white padding */
-      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #000000 100%) !important;
+      background: #000000 !important;
       margin: 0;
       padding: 0;
     }
@@ -257,7 +259,9 @@ const GlobalStyles = () => {
         min-height: calc(100% + env(safe-area-inset-top));
         min-height: 300vh; /* Extra height for seamless overscroll experience */
         padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
-        background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #000000 100%) !important;
+        background: #000000 !important;
+        /* 🎯 OVERSCROLL BEHAVIOR - Disable vertical bounce while preserving horizontal navigation */
+        overscroll-behavior-y: none;
       }
 
       /* Mobile-specific background extension for overscroll areas */
@@ -268,7 +272,7 @@ const GlobalStyles = () => {
         left: -100vw;
         right: -100vw;
         bottom: -300vh;
-        background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #000000 100%);
+        background: #000000;
         z-index: -9997;
         pointer-events: none;
       }
