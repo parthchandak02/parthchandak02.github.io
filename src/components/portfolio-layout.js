@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
+import { initScrollBounceProtection } from '../utils/preventScrollBounce';
 import {
   SiPython,
   SiJavascript,
@@ -21,7 +22,7 @@ const PortfolioLayout = ({ children }) => {
   const [activeSection, setActiveSection] = useState('about');
   const [isMobile, setIsMobile] = useState(false);
 
-  // Check if device is mobile/tablet
+  // Check if device is mobile/tablet and initialize scroll bounce protection
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth <= 768);
@@ -32,6 +33,9 @@ const PortfolioLayout = ({ children }) => {
     const handleResize = () => {
       checkMobile();
     };
+
+    // 🚫 Initialize scroll bounce protection to prevent Safari mobile white space issue
+    initScrollBounceProtection();
 
     window.addEventListener('resize', handleResize);
 

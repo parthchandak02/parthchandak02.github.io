@@ -82,6 +82,9 @@ const GlobalStyles = () => {
       min-height: 100vh; /* Fallback for older browsers */
       min-height: -webkit-fill-available;
       min-height: 100dvh; /* Dynamic viewport height - fixes Safari mobile white padding */
+      /* 🚫 PREVENT SCROLL BOUNCE & WHITE SPACE SCROLLING */
+      overscroll-behavior: none; /* Prevents scroll chaining and bounce effects */
+      overscroll-behavior-y: none; /* Specifically prevents vertical scroll bounce */
       /* Ensure dark background fallbacks */
       background-color: #000000 !important;
       margin: 0;
@@ -167,6 +170,8 @@ const GlobalStyles = () => {
       background: #000000 !important;
       min-height: 100vh; /* Fallback for older browsers */
       min-height: 100dvh; /* Dynamic viewport height - fixes Safari mobile white padding */
+      /* 🚫 PREVENT SCROLL BOUNCE & WHITE SPACE SCROLLING */
+      overscroll-behavior: none; /* Prevents scroll chaining and bounce effects */
       margin: 0;
       padding: 0;
     }
