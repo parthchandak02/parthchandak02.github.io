@@ -8,5 +8,6 @@ export { default as GlassRefractionFilters } from './GlassRefractionFilters';
 export { default as LiquidGlass, LiquidGlassPresets } from './LiquidGlass';
 export { default as LiquidGlassDemo } from './LiquidGlassDemo';
 export { default as LiquidGlassScrollDemo } from './LiquidGlassScrollDemo';
+export { default as TagsDisplay } from './TagsDisplay';
 export { default as TypewriterText } from './TypewriterText';
 export type { TimelineItem } from './GlassTimeline'; 
