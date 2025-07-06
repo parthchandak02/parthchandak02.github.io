@@ -32,17 +32,10 @@ export const metadata: Metadata = {
   title: "Parth Chandak | Portfolio",
   description: "Interactive portfolio showcasing engineering, research, and creative work",
   icons: {
-    icon: [
-      {
-        url: '/favicon.svg',
-        type: 'image/svg+xml',
-      },
-      {
-        url: '/favicon.ico',
-        sizes: '32x32',
-        type: 'image/x-icon',
-      }
-    ],
+    icon: {
+      url: '/favicon.svg',
+      type: 'image/svg+xml',
+    },
     apple: {
       url: '/favicon.svg',
       type: 'image/svg+xml',
