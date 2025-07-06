@@ -13,110 +13,46 @@ import {
 } from '../lib/contentLoader';
 import TypewriterText from '../components/TypewriterText';
 import LiquidGlass, { LiquidGlassPresets } from '../components/LiquidGlass';
+import { portfolioData } from '../content/portfolio-data';
 
-// Static data - this will be populated at build time
-const STATIC_CONTENT_ITEMS: ContentItem[] = [
-  // This will be populated with actual content during build
-  // For now, we'll use placeholder data that will be replaced
-];
+// Convert portfolio data to ContentItem format
+const convertTimelineToContentItems = (timeline: any[]): ContentItem[] => {
+  return timeline.map((item, index) => ({
+    id: item.id,
+    title: item.title,
+    company: item.company,
+    location: item.location,
+    date: item.date,
+    description: item.description,
+    category: item.type.charAt(0).toUpperCase() + item.type.slice(1), // Convert type to category
+    type: item.type,
+    icon: item.icon,
+    order: index,
+    technologies: item.technologies || [],
+    color: item.color || '#E53E3E',
+    link: item.link,
+    iconOverride: item.logo ? item.logo.replace('/logos/', 'company-logos/') : undefined,
+    image: undefined, // Add if you have project images
+    content: item.description
+  }));
+};
 
-const STATIC_NAVIGATION_ITEMS: NavigationItem[] = [
-  {
-    id: 'about',
-    label: 'About',
-    icon: 'UserIcon',
-    section: 'about',
-    folder: '00_about',
-    color: '#E53E3E'
-  },
-  {
-    id: 'experience',
-    label: 'Experience',
-    icon: 'BriefcaseIcon',
-    section: 'experience',
-    folder: '01_experience',
-    color: '#E53E3E'
-  },
-  {
-    id: 'projects',
-    label: 'Projects',
-    icon: 'RocketLaunchIcon',
-    section: 'projects',
-    folder: '02_projects',
-    color: '#E53E3E'
-  },
-  {
-    id: 'research',
-    label: 'Research',
-    icon: 'BeakerIcon',
-    section: 'research',
-    folder: '03_research',
-    color: '#E53E3E'
-  },
-  {
-    id: 'awards',
-    label: 'Awards',
-    icon: 'TrophyIcon',
-    section: 'awards',
-    folder: '04_awards',
-    color: '#E53E3E'
-  },
-  {
-    id: 'community',
-    label: 'Community',
-    icon: 'UsersIcon',
-    section: 'community',
-    folder: '05_community',
-    color: '#E53E3E'
-  },
-  {
-    id: 'media',
-    label: 'Media',
-    icon: 'FilmIcon',
-    section: 'media',
-    folder: '06_media',
-    color: '#E53E3E'
-  },
-  {
-    id: 'contact',
-    label: 'Contact',
-    icon: 'EnvelopeIcon',
-    section: 'contact',
-    folder: '07_contact',
-    color: '#E53E3E'
-  }
-];
+// Static data using portfolio-data.ts
+const STATIC_CONTENT_ITEMS: ContentItem[] = convertTimelineToContentItems(portfolioData.timeline);
 
-const STATIC_SOCIAL_MEDIA_ITEMS: SocialMediaItem[] = [
-  {
-    id: 'linkedin',
-    label: 'LinkedIn',
-    icon: 'linkedin',
-    url: 'https://linkedin.com/in/username',
-    color: '#0077B5'
-  },
-  {
-    id: 'github',
-    label: 'GitHub',
-    icon: 'github',
-    url: 'https://github.com/username',
-    color: '#333'
-  },
-  {
-    id: 'email',
-    label: 'Email',
-    icon: 'EnvelopeIcon',
-    url: 'mailto:your.email@example.com',
-    color: '#EF4444'
-  },
-  {
-    id: 'calendar',
-    label: 'Schedule Call',
-    icon: 'CalendarDaysIcon',
-    url: 'https://calendly.com/username',
-    color: '#06B6D4'
-  }
-];
+const STATIC_NAVIGATION_ITEMS: NavigationItem[] = portfolioData.navigation.map(item => ({
+  id: item.id,
+  label: item.label,
+  icon: item.icon,
+  section: item.section,
+  folder: `0${portfolioData.navigation.indexOf(item)}_${item.section}`,
+  color: item.color || '#E53E3E'
+}));
+
+const STATIC_SOCIAL_MEDIA_ITEMS: SocialMediaItem[] = portfolioData.socialMedia.map(item => ({
+  ...item,
+  color: item.color || '#E53E3E' // Ensure color is always defined
+}));
 
 const STATIC_ABOUT_DATA: AboutData = {
   title: 'About',
@@ -146,51 +82,11 @@ function PortfolioContent() {
   const [aboutData, setAboutData] = useState<AboutData | null>(STATIC_ABOUT_DATA);
   const [loading, setLoading] = useState(false);
 
-  // Load dynamic content if available (for development mode)
+  // For static export, we don't need to load dynamic data
+  // All data is already loaded from portfolio-data.ts
   useEffect(() => {
-    const loadDynamicData = async () => {
-      try {
-        // Try to fetch from API routes if available (development mode)
-        const responses = await Promise.allSettled([
-          fetch('/api/content'),
-          fetch('/api/navigation'),
-          fetch('/api/social'),
-          fetch('/api/about')
-        ]);
-
-        const [contentResponse, navResponse, socialResponse, aboutResponse] = responses;
-
-        if (contentResponse.status === 'fulfilled' && contentResponse.value.ok) {
-          const contentData = await contentResponse.value.json();
-          if (contentData.items) {
-            setAllContentItems(contentData.items);
-          }
-        }
-
-        if (navResponse.status === 'fulfilled' && navResponse.value.ok) {
-          const navData = await navResponse.value.json();
-          if (navData.items) {
-            setNavigationItems(navData.items);
-          }
-        }
-
-        if (socialResponse.status === 'fulfilled' && socialResponse.value.ok) {
-          const socialData = await socialResponse.value.json();
-          if (socialData.items) {
-            setSocialMediaItems(socialData.items);
-          }
-        }
-
-        if (aboutResponse.status === 'fulfilled' && aboutResponse.value.ok) {
-          const aboutData = await aboutResponse.value.json();
-          setAboutData(aboutData);
-        }
-      } catch (error) {
-        console.log('API routes not available, using static data');
-      }
-    };
-
-    loadDynamicData();
+    // Static data is already loaded, no need to fetch from API
+    console.log('Using static data from portfolio-data.ts');
   }, []);
 
   // Filter content items based on current filter
