@@ -86,9 +86,9 @@ export const RightSocialBar: React.FC<RightSocialBarProps> = ({
                 onClick={() => handleLinkClick(item.url)}
                 className="
                   relative rounded-xl transition-all duration-300
-                  text-white/70 hover:text-white hover:bg-red-500/20
-                  hover:scale-110 transform
-                  group flex-shrink-0
+                  text-white/80 hover:text-white hover:bg-white/10
+                  hover:scale-105 transform
+                  flex-shrink-0
                   /* Mobile: compact padding for pill shape */
                   p-2
                   /* Desktop: larger padding */
