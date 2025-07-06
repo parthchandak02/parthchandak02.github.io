@@ -166,13 +166,13 @@ function PortfolioContent() {
                 className="p-8 md:p-12 rounded-3xl mb-8"
               >
                 <div className="text-center">
-                  <div className="text-2xl md:text-3xl text-white/80 mb-4">
+                  <div className="text-2xl md:text-3xl text-white/80 mb-4 font-secondary">
                     Hi, my name is
                   </div>
-                  <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 animate-fade-in">
+                  <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 animate-fade-in font-title">
                     Parth Chandak
                   </h1>
-                  <div className="text-xl md:text-2xl text-white/90 mb-8 leading-relaxed">
+                  <div className="text-xl md:text-2xl text-white/90 mb-8 leading-relaxed font-secondary">
                     I am a{' '}
                     <TypewriterText
                       roles={[
@@ -183,7 +183,7 @@ function PortfolioContent() {
                         'Innovator',
                         'Problem Solver'
                       ]}
-                      className="text-white font-medium"
+                      className="text-white font-medium font-secondary"
                     />
                   </div>
                 </div>
@@ -193,20 +193,20 @@ function PortfolioContent() {
                   <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
                     {aboutData?.tags && Object.entries(aboutData.tags).map(([category, items]) => (
                       <div key={category} className="bg-white/5 backdrop-blur-sm rounded-xl p-3 border border-white/10">
-                        <h3 className="text-sm font-medium text-white/90 mb-2 capitalize">
+                        <h3 className="text-sm font-medium text-white/90 mb-2 capitalize font-title">
                           {category.replace('_', ' ')}
                         </h3>
                         <div className="flex flex-wrap gap-1">
                           {items.slice(0, 3).map((item, index) => (
                             <span
                               key={index}
-                              className="px-2 py-1 text-xs bg-white/10 text-white/80 rounded-full"
+                              className="px-2 py-1 text-xs bg-white/10 text-white/80 rounded-full font-navigation"
                             >
                               {item}
                             </span>
                           ))}
                           {items.length > 3 && (
-                            <span className="px-2 py-1 text-xs bg-white/10 text-white/80 rounded-full">
+                            <span className="px-2 py-1 text-xs bg-white/10 text-white/80 rounded-full font-navigation">
                               +{items.length - 3}
                             </span>
                           )}
@@ -217,26 +217,26 @@ function PortfolioContent() {
                 </div>
 
                 {/* About Content */}
-                <div className="text-white/80 text-lg leading-relaxed mb-8 max-w-3xl mx-auto">
+                <div className="text-white/80 text-lg leading-relaxed mb-8 max-w-3xl mx-auto font-secondary">
                   <p className="mb-4">
                     {aboutData?.description}
                   </p>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
                     <div>
-                      <h3 className="text-white font-medium mb-2">Current Position</h3>
-                      <p className="text-white/70">{aboutData?.currentPosition}</p>
+                      <h3 className="text-white font-medium mb-2 font-title">Current Position</h3>
+                      <p className="text-white/70 font-secondary">{aboutData?.currentPosition}</p>
                     </div>
                     <div>
-                      <h3 className="text-white font-medium mb-2">Location</h3>
-                      <p className="text-white/70">{aboutData?.location}</p>
+                      <h3 className="text-white font-medium mb-2 font-title">Location</h3>
+                      <p className="text-white/70 font-secondary">{aboutData?.location}</p>
                     </div>
                     <div>
-                      <h3 className="text-white font-medium mb-2">Languages</h3>
-                      <p className="text-white/70">{aboutData?.languages.join(', ')}</p>
+                      <h3 className="text-white font-medium mb-2 font-title">Languages</h3>
+                      <p className="text-white/70 font-secondary">{aboutData?.languages.join(', ')}</p>
                     </div>
                     <div>
-                      <h3 className="text-white font-medium mb-2">Education</h3>
-                      <p className="text-white/70">{aboutData?.education.join(', ')}</p>
+                      <h3 className="text-white font-medium mb-2 font-title">Education</h3>
+                      <p className="text-white/70 font-secondary">{aboutData?.education.join(', ')}</p>
                     </div>
                   </div>
                 </div>
@@ -245,13 +245,13 @@ function PortfolioContent() {
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <button 
                     onClick={() => handleSectionClick('timeline')}
-                    className="px-8 py-3 bg-white/10 text-white rounded-full hover:bg-white/20 transition-all duration-300 backdrop-blur-sm"
+                    className="px-8 py-3 bg-white/10 text-white rounded-full hover:bg-white/20 transition-all duration-300 backdrop-blur-sm font-navigation"
                   >
                     View My Work
                   </button>
                   <button 
                     onClick={() => handleSectionClick('contact')}
-                    className="px-8 py-3 bg-white/10 text-white rounded-full hover:bg-white/20 transition-all duration-300 backdrop-blur-sm"
+                    className="px-8 py-3 bg-white/10 text-white rounded-full hover:bg-white/20 transition-all duration-300 backdrop-blur-sm font-navigation"
                   >
                     Get In Touch
                   </button>
@@ -276,10 +276,10 @@ function PortfolioContent() {
                 {...LiquidGlassPresets.primary}
                 className="p-8 md:p-12 rounded-3xl"
               >
-                <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
+                <h2 className="text-3xl md:text-4xl font-bold text-white mb-6 font-title">
                   Let&apos;s Work Together
                 </h2>
-                <p className="text-white/80 text-lg mb-8 max-w-2xl mx-auto">
+                <p className="text-white/80 text-lg mb-8 max-w-2xl mx-auto font-secondary">
                   I&apos;m always interested in new opportunities and collaborations. 
                   Whether you have a project in mind or just want to connect, 
                   I&apos;d love to hear from you.
@@ -287,13 +287,13 @@ function PortfolioContent() {
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <button 
                     onClick={() => window.open('mailto:your.email@example.com')}
-                    className="px-8 py-3 bg-white/10 text-white rounded-full hover:bg-white/20 transition-all duration-300 backdrop-blur-sm"
+                    className="px-8 py-3 bg-white/10 text-white rounded-full hover:bg-white/20 transition-all duration-300 backdrop-blur-sm font-navigation"
                   >
                     Send Email
                   </button>
                   <button 
                     onClick={() => window.open('https://calendly.com/username')}
-                    className="px-8 py-3 bg-white/10 text-white rounded-full hover:bg-white/20 transition-all duration-300 backdrop-blur-sm"
+                    className="px-8 py-3 bg-white/10 text-white rounded-full hover:bg-white/20 transition-all duration-300 backdrop-blur-sm font-navigation"
                   >
                     Schedule Call
                   </button>

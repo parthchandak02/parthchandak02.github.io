@@ -62,7 +62,7 @@ export const LeftNavigation: React.FC<LeftNavigationProps> = ({
                   }`}
                 >
                   <IconComponent className="w-5 h-5 flex-shrink-0" />
-                  <span className="text-sm font-medium truncate">{item.label}</span>
+                  <span className="text-sm font-medium truncate font-navigation">{item.label}</span>
                 </button>
               );
             })}
@@ -92,7 +92,7 @@ export const LeftNavigation: React.FC<LeftNavigationProps> = ({
                   }`}
                 >
                   <IconComponent className="w-4 h-4 flex-shrink-0" />
-                  <span className="text-xs font-medium text-center leading-tight">
+                  <span className="text-xs font-medium text-center leading-tight font-navigation">
                     {item.label}
                   </span>
                 </button>
