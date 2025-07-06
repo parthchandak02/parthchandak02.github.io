@@ -227,20 +227,17 @@ const TimelineCard: React.FC<{ item: ContentItem; isLast: boolean }> = ({ item, 
           </div>
           
           {/* Caret Indicator - Bottom Center */}
-          <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 transition-all duration-300 ease-in-out">
-            <div className="flex items-center justify-center w-8 h-8 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 transition-all duration-200">
-              {/* Mobile: Show based on isExpanded state, Desktop: Show based on both isExpanded and group hover */}
-              <div className="md:block">
-                {isExpanded ? (
-                  <ChevronUpIcon className="w-4 h-4 text-white/80 transition-transform duration-300" />
-                ) : (
-                  <ChevronDownIcon className="w-4 h-4 text-white/80 transition-transform duration-300" />
-                )}
-              </div>
-              {/* Desktop hover state - shown when card is hovered but not explicitly expanded */}
-              <div className="hidden md:group-hover:block md:block">
-                <ChevronUpIcon className="w-4 h-4 text-white/80 transition-transform duration-300 md:group-hover:opacity-100 md:opacity-0" />
-              </div>
+          <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 transition-all duration-300 ease-in-out pointer-events-none">
+            <div className="flex items-center justify-center w-8 h-8 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 transition-all duration-200">
+              {/* Show up caret when expanded (mobile) or on hover (desktop) */}
+              <ChevronUpIcon className={`w-4 h-4 text-white/80 transition-all duration-300 absolute ${
+                isExpanded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
+              } md:group-hover:opacity-100 md:group-hover:translate-y-0`} />
+              
+              {/* Show down caret when collapsed and not hovered */}
+              <ChevronDownIcon className={`w-4 h-4 text-white/80 transition-all duration-300 absolute ${
+                !isExpanded ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2'
+              } md:group-hover:opacity-0 md:group-hover:-translate-y-2`} />
             </div>
           </div>
         </LiquidGlass>
