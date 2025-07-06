@@ -7,7 +7,6 @@ import {
 } from '@heroicons/react/24/outline';
 import LiquidGlass, { LiquidGlassPresets } from './LiquidGlass';
 import { SocialMediaItem } from '../lib/contentLoader';
-import { theme } from '../lib/theme';
 
 interface RightSocialBarProps {
   items: SocialMediaItem[];

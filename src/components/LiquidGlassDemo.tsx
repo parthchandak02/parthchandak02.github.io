@@ -25,7 +25,7 @@ export default function LiquidGlassDemo() {
   const presetKeys = Object.keys(LiquidGlassPresets) as (keyof typeof LiquidGlassPresets)[];
 
   return (
-    <BackgroundProvider defaultType="abstract">
+    <BackgroundProvider>
       <div className="min-h-screen flex items-center justify-center p-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl w-full">
           

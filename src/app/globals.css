@@ -625,3 +625,168 @@ html {
 .timeline-card span {
   will-change: font-size;
 }
+
+/* Mobile-specific timeline improvements */
+@media (max-width: 768px) {
+  /* Timeline card mobile optimizations */
+  .timeline-card {
+    margin-bottom: 1rem;
+    min-height: 100px;
+    padding: 0.75rem;
+  }
+  
+  .timeline-card h3 {
+    font-size: 1rem;
+    line-height: 1.4;
+    margin-bottom: 0.5rem;
+  }
+  
+  .timeline-card p {
+    font-size: 0.875rem;
+    line-height: 1.4;
+  }
+  
+  /* Improve text readability on mobile */
+  .timeline-card .expandable-content {
+    padding-top: 0.5rem;
+  }
+  
+  .timeline-card .expandable-content p {
+    font-size: 0.875rem;
+    line-height: 1.5;
+  }
+  
+  /* Glass icon container mobile sizing */
+  .glass-icon-container {
+    width: 48px;
+    height: 48px;
+  }
+  
+  /* Reduce spacing between timeline items on mobile */
+  .timeline-card + .timeline-card {
+    margin-top: 1rem;
+  }
+}
+
+/* Line clamp utilities for text truncation */
+.line-clamp-1 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+}
+
+.line-clamp-2 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.line-clamp-3 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+.line-clamp-none {
+  overflow: visible;
+  display: block;
+  -webkit-line-clamp: none;
+  -webkit-box-orient: unset;
+}
+
+/* Enhanced mobile touch targets */
+@media (max-width: 768px) {
+  .timeline-card {
+    cursor: pointer;
+    -webkit-tap-highlight-color: rgba(255, 255, 255, 0.1);
+    tap-highlight-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  /* Improve touch feedback */
+  .timeline-card:active {
+    transform: scale(0.98);
+    transition: transform 0.1s ease;
+  }
+  
+  /* Ensure sufficient spacing for touch targets */
+  .timeline-card {
+    min-height: 120px;
+    margin-bottom: 1.5rem;
+  }
+  
+  /* Text sizing adjustments for mobile readability */
+  .timeline-card h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+  
+  .timeline-card .text-white\/90 {
+    font-size: 0.9rem;
+  }
+  
+  .timeline-card .text-white\/70 {
+    font-size: 0.8rem;
+  }
+}
+
+/* Improved mobile layout for timeline structure */
+@media (max-width: 480px) {
+  .timeline-card {
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+  }
+  
+  .timeline-card h3 {
+    font-size: 1rem;
+  }
+  
+  .timeline-card p {
+    font-size: 0.85rem;
+  }
+  
+  /* Smaller icons for very small screens */
+  .glass-icon-container {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+/* About section responsive spacing */
+#about {
+  /* Ensure proper spacing from navigation elements */
+  scroll-margin-top: 2rem;
+}
+
+/* Mobile navigation clearance */
+@media (max-width: 1023px) {
+  #about {
+    /* Mobile navigation is at top, need more padding */
+    min-height: calc(100vh - 10rem) !important;
+    padding-top: 10rem !important;
+  }
+}
+
+/* Desktop navigation clearance */  
+@media (min-width: 1024px) {
+  #about {
+    /* Desktop navigation is on left side, less top padding needed */
+    min-height: calc(100vh - 6rem) !important;
+    padding-top: 6rem !important;
+  }
+}
+
+/* Smooth scroll behavior for section transitions */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  #about,
+  #timeline,
+  #contact {
+    scroll-margin-top: 2rem;
+  }
+}

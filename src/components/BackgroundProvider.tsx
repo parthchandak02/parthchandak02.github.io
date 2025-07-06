@@ -3,7 +3,8 @@
 import React, { createContext, useContext, useEffect } from 'react';
 
 interface BackgroundContextType {
-  // Keep interface for compatibility but simplify implementation
+  // Simplified background context for glass morphism effect
+  initialized: boolean;
 }
 
 const BackgroundContext = createContext<BackgroundContextType | undefined>(undefined);
@@ -57,7 +58,7 @@ export function BackgroundProvider({ children }: BackgroundProviderProps) {
   }, []);
 
   return (
-    <BackgroundContext.Provider value={{}}>
+    <BackgroundContext.Provider value={{ initialized: true }}>
       {children}
     </BackgroundContext.Provider>
   );

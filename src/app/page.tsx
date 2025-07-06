@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { BackgroundProvider, useBackground } from '../components/BackgroundProvider';
+import { BackgroundProvider } from '../components/BackgroundProvider';
 import { PortfolioTimeline } from '../components/PortfolioTimeline';
 import { LeftNavigation } from '../components/LeftNavigation';
 import { RightSocialBar } from '../components/RightSocialBar';
@@ -9,7 +9,6 @@ import {
   getAllContentItems, 
   getNavigationItems, 
   getSocialMediaItems,
-  getContentItemsByType,
   ContentItem,
   NavigationItem,
   SocialMediaItem
@@ -282,12 +281,12 @@ function PortfolioContent() {
                 className="p-8 md:p-12 rounded-3xl"
               >
                 <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-                  Let's Work Together
+                  Let&apos;s Work Together
                 </h2>
                 <p className="text-white/80 text-lg mb-8 max-w-2xl mx-auto">
-                  I'm always interested in new opportunities and collaborations. 
+                  I&apos;m always interested in new opportunities and collaborations. 
                   Whether you have a project in mind or just want to connect, 
-                  I'd love to hear from you.
+                  I&apos;d love to hear from you.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <button 

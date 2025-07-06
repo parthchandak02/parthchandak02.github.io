@@ -13,7 +13,6 @@ import {
 } from '@heroicons/react/24/outline';
 import LiquidGlass, { LiquidGlassPresets } from './LiquidGlass';
 import { NavigationItem } from '../lib/contentLoader';
-import { theme } from '../lib/theme';
 
 interface LeftNavigationProps {
   items: NavigationItem[];

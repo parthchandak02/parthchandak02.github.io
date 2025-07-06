@@ -15,7 +15,7 @@ export interface ContentItem {
   color?: string;
   link?: string;
   image?: string;
-  companyLogo?: string;
+  iconOverride?: string;
   subtitle?: string;
   content?: string;
 }
