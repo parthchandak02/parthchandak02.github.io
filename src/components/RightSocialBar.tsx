@@ -94,22 +94,8 @@ export const RightSocialBar: React.FC<RightSocialBarProps> = ({
                   /* Desktop: larger padding */
                   lg:p-3
                 "
-                title={item.label}
               >
                 <IconComponent className="w-5 h-5 lg:w-6 lg:h-6" />
-                
-                {/* Tooltip only on desktop */}
-                <div className="
-                  absolute z-10 px-2 py-1 text-xs bg-black/80 text-white rounded
-                  opacity-0 group-hover:opacity-100 transition-opacity duration-200
-                  pointer-events-none whitespace-nowrap
-                  /* Position tooltip appropriately for desktop */
-                  hidden lg:block
-                  -left-16 top-1/2 transform -translate-y-1/2
-                ">
-                  {item.label}
-                  <div className="absolute top-1/2 -right-1 transform -translate-y-1/2 w-2 h-2 bg-black/80 rotate-45"></div>
-                </div>
               </button>
             );
           })}
