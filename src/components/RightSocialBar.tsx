@@ -3,7 +3,8 @@
 import React from 'react';
 import { 
   EnvelopeIcon, 
-  CalendarDaysIcon 
+  CalendarDaysIcon,
+  DocumentTextIcon
 } from '@heroicons/react/24/outline';
 import LiquidGlass, { LiquidGlassPresets } from './LiquidGlass';
 import { SocialMediaItem } from '../lib/contentLoader';
@@ -16,6 +17,7 @@ interface RightSocialBarProps {
 const iconMap = {
   EnvelopeIcon,
   CalendarDaysIcon,
+  DocumentTextIcon,
 };
 
 // Custom LinkedIn and GitHub icons as SVG

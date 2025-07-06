@@ -13,29 +13,36 @@ const SOCIAL_MEDIA_CONFIG: SocialMediaItem[] = [
     id: 'linkedin',
     label: 'LinkedIn',
     icon: 'linkedin',
-    url: 'https://linkedin.com/in/username',
+    url: 'https://linkedin.com/in/parthchandak02',
     color: '#0077B5'
   },
   {
     id: 'github',
     label: 'GitHub',
     icon: 'github',
-    url: 'https://github.com/username',
+    url: 'https://github.com/parthchandak02',
     color: '#333'
   },
   {
     id: 'email',
     label: 'Email',
     icon: 'EnvelopeIcon',
-    url: 'mailto:your.email@example.com',
+    url: 'mailto:parth.chandak02@gmail.com',
     color: '#EF4444'
   },
   {
     id: 'calendar',
     label: 'Schedule Call',
     icon: 'CalendarDaysIcon',
-    url: 'https://calendly.com/username',
+    url: 'http://tiny.cc/parthchandakbook',
     color: '#06B6D4'
+  },
+  {
+    id: 'resume',
+    label: 'Resume',
+    icon: 'DocumentTextIcon',
+    url: 'https://tiny.cc/parthchandakresume',
+    color: '#8B5CF6'
   }
 ];
 
