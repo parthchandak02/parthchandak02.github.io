@@ -15,15 +15,21 @@ import TypewriterText from '../components/TypewriterText';
 import LiquidGlass, { LiquidGlassPresets } from '../components/LiquidGlass';
 import TagsDisplay from '../components/TagsDisplay';
 import { portfolioData } from '../content/portfolio-data';
+import { getOrganizedTimeline, organizeTimelineData } from '../utils/organizePortfolioData';
 import { ChevronDownIcon } from '@heroicons/react/24/outline';
 
-// Transform portfolio data to match ContentItem interface
-const STATIC_CONTENT_ITEMS: ContentItem[] = portfolioData.timeline.map(item => ({
-  ...item,
-  category: item.type.charAt(0).toUpperCase() + item.type.slice(1), // Convert 'experience' -> 'Experience'
-  order: item.order || 0, // Use order from data or default to 0
-  content: item.content || item.description, // Use content if available, fallback to description
-}));
+// Transform and organize portfolio data by category and date
+const STATIC_CONTENT_ITEMS: ContentItem[] = getOrganizedTimeline(
+  portfolioData.timeline.map(item => ({
+    ...item,
+    category: item.type.charAt(0).toUpperCase() + item.type.slice(1), // Convert 'experience' -> 'Experience'
+    order: item.order || 0, // Use order from data or default to 0
+    content: item.content || item.description, // Use content if available, fallback to description
+  }))
+);
+
+// Get organized data for grouped display
+const ORGANIZED_TIMELINE_DATA = organizeTimelineData(STATIC_CONTENT_ITEMS);
 
 
 
@@ -98,21 +104,12 @@ function PortfolioContent() {
     console.log('Content types available:', [...new Set(allContentItems.map(item => item.type))]);
   }, []);
 
-  // Filter content items based on current filter
-  const getFilteredItems = () => {
-    if (filteredType === 'all') {
-      return allContentItems;
-    }
-    return allContentItems.filter(item => item.type === filteredType);
-  };
-
-  // Get unique types for filtering
+  // Get unique types for filtering (now using organized data)
   const getUniqueTypes = () => {
-    const types = allContentItems.map(item => item.type);
-    return [...new Set(types)];
+    return ['experience', 'projects', 'research', 'awards', 'community', 'media'];
   };
 
-  // Intersection Observer for section detection
+  // Intersection Observer for main sections (about, contact)
   useEffect(() => {
     const observerOptions = {
       root: null,
@@ -123,12 +120,16 @@ function PortfolioContent() {
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          setActiveSection(entry.target.id);
+          // Only handle main sections (about, contact), timeline sections handled by PortfolioTimeline
+          const sectionId = entry.target.id;
+          if (sectionId === 'about' || sectionId === 'contact') {
+            setActiveSection(sectionId);
+          }
         }
       });
     }, observerOptions);
 
-    const sections = document.querySelectorAll('section[id]');
+    const sections = document.querySelectorAll('section[id="about"], section[id="contact"]');
     sections.forEach((section) => observer.observe(section));
 
     return () => {
@@ -136,30 +137,31 @@ function PortfolioContent() {
     };
   }, []);
 
-  const handleSectionClick = (sectionId: string) => {
+    const handleSectionClick = (sectionId: string) => {
     setActiveSection(sectionId);
     
-    // Map navigation sections to timeline item types for filtering
-    const sectionToTypeMap: { [key: string]: string } = {
-      'experience': 'experience',
-      'projects': 'project',
-      'research': 'research', 
-      'awards': 'award',
-      'community': 'community',
-      'media': 'media'
-    };
+    // Timeline sections are in the timeline section, so we need to scroll to them
+    const timelineTypes = ['experience', 'projects', 'research', 'awards', 'community', 'media'];
     
-    // Update filter based on selected section
-    if (sectionToTypeMap[sectionId]) {
-      setFilteredType(sectionToTypeMap[sectionId]);
-    } else {
-      // For 'about' and 'contact', show all items
+    if (timelineTypes.includes(sectionId)) {
+      // For timeline sections, reset filter to show all and scroll to specific section
       setFilteredType('all');
-    }
-    
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+      
+      // Wait for the timeline to render with all sections, then scroll to the specific section
+      setTimeout(() => {
+        const element = document.getElementById(sectionId);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 100);
+    } else {
+      // For non-timeline sections (about, contact), show all items
+      setFilteredType('all');
+      
+      const element = document.getElementById(sectionId);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
     }
   };
 
@@ -199,15 +201,15 @@ function PortfolioContent() {
                 Parth Chandak
               </h1>
               <div className="text-xl md:text-2xl text-white/90 mb-12 leading-relaxed font-secondary">
-                I am a{' '}
+                I am {' '}
                 <TypewriterText
                   roles={[
-                    'Creative Technologist',
-                    'Engineer',
-                    'Researcher',
-                    'Team Leader',
-                    'Innovator',
-                    'Problem Solver'
+                    'a Creative Technologist',
+                    'an Engineer',
+                    'a Researcher',
+                    'a Team Leader',
+                    'an Innovator',
+                    'a Tinkerer'
                   ]}
                   className="text-white font-medium font-secondary"
                 />
@@ -241,7 +243,19 @@ function PortfolioContent() {
           <section id="timeline" className="py-20">
             <div className="max-w-6xl mx-auto">
               <PortfolioTimeline 
-                items={getFilteredItems()}
+                groupedItems={
+                  filteredType === 'all' 
+                    ? ORGANIZED_TIMELINE_DATA 
+                    : {
+                        experience: filteredType === 'experience' ? ORGANIZED_TIMELINE_DATA.experience : [],
+                        projects: filteredType === 'projects' ? ORGANIZED_TIMELINE_DATA.projects : [],
+                        research: filteredType === 'research' ? ORGANIZED_TIMELINE_DATA.research : [],
+                        awards: filteredType === 'awards' ? ORGANIZED_TIMELINE_DATA.awards : [],
+                        community: filteredType === 'community' ? ORGANIZED_TIMELINE_DATA.community : [],
+                        media: filteredType === 'media' ? ORGANIZED_TIMELINE_DATA.media : []
+                      }
+                }
+                onSectionInView={setActiveSection}
               />
             </div>
           </section>

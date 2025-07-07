@@ -23,8 +23,17 @@ import LiquidGlass, { LiquidGlassPresets } from './LiquidGlass';
 import { ContentItem } from '../types/portfolio';
 
 interface PortfolioTimelineProps {
-  items: ContentItem[];
+  groupedItems?: {
+    experience: ContentItem[];
+    projects: ContentItem[];
+    research: ContentItem[];
+    awards: ContentItem[];
+    community: ContentItem[];
+    media: ContentItem[];
+  };
+  items?: ContentItem[]; // Keep for backward compatibility
   className?: string;
+  onSectionInView?: (sectionId: string) => void; // Callback for section visibility
 }
 
 const iconMap = {
@@ -42,6 +51,8 @@ const iconMap = {
   DocumentIcon,
 };
 
+
+
 const getTypeStyles = (type: string) => {
   // All content types now use consistent white/glass theme to match navigation
   const badgeText = type.charAt(0).toUpperCase() + type.slice(1);
@@ -53,7 +64,11 @@ const getTypeStyles = (type: string) => {
   };
 };
 
-const TimelineCard: React.FC<{ item: ContentItem; isLast: boolean }> = ({ item, isLast }) => {
+const TimelineCard: React.FC<{ item: ContentItem; isLast: boolean; showConnector: boolean }> = ({ 
+  item, 
+  isLast, 
+  showConnector 
+}) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const IconComponent = iconMap[item.icon as keyof typeof iconMap] || BriefcaseIcon;
   const styles = getTypeStyles(item.type);
@@ -63,15 +78,9 @@ const TimelineCard: React.FC<{ item: ContentItem; isLast: boolean }> = ({ item, 
   };
   
   return (
-    <div className="relative flex items-start pb-8 md:pb-12">
+    <div className={`relative flex items-start ${isLast ? '' : 'pb-8 md:pb-12'}`}>
       {/* Left column - Timeline track with icon */}
       <div className="flex flex-col items-center flex-shrink-0 relative">
-        {/* Timeline line - creates seamless connection from icon to icon */}
-        {!isLast && (
-          <div className="absolute top-6 md:top-8 w-0.5 bg-gradient-to-b from-white/40 via-white/30 to-white/40 left-1/2 transform -translate-x-1/2 z-0" 
-               style={{ height: 'calc(100% + 2rem)' }} />
-        )}
-        
         {/* Glass morphism icon container - mobile optimized */}
         <div className="relative z-10 mb-2">
           <LiquidGlass
@@ -117,6 +126,7 @@ const TimelineCard: React.FC<{ item: ContentItem; isLast: boolean }> = ({ item, 
           {...styles.preset}
           className={`timeline-card group rounded-2xl cursor-pointer relative p-6 hover:shadow-lg`}
           onClick={toggleExpanded}
+          id={item.id}
         >
           <div className="relative">
             {/* --- Compact, Always Visible Content --- */}
@@ -214,34 +224,108 @@ const TimelineCard: React.FC<{ item: ContentItem; isLast: boolean }> = ({ item, 
   );
 };
 
-export const PortfolioTimeline: React.FC<PortfolioTimelineProps> = ({ 
-  items, 
-  className = '' 
-}) => {
-  const [isAtBottom, setIsAtBottom] = useState(false);
 
+
+export const PortfolioTimeline: React.FC<PortfolioTimelineProps> = ({ 
+  groupedItems,
+  items, 
+  className = '',
+  onSectionInView
+}) => {
+  // Set up intersection observer for auto-highlighting navigation
   useEffect(() => {
-    const handleScroll = () => {
-      const scrollPosition = window.scrollY + window.innerHeight;
-      const documentHeight = document.documentElement.scrollHeight;
-      const threshold = documentHeight - 100; // Show bottom bar 100px before reaching bottom
-      setIsAtBottom(scrollPosition > threshold);
+    if (!onSectionInView || !groupedItems) return;
+
+    const observerOptions = {
+      root: null,
+      rootMargin: '-20% 0px -20% 0px', // Trigger when section is in middle 60% of viewport
+      threshold: 0.3
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+    // Create a map of item IDs to their categories
+    const itemCategoryMap: { [itemId: string]: string } = {};
+    const categoryOrder: (keyof typeof groupedItems)[] = ['experience', 'projects', 'research', 'awards', 'community', 'media'];
+    
+    categoryOrder.forEach((category) => {
+      const items = groupedItems[category] || [];
+      items.forEach((item: ContentItem) => {
+        itemCategoryMap[item.id] = category;
+      });
+    });
 
-  return (
-    <div className={`max-w-4xl mx-auto px-4 md:px-6 py-8 md:py-12 ${className}`}>
-      <div>
-        {items.map((item, index) => (
-          <div key={index} className={`py-0 ${isAtBottom ? 'at-bottom' : ''}`}>
+    let currentCategory = '';
+    const observer = new IntersectionObserver((entries) => {
+      // Find the most visible entry
+      const visibleEntry = entries.find(entry => entry.isIntersecting);
+      if (visibleEntry && visibleEntry.target.id) {
+        const itemId = visibleEntry.target.id;
+        const category = itemCategoryMap[itemId];
+        
+        if (category && category !== currentCategory) {
+          currentCategory = category;
+          onSectionInView(category);
+        }
+      }
+    }, observerOptions);
+
+    // Observe timeline cards
+    setTimeout(() => {
+      const timelineCards = document.querySelectorAll('.timeline-card');
+      timelineCards.forEach((card) => {
+        if (card.id) {
+          observer.observe(card);
+        }
+      });
+    }, 100);
+
+    return () => {
+      const timelineCards = document.querySelectorAll('.timeline-card');
+      timelineCards.forEach((card) => {
+        if (card.id) {
+          observer.unobserve(card);
+        }
+      });
+    };
+  }, [onSectionInView, groupedItems]);
+
+  // If grouped items are provided, use them; otherwise fallback to flat items
+  const displayGrouped = groupedItems || {};
+  const displayFlat = items || [];
+
+  // If we have grouped items, render as flat list (grouped and sorted but no headers)
+  if (groupedItems) {
+    const categoryOrder: (keyof typeof groupedItems)[] = ['experience', 'projects', 'research', 'awards', 'community', 'media'];
+    
+    // Flatten the grouped items while maintaining category order
+    const flattenedItems = categoryOrder.flatMap(category => groupedItems[category] || []);
+    
+    return (
+      <div className={`portfolio-timeline ${className}`}>
+        <div className="space-y-0">
+          {flattenedItems.map((item: ContentItem, index: number) => (
             <TimelineCard 
-              item={item} 
-              isLast={index === items.length - 1} 
+              key={item.id}
+              item={item}
+              isLast={index === flattenedItems.length - 1}
+              showConnector={true}
             />
-          </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  // Fallback to flat layout for backward compatibility
+  return (
+    <div className={`portfolio-timeline ${className}`}>
+      <div className="space-y-0">
+        {displayFlat.map((item: ContentItem, index: number) => (
+          <TimelineCard 
+            key={item.id}
+            item={item}
+            isLast={index === displayFlat.length - 1}
+            showConnector={true}
+          />
         ))}
       </div>
     </div>
