@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   EnvelopeIcon, 
   CalendarDaysIcon,
@@ -42,6 +42,36 @@ export const RightSocialBar: React.FC<RightSocialBarProps> = ({
   items,
   className = ''
 }) => {
+  const [isInContactSection, setIsInContactSection] = useState(false);
+
+  // Intersection Observer for contact section detection
+  useEffect(() => {
+    const observerOptions = {
+      root: null,
+      rootMargin: '-50px 0px -50px 0px',
+      threshold: 0.3
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.target.id === 'contact') {
+          setIsInContactSection(entry.isIntersecting);
+        }
+      });
+    }, observerOptions);
+
+    const contactSection = document.getElementById('contact');
+    if (contactSection) {
+      observer.observe(contactSection);
+    }
+
+    return () => {
+      if (contactSection) {
+        observer.unobserve(contactSection);
+      }
+    };
+  }, []);
+
   const handleLinkClick = (url: string) => {
     window.open(url, '_blank', 'noopener,noreferrer');
   };
@@ -55,28 +85,39 @@ export const RightSocialBar: React.FC<RightSocialBarProps> = ({
 
   return (
     <div className={`
-      fixed z-50 
-      /* Mobile: Bottom center horizontal pill */
+      fixed z-50 transition-all duration-500 ease-in-out
+      /* Mobile: Always bottom center horizontal pill */
       bottom-4 left-1/2 transform -translate-x-1/2 w-auto
-      /* Desktop: Right side vertical */
-      lg:right-6 lg:top-1/2 lg:bottom-auto lg:left-auto lg:transform lg:-translate-y-1/2 lg:translate-x-0
+      /* Desktop: Conditional positioning based on contact section */
+      ${isInContactSection 
+        ? 'lg:bottom-6 lg:left-1/2 lg:top-auto lg:transform lg:-translate-x-1/2 lg:translate-y-0' 
+        : 'lg:right-6 lg:top-1/2 lg:bottom-auto lg:left-auto lg:transform lg:-translate-y-1/2 lg:translate-x-0'
+      }
       ${className}
     `}>
       <LiquidGlass 
         {...LiquidGlassPresets.primary}
-        className="
+        className={`
+          transition-all duration-500 ease-in-out
           /* Mobile: horizontal pill shape with proper padding */
           px-4 py-2.5 rounded-full
-          /* Desktop: vertical padding with different border radius */
-          lg:p-4 lg:rounded-2xl
-        "
+          /* Desktop: Conditional styling based on contact section */
+          ${isInContactSection 
+            ? 'lg:px-4 lg:py-2.5 lg:rounded-full' 
+            : 'lg:p-4 lg:rounded-2xl'
+          }
+        `}
       >
-        <nav className="
+        <nav className={`
+          transition-all duration-500 ease-in-out
           /* Mobile: horizontal flex with proper spacing */
           flex flex-row space-x-4 items-center
-          /* Desktop: vertical flex */
-          lg:flex-col lg:space-x-0 lg:space-y-4
-        ">
+          /* Desktop: Conditional layout based on contact section */
+          ${isInContactSection 
+            ? 'lg:flex-row lg:space-x-4 lg:space-y-0' 
+            : 'lg:flex-col lg:space-x-0 lg:space-y-4'
+          }
+        `}>
           {items.map((item) => {
             const IconComponent = getIconComponent(item.icon);
             
@@ -91,7 +132,7 @@ export const RightSocialBar: React.FC<RightSocialBarProps> = ({
                   flex-shrink-0
                   /* Mobile: compact padding for pill shape */
                   p-2
-                  /* Desktop: larger padding */
+                  /* Desktop: larger padding when vertical, compact when horizontal in contact */
                   lg:p-3
                 "
               >

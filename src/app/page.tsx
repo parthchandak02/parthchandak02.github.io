@@ -234,7 +234,7 @@ function PortfolioContent() {
 
       {/* Main Content */}
       <main className="min-h-screen">
-        <div className="px-4 md:px-8 lg:px-16 xl:px-32 lg:ml-64">
+        <div className="px-4 md:px-8 lg:px-16 xl:px-32 lg:ml-64 lg:mr-24">
           {/* Hero Section */}
           <section id="about" className="min-h-screen flex items-center justify-center py-8 md:py-12">
             <div className="max-w-4xl mx-auto px-4 text-center">
@@ -294,7 +294,7 @@ function PortfolioContent() {
           </section>
 
           {/* Contact Section */}
-          <section id="contact" className="py-20 mb-24 lg:mb-32">
+          <section id="contact" className="pb-10 mb-24 lg:mb-32">
             <div className="max-w-4xl mx-auto text-center">
               <h2 className="text-3xl md:text-4xl font-bold text-white mb-6 font-title">
                 Let&apos;s Connect

@@ -114,125 +114,100 @@ const TimelineCard: React.FC<{ item: ContentItem; isLast: boolean }> = ({ item, 
       <div className="flex-1 min-w-0 ml-4 md:ml-8">
         <LiquidGlass 
           {...styles.preset}
-          className={`timeline-card group rounded-2xl transition-all duration-500 ease-in-out cursor-pointer overflow-hidden
-                     ${isExpanded ? 'p-6' : 'p-4'}
-                     ${isExpanded ? 'min-h-[250px]' : 'min-h-[120px]'}
-                     hover:shadow-lg`}
+          className={`timeline-card group rounded-2xl cursor-pointer relative p-6 hover:shadow-lg`}
           onClick={toggleExpanded}
         >
-          {/* Mobile: Always show essential info, Desktop: Compact Header */}
-          <div className={`flex items-start justify-between mb-4 transition-all duration-500 ease-in-out
-                          ${isExpanded ? 'mb-6' : 'mb-4'}`}>
-            <div className="flex-1 min-w-0 pr-4">
-              <h3 className={`font-semibold text-white transition-all duration-500 font-title
-                             ${isExpanded ? 'text-lg md:text-xl mb-3' : 'text-base md:text-lg mb-2'}
-                             break-words`}>
+          <div className="relative">
+            {/* --- Compact, Always Visible Content --- */}
+            {/* This part has a stable structure and is all left-aligned */}
+            <div className="space-y-3">
+              <h3 className="font-semibold text-white font-title text-base md:text-lg break-words leading-tight">
                 {item.title}
               </h3>
-              <p className={`text-white/90 font-medium transition-all duration-500 font-title
-                            ${isExpanded ? 'text-base md:text-lg mb-3' : 'text-sm md:text-base mb-2'}
-                            break-words`}>
-                {item.company}
-              </p>
-              {item.location && item.location.trim() !== '' && (
-                <div className="flex items-center gap-1 text-white/70 text-xs md:text-sm font-secondary">
-                  <MapPinIcon className="w-3 h-3 flex-shrink-0" />
-                  <span className="break-words">{item.location}</span>
+              
+              <div className="text-white/80 text-sm md:text-base font-secondary">
+                  <span>{item.date}</span>
+              </div>
+
+              <div className="flex items-center gap-2 flex-wrap text-sm">
+                <span className="text-white/90 font-medium font-title">
+                  {item.company}
+                </span>
+                {item.location && item.location.trim() !== '' && (
+                  <>
+                    <span className="text-white/60">•</span>
+                    <div className="flex items-center gap-1 text-white/70">
+                      <MapPinIcon className="w-3 h-3 flex-shrink-0" />
+                      <span className="break-words">{item.location}</span>
+                    </div>
+                  </>
+                )}
+              </div>
+
+              <div>
+                <span className={`px-2 py-1 text-xs font-medium text-white rounded-full ${styles.badgeColor} font-navigation`}>
+                    {styles.badgeText}
+                </span>
+              </div>
+            </div>
+
+            {/* --- Expandable Content --- */}
+            {/* This part animates smoothly */}
+            <div 
+              className={`transition-all duration-500 ease-in-out overflow-hidden ${isExpanded ? 'max-h-[1000px] opacity-100 mt-4 pt-4 border-t border-white/20' : 'max-h-0 opacity-0'}`}
+            >
+              <div className="space-y-4">
+                {/* Project Image */}
+                {item.image && (
+                  <div className="relative overflow-hidden rounded-lg">
+                    {item.link ? (
+                      <a href={item.link} target="_blank" rel="noopener noreferrer" className="block">
+                        <img src={`/images/${item.image}`} alt={item.title} className="w-full h-48 md:h-56 object-cover transition-transform duration-300 ease-in-out hover:scale-105" />
+                      </a>
+                    ) : (
+                      <img src={`/images/${item.image}`} alt={item.title} className="w-full h-48 md:h-56 object-cover" />
+                    )}
+                  </div>
+                )}
+                
+                {/* Description */}
+                <div>
+                  <p className="text-white/80 text-sm md:text-base leading-relaxed font-secondary break-words">
+                    {item.description}
+                  </p>
                 </div>
-              )}
-            </div>
-            <div className="text-right flex-shrink-0">
-              <span className="font-medium text-white/80 text-sm md:text-base font-secondary">
-                {item.date}
-              </span>
-            </div>
-          </div>
-          
-          {/* Category Badge - Always Visible */}
-          <div className={`flex justify-end transition-all duration-500 ease-in-out
-                          ${isExpanded ? 'mb-6' : 'mb-4'}`}>
-            <span className={`px-2 py-1 text-xs font-medium text-white rounded-full ${styles.badgeColor} flex-shrink-0 font-navigation`}>
-              {styles.badgeText}
-            </span>
-          </div>
-          
-          {/* Content Section */}
-          <div className={`transition-all duration-500 ease-in-out space-y-4 transform
-            ${isExpanded 
-              ? 'opacity-100 max-h-[800px] translate-y-0' 
-              : 'opacity-0 max-h-0 -translate-y-4 pointer-events-none'}`}>
-            
-            {/* Project Image */}
-            {item.image && (
-              <div className="border-t border-white/10 pt-4">
-                <div className="relative overflow-hidden rounded-lg">
-                  {item.link ? (
-                    <a 
-                      href={item.link} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="block"
-                    >
-                      <img 
-                        src={`/images/${item.image}`}
-                        alt={item.title}
-                        className="w-full h-48 md:h-56 object-cover transition-transform duration-300 ease-in-out hover:scale-105"
-                      />
-                    </a>
-                  ) : (
-                    <img 
-                      src={`/images/${item.image}`}
-                      alt={item.title}
-                      className="w-full h-48 md:h-56 object-cover"
-                    />
-                  )}
-                </div>
+                
+                {/* Technologies */}
+                {item.technologies && (
+                  <div className="flex flex-wrap gap-2">
+                    {(Array.isArray(item.technologies) ? item.technologies : [item.technologies]).map((tech: string) => (
+                      <span key={tech} className="px-2 py-1 text-xs bg-white/10 text-white/90 rounded-md backdrop-blur-sm font-navigation">
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+                )}
+                
+                {/* Link Icon for the article/project */}
+                {item.link && (
+                    <div className="flex justify-start">
+                      <a href={item.link} target="_blank" rel="noopener noreferrer" className="inline-flex items-center text-white/90 hover:text-white transition-colors p-2 rounded-lg hover:bg-white/10 -ml-2">
+                        <ArrowTopRightOnSquareIcon className="w-5 h-5" />
+                      </a>
+                    </div>
+                )}
               </div>
-            )}
-            
-            {/* Description */}
-            <div className={`${item.image ? '' : 'border-t border-white/10 pt-4'}`}>
-              <p className="text-white/80 text-sm md:text-base leading-relaxed font-secondary break-words">
-                {item.description}
-              </p>
             </div>
             
-            {/* Technologies */}
-            {item.technologies && (
-              <div className="flex flex-wrap gap-2">
-                {(Array.isArray(item.technologies) ? item.technologies : [item.technologies]).map((tech: string) => (
-                  <span 
-                    key={tech} 
-                    className="px-2 py-1 text-xs bg-white/10 text-white/90 rounded-md backdrop-blur-sm font-navigation"
-                  >
-                    {tech}
-                  </span>
-                ))}
-              </div>
-            )}
-            
-            {/* Link */}
-            {item.link && (
-              <div className="flex justify-start">
-                <a 
-                  href={item.link} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center text-white/90 hover:text-white transition-colors p-2 rounded-lg hover:bg-white/10"
-                >
-                  <ArrowTopRightOnSquareIcon className="w-5 h-5" />
-                </a>
-              </div>
-            )}
-          </div>
-          
-          {/* Expand/Collapse Indicator */}
-          <div className="absolute bottom-4 right-4 transition-all duration-500">
-            {isExpanded ? (
-              <ChevronUpIcon className="w-5 h-5 text-white/60" />
-            ) : (
-              <ChevronDownIcon className="w-5 h-5 text-white/60" />
-            )}
+            {/* --- Expand/Collapse Indicator --- */}
+            {/* Positioned at bottom right of the card */}
+            <div className="absolute bottom-0 right-0">
+                {isExpanded ? (
+                  <ChevronUpIcon className="w-5 h-5 text-white/60" />
+                ) : (
+                  <ChevronDownIcon className="w-5 h-5 text-white/60" />
+                )}
+            </div>
           </div>
         </LiquidGlass>
       </div>
@@ -260,7 +235,7 @@ export const PortfolioTimeline: React.FC<PortfolioTimelineProps> = ({
 
   return (
     <div className={`max-w-4xl mx-auto px-4 md:px-6 py-8 md:py-12 ${className}`}>
-      <div className="space-y-8 md:space-y-12">
+      <div className="space-y-4 md:space-y-8">
         {items.map((item, index) => (
           <div key={index} className={isAtBottom ? 'at-bottom' : ''}>
             <TimelineCard 
