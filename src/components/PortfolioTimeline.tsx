@@ -20,7 +20,7 @@ import {
   ChevronUpIcon
 } from '@heroicons/react/24/outline';
 import LiquidGlass, { LiquidGlassPresets } from './LiquidGlass';
-import { ContentItem } from '../lib/contentLoader';
+import { ContentItem } from '../types/portfolio';
 
 interface PortfolioTimelineProps {
   items: ContentItem[];
@@ -66,9 +66,10 @@ const TimelineCard: React.FC<{ item: ContentItem; isLast: boolean }> = ({ item, 
     <div className="relative flex items-start pb-8 md:pb-12">
       {/* Left column - Timeline track with icon */}
       <div className="flex flex-col items-center flex-shrink-0 relative">
-        {/* Timeline line - extends from top to bottom */}
+        {/* Timeline line - creates seamless connection from icon to icon */}
         {!isLast && (
-          <div className="absolute top-12 md:top-16 bottom-0 w-0.5 bg-white/20 left-1/2 transform -translate-x-1/2" />
+          <div className="absolute top-6 md:top-8 w-0.5 bg-gradient-to-b from-white/40 via-white/30 to-white/40 left-1/2 transform -translate-x-1/2 z-0" 
+               style={{ height: 'calc(100% + 2rem)' }} />
         )}
         
         {/* Glass morphism icon container - mobile optimized */}

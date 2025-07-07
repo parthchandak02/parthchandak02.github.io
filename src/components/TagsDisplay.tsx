@@ -20,14 +20,7 @@ interface Tag {
 
 interface TagsDisplayProps {
   tags: {
-    technical: Tag[];
-    project_management: Tag[];
-    research: Tag[];
-    experience: Tag[];
-    community: Tag[];
-    team: Tag[];
-    media: Tag[];
-    awards: Tag[];
+    [category: string]: Tag[];
   };
   className?: string;
 }
@@ -138,6 +131,7 @@ export default function TagsDisplay({ tags, className = '' }: TagsDisplayProps) 
                           : 'w-10 md:w-12'
                       }`}
                       style={{
+                        borderRadius: '8px',
                         display: 'flex',
                         alignItems: 'center'
                       }}

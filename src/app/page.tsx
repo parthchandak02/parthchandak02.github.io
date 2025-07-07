@@ -10,12 +10,11 @@ import {
   NavigationItem,
   SocialMediaItem,
   AboutData
-} from '../lib/contentLoader';
+} from '../types/portfolio';
 import TypewriterText from '../components/TypewriterText';
 import LiquidGlass, { LiquidGlassPresets } from '../components/LiquidGlass';
 import TagsDisplay from '../components/TagsDisplay';
 import { portfolioData } from '../content/portfolio-data';
-import { tagsData } from '../content/tags-data';
 import { ChevronDownIcon } from '@heroicons/react/24/outline';
 
 // Transform portfolio data to match ContentItem interface
@@ -28,72 +27,7 @@ const STATIC_CONTENT_ITEMS: ContentItem[] = portfolioData.timeline.map(item => (
 
 
 
-const STATIC_NAVIGATION_ITEMS: NavigationItem[] = [
-  {
-    id: 'about',
-    label: 'About',
-    icon: 'UserIcon',
-    section: 'about',
-    folder: '00_about',
-    color: '#E53E3E'
-  },
-  {
-    id: 'experience',
-    label: 'Experience',
-    icon: 'BriefcaseIcon',
-    section: 'experience',
-    folder: '01_experience',
-    color: '#E53E3E'
-  },
-  {
-    id: 'projects',
-    label: 'Projects',
-    icon: 'RocketLaunchIcon',
-    section: 'projects',
-    folder: '02_projects',
-    color: '#E53E3E'
-  },
-  {
-    id: 'research',
-    label: 'Research',
-    icon: 'BeakerIcon',
-    section: 'research',
-    folder: '03_research',
-    color: '#E53E3E'
-  },
-  {
-    id: 'awards',
-    label: 'Awards',
-    icon: 'TrophyIcon',
-    section: 'awards',
-    folder: '04_awards',
-    color: '#E53E3E'
-  },
-  {
-    id: 'community',
-    label: 'Community',
-    icon: 'UsersIcon',
-    section: 'community',
-    folder: '05_community',
-    color: '#E53E3E'
-  },
-  {
-    id: 'media',
-    label: 'Media',
-    icon: 'FilmIcon',
-    section: 'media',
-    folder: '06_media',
-    color: '#E53E3E'
-  },
-  {
-    id: 'contact',
-    label: 'Contact',
-    icon: 'EnvelopeIcon',
-    section: 'contact',
-    folder: '07_contact',
-    color: '#E53E3E'
-  }
-];
+const STATIC_NAVIGATION_ITEMS: NavigationItem[] = portfolioData.navigation;
 
 const STATIC_SOCIAL_MEDIA_ITEMS: SocialMediaItem[] = portfolioData.socialMedia;
 
@@ -281,7 +215,7 @@ function PortfolioContent() {
               {/* Tags Display - Now directly below typewriter text */}
               <div className="max-w-3xl mx-auto mb-12">
                 <TagsDisplay 
-                  tags={tagsData}
+                  tags={portfolioData.tags || {}}
                   className="w-full"
                 />
               </div>
