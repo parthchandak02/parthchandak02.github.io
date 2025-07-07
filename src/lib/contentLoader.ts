@@ -3,6 +3,12 @@ import path from 'path';
 import matter from 'gray-matter';
 
 // Client-side content loader using API routes
+export interface Tag {
+  name: string;
+  icon: string;
+  category: string;
+}
+
 export interface ContentItem {
   id: string;
   title: string;
@@ -16,6 +22,7 @@ export interface ContentItem {
   icon: string;
   order: number;
   technologies: string[];
+  tags: Tag[];
   color: string;
   link?: string;
   image?: string;
@@ -183,8 +190,10 @@ const ICON_MAP: Record<string, string> = {
 
 // Type mapping for content categories
 const TYPE_MAP: Record<string, string> = {
+  'Professional Experience': 'experience',
   'Experience': 'experience',
   'Projects': 'project',
+  'Material Science': 'project',
   'Research': 'research',
   'Awards': 'award',
   'Community': 'community',
@@ -232,6 +241,12 @@ export function getAllContentItemsStatic(): ContentItem[] {
         }
       }
       
+      // Determine the type based on category or fallback to folder
+      let itemType = navItem.id; // Default to folder-based type
+      if (data.category && TYPE_MAP[data.category]) {
+        itemType = TYPE_MAP[data.category];
+      }
+
       const item: ContentItem = {
         id: file.replace('.md', ''),
         title: data.title || 'Untitled',
@@ -241,12 +256,13 @@ export function getAllContentItemsStatic(): ContentItem[] {
         range: data.range,
         description: data.description || content.split('\n')[0] || '',
         category: data.category || navItem.label,
-        type: TYPE_MAP[data.category] || navItem.id,
-        icon: ICON_MAP[data.icon] || 'DocumentIcon',
+        type: itemType,
+        icon: ICON_MAP[data.icon] || navItem.icon || 'DocumentIcon',
         order: data.order || 0,
         technologies,
+        tags: data.tags || [],
         color: THEME_COLOR,
-        link: data.link,
+        link: data.link || data.url, // Support both 'link' and 'url' fields
         image: data.image,
         companyLogo: data.companyLogo,
         iconOverride: data.iconOverride,

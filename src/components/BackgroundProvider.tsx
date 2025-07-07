@@ -22,7 +22,7 @@ interface BackgroundProviderProps {
 }
 
 // Use a single, beautiful high-resolution image for consistent liquid glass effect
-const STATIC_BACKGROUND_URL = 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=2560&h=1600&q=90';
+const STATIC_BACKGROUND_URL = '/images/background-pattern/background-pattern.png';
 
 export function BackgroundProvider({ children }: BackgroundProviderProps) {
   useEffect(() => {
@@ -31,9 +31,9 @@ export function BackgroundProvider({ children }: BackgroundProviderProps) {
     
     // Apply static background directly to body
     body.style.backgroundImage = `url(${STATIC_BACKGROUND_URL})`;
-    body.style.backgroundSize = 'cover';
-    body.style.backgroundPosition = 'center center';
-    body.style.backgroundRepeat = 'no-repeat';
+    body.style.backgroundSize = '600px 600px';
+    body.style.backgroundPosition = 'center';
+    body.style.backgroundRepeat = 'repeat';
     body.style.backgroundAttachment = 'fixed';
     
     // Clean up any existing dynamic background elements

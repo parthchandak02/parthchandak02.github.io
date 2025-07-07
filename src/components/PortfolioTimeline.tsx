@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   BriefcaseIcon, 
   TrophyIcon, 
@@ -114,57 +114,57 @@ const TimelineCard: React.FC<{ item: ContentItem; isLast: boolean }> = ({ item, 
       <div className="flex-1 min-w-0 ml-4 md:ml-8">
         <LiquidGlass 
           {...styles.preset}
-          className={`timeline-card group rounded-2xl transition-all duration-300 ease-in-out cursor-pointer overflow-hidden
-                     ${isExpanded ? 'p-4 md:p-6' : 'p-3 md:p-4'} 
-                     ${isExpanded ? 'min-h-[200px] md:min-h-[250px]' : 'min-h-[100px] md:min-h-[120px]'}
-                     hover:p-6 hover:min-h-[200px] md:hover:min-h-[250px]`}
+          className={`timeline-card group rounded-2xl transition-all duration-500 ease-in-out cursor-pointer overflow-hidden
+                     ${isExpanded ? 'p-6' : 'p-4'}
+                     ${isExpanded ? 'min-h-[250px]' : 'min-h-[120px]'}
+                     hover:shadow-lg`}
           onClick={toggleExpanded}
         >
           {/* Mobile: Always show essential info, Desktop: Compact Header */}
-          <div className="flex items-start justify-between mb-2 md:mb-2">
-            <div className="flex-1 min-w-0 pr-2 md:pr-4">
-              <h3 className={`font-semibold text-white mb-1 transition-all duration-300 font-title
-                ${isExpanded ? 'text-lg md:text-xl' : 'text-base md:text-base'} 
-                group-hover:text-lg md:group-hover:text-xl
-                ${isExpanded ? 'line-clamp-none' : 'line-clamp-1 md:truncate'}`}>
+          <div className={`flex items-start justify-between mb-4 transition-all duration-500 ease-in-out
+                          ${isExpanded ? 'mb-6' : 'mb-4'}`}>
+            <div className="flex-1 min-w-0 pr-4">
+              <h3 className={`font-semibold text-white transition-all duration-500 font-title
+                             ${isExpanded ? 'text-lg md:text-xl mb-3' : 'text-base md:text-lg mb-2'}
+                             break-words`}>
                 {item.title}
               </h3>
-              <p className={`text-white/90 font-medium mb-1 transition-all duration-300 font-title
-                ${isExpanded ? 'text-sm md:text-base' : 'text-sm md:text-sm'}
-                ${isExpanded ? 'line-clamp-none' : 'line-clamp-1 md:truncate'}`}>
+              <p className={`text-white/90 font-medium transition-all duration-500 font-title
+                            ${isExpanded ? 'text-base md:text-lg mb-3' : 'text-sm md:text-base mb-2'}
+                            break-words`}>
                 {item.company}
               </p>
               {item.location && item.location.trim() !== '' && (
-                <div className="flex items-center gap-1 text-white/70 text-xs md:text-xs font-secondary">
+                <div className="flex items-center gap-1 text-white/70 text-xs md:text-sm font-secondary">
                   <MapPinIcon className="w-3 h-3 flex-shrink-0" />
-                  <span className={isExpanded ? 'line-clamp-none' : 'truncate'}>{item.location}</span>
+                  <span className="break-words">{item.location}</span>
                 </div>
               )}
             </div>
             <div className="text-right flex-shrink-0">
-              <span className={`font-medium text-white/80 transition-all duration-300 font-secondary
-                ${isExpanded ? 'text-sm md:text-base' : 'text-xs md:text-xs'}
-                group-hover:text-sm md:group-hover:text-base`}>
+              <span className="font-medium text-white/80 text-sm md:text-base font-secondary">
                 {item.date}
               </span>
             </div>
           </div>
           
           {/* Category Badge - Always Visible */}
-          <div className="flex justify-end mb-2 md:mb-2 transition-all duration-300">
+          <div className={`flex justify-end transition-all duration-500 ease-in-out
+                          ${isExpanded ? 'mb-6' : 'mb-4'}`}>
             <span className={`px-2 py-1 text-xs font-medium text-white rounded-full ${styles.badgeColor} flex-shrink-0 font-navigation`}>
               {styles.badgeText}
             </span>
           </div>
           
-          {/* Mobile: Show/hide content based on isExpanded, Desktop: Hover behavior */}
-          <div className={`expandable-content overflow-hidden transition-all duration-300 ease-in-out
-            ${isExpanded ? 'opacity-100 max-h-[600px]' : 'opacity-0 max-h-0'} 
-            md:group-hover:opacity-100 md:group-hover:max-h-[600px]`}>
+          {/* Content Section */}
+          <div className={`transition-all duration-500 ease-in-out space-y-4 transform
+            ${isExpanded 
+              ? 'opacity-100 max-h-[800px] translate-y-0' 
+              : 'opacity-0 max-h-0 -translate-y-4 pointer-events-none'}`}>
             
             {/* Project Image */}
             {item.image && (
-              <div className="pt-2 border-t border-white/10 mb-4">
+              <div className="border-t border-white/10 pt-4">
                 <div className="relative overflow-hidden rounded-lg">
                   {item.link ? (
                     <a 
@@ -176,14 +176,14 @@ const TimelineCard: React.FC<{ item: ContentItem; isLast: boolean }> = ({ item, 
                       <img 
                         src={`/images/${item.image}`}
                         alt={item.title}
-                        className="w-full h-32 md:h-48 object-cover transition-transform duration-300 ease-in-out hover:scale-105"
+                        className="w-full h-48 md:h-56 object-cover transition-transform duration-300 ease-in-out hover:scale-105"
                       />
                     </a>
                   ) : (
                     <img 
                       src={`/images/${item.image}`}
                       alt={item.title}
-                      className="w-full h-32 md:h-48 object-cover"
+                      className="w-full h-48 md:h-56 object-cover"
                     />
                   )}
                 </div>
@@ -191,15 +191,15 @@ const TimelineCard: React.FC<{ item: ContentItem; isLast: boolean }> = ({ item, 
             )}
             
             {/* Description */}
-            <div className={`${item.image ? 'mb-4' : 'pt-2 border-t border-white/10 mb-4'}`}>
-              <p className="text-white/80 text-sm md:text-base leading-relaxed font-secondary">
+            <div className={`${item.image ? '' : 'border-t border-white/10 pt-4'}`}>
+              <p className="text-white/80 text-sm md:text-base leading-relaxed font-secondary break-words">
                 {item.description}
               </p>
             </div>
             
             {/* Technologies */}
             {item.technologies && (
-              <div className="flex flex-wrap gap-2 mb-4">
+              <div className="flex flex-wrap gap-2">
                 {(Array.isArray(item.technologies) ? item.technologies : [item.technologies]).map((tech: string) => (
                   <span 
                     key={tech} 
@@ -226,17 +226,13 @@ const TimelineCard: React.FC<{ item: ContentItem; isLast: boolean }> = ({ item, 
             )}
           </div>
           
-          {/* Subtle Caret Indicator - Bottom Center */}
-          <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 transition-all duration-300 ease-in-out pointer-events-none">
-            {/* Show up caret when expanded (mobile) or on hover (desktop) */}
-            <ChevronUpIcon className={`w-4 h-4 text-white/40 transition-all duration-300 absolute ${
-              isExpanded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-1'
-            } md:group-hover:opacity-60 md:group-hover:translate-y-0`} />
-            
-            {/* Show down caret when collapsed and not hovered */}
-            <ChevronDownIcon className={`w-4 h-4 text-white/40 transition-all duration-300 absolute ${
-              !isExpanded ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-1'
-            } md:group-hover:opacity-0 md:group-hover:-translate-y-1`} />
+          {/* Expand/Collapse Indicator */}
+          <div className="absolute bottom-4 right-4 transition-all duration-500">
+            {isExpanded ? (
+              <ChevronUpIcon className="w-5 h-5 text-white/60" />
+            ) : (
+              <ChevronDownIcon className="w-5 h-5 text-white/60" />
+            )}
           </div>
         </LiquidGlass>
       </div>
@@ -248,16 +244,30 @@ export const PortfolioTimeline: React.FC<PortfolioTimelineProps> = ({
   items, 
   className = '' 
 }) => {
+  const [isAtBottom, setIsAtBottom] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY + window.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight;
+      const threshold = documentHeight - 100; // Show bottom bar 100px before reaching bottom
+      setIsAtBottom(scrollPosition > threshold);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
     <div className={`max-w-4xl mx-auto px-4 md:px-6 py-8 md:py-12 ${className}`}>
-      {/* Timeline Items */}
-      <div className="relative">
+      <div className="space-y-8 md:space-y-12">
         {items.map((item, index) => (
-          <TimelineCard 
-            key={item.id} 
-            item={item} 
-            isLast={index === items.length - 1}
-          />
+          <div key={index} className={isAtBottom ? 'at-bottom' : ''}>
+            <TimelineCard 
+              item={item} 
+              isLast={index === items.length - 1} 
+            />
+          </div>
         ))}
       </div>
     </div>

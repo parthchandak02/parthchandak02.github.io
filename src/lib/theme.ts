@@ -1,3 +1,144 @@
+/**
+ * Clean, Minimal, Impactful Typography System - 2025 Edition
+ * 
+ * This file contains all font configurations optimized for modern design portfolios.
+ * Features Space Grotesk - a geometric sans-serif with character and impact.
+ * 
+ * WHY SPACE GROTESK?
+ * - Modern geometric design with clean lines
+ * - Excellent readability at all sizes
+ * - Character and impact without being overly decorative
+ * - Perfect for all-caps navigation
+ * - Professional yet distinctive
+ * - Available on Google Fonts
+ * 
+ * CURRENT TYPOGRAPHY HIERARCHY:
+ * 
+ * Primary Font (Space Grotesk):
+ * - Base font for the entire application
+ * - Clean, readable, modern
+ * - Used as fallback for all text
+ * 
+ * Navigation Font (Space Grotesk Bold):
+ * - ALL CAPS formatting for impact
+ * - Bold weight (600-700)
+ * - Extra letter spacing for readability
+ * - Used for: Left navigation, right social bar, timeline tags
+ * 
+ * Title Font (Space Grotesk Medium):
+ * - Medium to bold weights (500-700)
+ * - Used for: Main headings, timeline card titles, about section title
+ * 
+ * Secondary Font (Space Grotesk Light):
+ * - Light to regular weights (300-500)
+ * - Used for: Body text, descriptions, dates, locations
+ * 
+ * HOW TO CHANGE FONTS:
+ * 
+ * 1. To change the entire font family:
+ *    - Update the font import in layout.tsx
+ *    - Update the font names in fontConfig below
+ *    - All elements will automatically use the new font
+ * 
+ * 2. To change specific font roles:
+ *    - Update the corresponding font configuration below
+ *    - Modify the font weights as needed
+ *    - The changes will apply to all elements using that font class
+ * 
+ * 3. To adjust the all-caps navigation:
+ *    - Modify the CSS in globals.css (.font-navigation)
+ *    - Adjust letter-spacing, font-weight, or text-transform
+ */
+
+export const fontConfig = {
+  // Primary Font - Base font for the entire application
+  primary: {
+    name: 'Space Grotesk',
+    variable: '--font-primary',
+    usage: 'Base font for entire application, fallback for all text',
+    weights: ['300', '400', '500', '600', '700'],
+    characteristics: 'Clean, modern geometric sans-serif with excellent readability'
+  },
+  
+  // Navigation Font - Bold, all-caps for impact
+  navigation: {
+    name: 'Space Grotesk',
+    variable: '--font-navigation',
+    usage: 'Left navigation, right social bar, timeline tags (ALL CAPS)',
+    weights: ['600', '700'],
+    characteristics: 'Bold, all-caps, extra letter spacing for maximum impact',
+    special: 'Automatically applies uppercase, bold weight, and letter spacing'
+  },
+  
+  // Title Font - Medium weight for headings
+  title: {
+    name: 'Space Grotesk',
+    variable: '--font-title',
+    usage: 'Main headings, timeline card titles, about section title',
+    weights: ['500', '600', '700'],
+    characteristics: 'Medium to bold weights for visual hierarchy'
+  },
+  
+  // Secondary Font - Light weight for body text
+  secondary: {
+    name: 'Space Grotesk',
+    variable: '--font-secondary',
+    usage: 'Body text, descriptions, dates, locations, details',
+    weights: ['300', '400', '500'],
+    characteristics: 'Light to regular weights for comfortable reading'
+  }
+};
+
+/**
+ * Typography Scale
+ * Consistent sizing across the portfolio
+ */
+export const typographyScale = {
+  // Navigation text sizes
+  navigation: {
+    mobile: 'text-xs',
+    desktop: 'text-sm'
+  },
+  
+  // Title text sizes
+  title: {
+    hero: 'text-4xl md:text-6xl',
+    section: 'text-2xl md:text-3xl',
+    card: 'text-lg md:text-xl'
+  },
+  
+  // Body text sizes
+  body: {
+    large: 'text-lg md:text-xl',
+    regular: 'text-base md:text-lg',
+    small: 'text-sm md:text-base'
+  }
+};
+
+/**
+ * Font Weight Scale
+ * Consistent weights for different contexts
+ */
+export const fontWeights = {
+  light: '300',
+  normal: '400',
+  medium: '500',
+  semibold: '600',
+  bold: '700'
+};
+
+/**
+ * Letter Spacing Scale
+ * For different text contexts
+ */
+export const letterSpacing = {
+  tight: '-0.025em',
+  normal: '0',
+  wide: '0.025em',
+  wider: '0.05em',
+  widest: '0.1em'
+};
+
 // Central theme configuration for the portfolio
 export const theme = {
   colors: {
@@ -90,9 +231,9 @@ export const theme = {
     timelinePointSize: '12px',
   },
   
-  // Typography
+  // Typography - Updated for Space Grotesk
   typography: {
-    fontFamily: 'Inter, system-ui, sans-serif',
+    fontFamily: 'Space Grotesk, system-ui, sans-serif',
     headings: {
       color: '#FFFFFF',
       weight: '600',
@@ -142,245 +283,4 @@ export const getNavigationStyle = (isActive: boolean = false) => ({
   }
 });
 
-export default theme;
-
-/**
- * Font Configuration System
- * 
- * This file contains all font configurations for the portfolio.
- * To change fonts, simply update the values here and they will be applied globally.
- * 
- * USAGE EXAMPLES:
- * 
- * 1. Change Navigation Font:
- *    - Update fontConfig.navigation.name to desired font
- *    - Update the font import in layout.tsx
- *    - All navigation elements will automatically use the new font
- * 
- * 2. Change Title Font:
- *    - Update fontConfig.title.name to desired font
- *    - Update the font import in layout.tsx
- *    - All titles and subtitles will automatically use the new font
- * 
- * 3. Change Secondary Font:
- *    - Update fontConfig.secondary.name to desired font
- *    - Update the font import in layout.tsx
- *    - All body text, dates, and locations will automatically use the new font
- * 
- * CURRENT FONT HIERARCHY:
- * 
- * Navigation Font (Montserrat):
- * - Left navigation bar labels
- * - Right social media bar (icons only)
- * - Timeline card category badges
- * - Timeline card technology tags
- * - Button text
- * 
- * Title Font (Source Sans Pro):
- * - About section main title
- * - About section category headings
- * - Timeline card titles
- * - Timeline card company names
- * - Contact section heading
- * 
- * Secondary Font (Source Sans Pro):
- * - About section descriptions
- * - About section details (position, location, etc.)
- * - Timeline card dates
- * - Timeline card locations
- * - Timeline card descriptions
- * - Contact section description
- * 
- * FILES TO UPDATE WHEN CHANGING FONTS:
- * 1. src/app/layout.tsx - Font imports and variable definitions
- * 2. src/lib/theme.ts - Font configuration (this file)
- * 3. src/app/globals.css - Font utility classes (already configured)
- */
-
-export const fontConfig = {
-  // Navigation Font - Used for navigation bars, filters, and tags
-  navigation: {
-    name: 'Montserrat',
-    variable: '--font-navigation',
-    usage: 'Navigation bars, timeline tags, filters, buttons',
-    weights: ['400', '500', '600', '700'],
-    characteristics: 'Clean, geometric, perfect for all-caps',
-    appliedTo: [
-      'LeftNavigation labels',
-      'Timeline category badges',
-      'Timeline technology tags',
-      'About section skill tags',
-      'Call-to-action buttons'
-    ]
-  },
-  
-  // Title/Subtitle Font - Used for main headings and card titles
-  title: {
-    name: 'Source Sans Pro',
-    variable: '--font-title', 
-    usage: 'About section titles, timeline card titles/subtitles',
-    weights: ['400', '600', '700'],
-    characteristics: 'Strong display font with visual impact',
-    appliedTo: [
-      'About section main title (Parth Chandak)',
-      'About section category headings',
-      'Timeline card titles',
-      'Timeline card company names',
-      'Contact section heading'
-    ]
-  },
-  
-  // Secondary/Body Font - Used for details, dates, locations
-  secondary: {
-    name: 'Source Sans Pro',
-    variable: '--font-secondary',
-    usage: 'Dates, locations, descriptions, body text',
-    weights: ['300', '400', '500'],
-    characteristics: 'Excellent readability for details',
-    appliedTo: [
-      'About section descriptions',
-      'About section details',
-      'Timeline card dates',
-      'Timeline card locations',
-      'Timeline card descriptions',
-      'Contact section description',
-      'Typewriter text'
-    ]
-  }
-};
-
-// CSS Custom Properties for easy font management
-export const fontVariables = {
-  '--font-navigation': 'var(--font-navigation)',
-  '--font-title': 'var(--font-title)',
-  '--font-secondary': 'var(--font-secondary)',
-};
-
-// Utility classes for easy font application
-export const fontClasses = {
-  navigation: 'font-navigation',
-  title: 'font-title',
-  secondary: 'font-secondary',
-};
-
-// Alternative font suggestions for easy swapping
-export const alternativeFonts = {
-  navigation: [
-    {
-      name: 'Neue Montreal',
-      characteristics: 'Modern, structured, excellent for UI',
-      googleFont: false,
-      source: 'Pangram Pangram Foundry'
-    },
-    {
-      name: 'Clash Grotesk',
-      characteristics: 'Clean, efficient, tech-oriented',
-      googleFont: false,
-      source: 'Fontshare'
-    },
-    {
-      name: 'Inter',
-      characteristics: 'Highly legible, UI-focused',
-      googleFont: true,
-      source: 'Google Fonts'
-    }
-  ],
-  title: [
-    {
-      name: 'Clash Display',
-      characteristics: 'Strong, contemporary, visual impact',
-      googleFont: false,
-      source: 'Fontshare'
-    },
-    {
-      name: 'Satoshi',
-      characteristics: 'Minimalist, clean, modern',
-      googleFont: false,
-      source: 'Fontshare'
-    },
-    {
-      name: 'Aeonik',
-      characteristics: 'Professional, structured, elegant',
-      googleFont: false,
-      source: 'CoType Foundry'
-    }
-  ],
-  secondary: [
-    {
-      name: 'Lato',
-      characteristics: 'Warm, readable, friendly',
-      googleFont: true,
-      source: 'Google Fonts'
-    },
-    {
-      name: 'Inter',
-      characteristics: 'Neutral, highly readable',
-      googleFont: true,
-      source: 'Google Fonts'
-    },
-    {
-      name: 'Source Sans 3',
-      characteristics: 'Professional, Adobe-quality',
-      googleFont: true,
-      source: 'Google Fonts'
-    }
-  ]
-};
-
-/**
- * How to Change Fonts:
- * 
- * EXAMPLE: Changing Navigation Font from Montserrat to Inter
- * 
- * 1. Update layout.tsx:
- *    ```typescript
- *    import { Inter, Source_Sans_3 } from "next/font/google";
- *    
- *    const navigationFont = Inter({
- *      variable: "--font-navigation",
- *      subsets: ["latin"],
- *      weight: ["400", "500", "600", "700"],
- *      display: "swap",
- *    });
- *    ```
- * 
- * 2. Update this file (theme.ts):
- *    ```typescript
- *    navigation: {
- *      name: 'Inter',
- *      variable: '--font-navigation',
- *      // ... rest of config
- *    }
- *    ```
- * 
- * 3. The font will automatically apply to all navigation elements!
- * 
- * EXAMPLE: Using a Non-Google Font (like Clash Display)
- * 
- * 1. Download the font files and place them in public/fonts/
- * 2. Update layout.tsx to use local font:
- *    ```typescript
- *    import localFont from 'next/font/local';
- *    
- *    const titleFont = localFont({
- *      src: [
- *        {
- *          path: '../public/fonts/ClashDisplay-Regular.woff2',
- *          weight: '400',
- *          style: 'normal',
- *        },
- *        {
- *          path: '../public/fonts/ClashDisplay-Bold.woff2',
- *          weight: '700',
- *          style: 'normal',
- *        },
- *      ],
- *      variable: '--font-title',
- *      display: 'swap',
- *    });
- *    ```
- * 
- * 3. Update this file to reflect the change
- * 
- * All components will automatically use the new fonts!
- */ 
+export default theme; 

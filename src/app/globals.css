@@ -1,5 +1,70 @@
 @import "tailwindcss";
 
+/* Array Font Family - Technical/Monospace Headers & Navigation */
+@font-face {
+  font-family: 'Array';
+  src: url('/fonts/array/Array-Regular.woff2') format('woff2'),
+       url('/fonts/array/Array-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Array';
+  src: url('/fonts/array/Array-Semibold.woff2') format('woff2'),
+       url('/fonts/array/Array-Semibold.woff') format('woff');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Array';
+  src: url('/fonts/array/Array-Bold.woff2') format('woff2'),
+       url('/fonts/array/Array-Bold.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Outfit Font Family - Modern Sans-Serif Body Text */
+@font-face {
+  font-family: 'Outfit';
+  src: url('/fonts/outfit/Outfit-Variable.woff2') format('woff2-variations'),
+       url('/fonts/outfit/Outfit-Variable.woff') format('woff-variations');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Outfit';
+  src: url('/fonts/outfit/Outfit-Regular.woff2') format('woff2'),
+       url('/fonts/outfit/Outfit-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Outfit';
+  src: url('/fonts/outfit/Outfit-Medium.woff2') format('woff2'),
+       url('/fonts/outfit/Outfit-Medium.woff') format('woff');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Outfit';
+  src: url('/fonts/outfit/Outfit-SemiBold.woff2') format('woff2'),
+       url('/fonts/outfit/Outfit-SemiBold.woff') format('woff');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -18,6 +83,7 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --font-primary: var(--font-primary);
   --font-navigation: var(--font-navigation);
   --font-title: var(--font-title);
   --font-secondary: var(--font-secondary);
@@ -32,24 +98,114 @@
 
 body {
   background: var(--background);
+  background-image: url('/images/background-pattern/background-pattern.png');
+  background-repeat: repeat;
+  background-size: 600px 600px; /* Optimized for technical pattern visibility */
+  background-attachment: fixed;
+  background-position: center;
   color: var(--foreground);
-  font-family: var(--font-secondary), Arial, Helvetica, sans-serif;
+  font-family: 'Outfit', system-ui, -apple-system, sans-serif;
   overflow-x: hidden;
   margin: 0;
   padding: 0;
+  position: relative;
 }
 
-/* Font Utility Classes */
+/* Background overlay optimized for technical pattern */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(8, 8, 12, 0.4); /* Enhanced overlay for technical pattern */
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Font Utility Classes - Modern Typography with Array & Outfit */
+
+/* Primary/Body Text - Outfit */
+.font-primary {
+  font-family: 'Outfit', system-ui, -apple-system, sans-serif;
+  font-weight: 400;
+  font-feature-settings: "calt" 1, "kern" 1;
+  -webkit-font-feature-settings: "calt" 1, "kern" 1;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.6;
+}
+
+/* Navigation - Array Bold */
 .font-navigation {
-  font-family: var(--font-navigation), Arial, Helvetica, sans-serif;
+  font-family: 'Array', monospace, system-ui, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  font-weight: 600;
+  font-feature-settings: "kern" 1;
+  -webkit-font-feature-settings: "kern" 1;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
+/* Titles/Headers - Array */
 .font-title {
-  font-family: var(--font-title), Georgia, serif;
+  font-family: 'Array', monospace, system-ui, sans-serif;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  font-feature-settings: "kern" 1, "liga" 1;
+  -webkit-font-feature-settings: "kern" 1, "liga" 1;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 0.95;
 }
 
+/* Array Font Specific Styling */
+.font-array {
+  font-family: 'Array', monospace, system-ui, sans-serif;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
+  -webkit-font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Secondary/Body Text - Outfit */
 .font-secondary {
-  font-family: var(--font-secondary), Arial, Helvetica, sans-serif;
+  font-family: 'Outfit', system-ui, -apple-system, sans-serif;
+  font-weight: 400;
+  font-feature-settings: "calt" 1, "kern" 1;
+  -webkit-font-feature-settings: "calt" 1, "kern" 1;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.6;
+}
+
+/* Outfit Font Specific Classes */
+.font-outfit {
+  font-family: 'Outfit', system-ui, -apple-system, sans-serif;
+}
+
+.font-outfit-light {
+  font-family: 'Outfit', system-ui, -apple-system, sans-serif;
+  font-weight: 300;
+}
+
+.font-outfit-medium {
+  font-family: 'Outfit', system-ui, -apple-system, sans-serif;
+  font-weight: 500;
+}
+
+.font-outfit-semibold {
+  font-family: 'Outfit', system-ui, -apple-system, sans-serif;
+  font-weight: 600;
 }
 
 /* SVG Filters for Glass Refraction */
@@ -802,5 +958,28 @@ html {
   #timeline,
   #contact {
     scroll-margin-top: 2rem;
+  }
+}
+
+/* Responsive background pattern adjustments */
+@media (max-width: 768px) {
+  /* Smaller pattern on mobile for better performance and visibility */
+  body {
+    background-size: 300px 300px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Even smaller pattern for very small screens */
+  body {
+    background-size: 250px 250px !important;
+  }
+}
+
+/* High DPI displays adjustment */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  body {
+    /* Crisper pattern on high DPI displays */
+    background-size: 350px 350px;
   }
 }

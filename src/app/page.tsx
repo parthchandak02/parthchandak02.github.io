@@ -13,63 +13,139 @@ import {
 } from '../lib/contentLoader';
 import TypewriterText from '../components/TypewriterText';
 import LiquidGlass, { LiquidGlassPresets } from '../components/LiquidGlass';
+import TagsDisplay from '../components/TagsDisplay';
 import { portfolioData } from '../content/portfolio-data';
+import { tagsData } from '../content/tags-data';
+import { ChevronDownIcon } from '@heroicons/react/24/outline';
 
-// Convert portfolio data to ContentItem format
-const convertTimelineToContentItems = (timeline: any[]): ContentItem[] => {
-  return timeline.map((item, index) => ({
-    id: item.id,
-    title: item.title,
-    company: item.company,
-    location: item.location,
-    date: item.date,
-    description: item.description,
-    category: item.type.charAt(0).toUpperCase() + item.type.slice(1), // Convert type to category
-    type: item.type,
-    icon: item.icon,
-    order: index,
-    technologies: item.technologies || [],
-    color: item.color || '#E53E3E',
-    link: item.link,
-    iconOverride: item.logo ? item.logo.replace('/logos/', 'company-logos/') : undefined,
-    image: undefined, // Add if you have project images
-    content: item.description
-  }));
-};
-
-// Static data using portfolio-data.ts
-const STATIC_CONTENT_ITEMS: ContentItem[] = convertTimelineToContentItems(portfolioData.timeline);
-
-const STATIC_NAVIGATION_ITEMS: NavigationItem[] = portfolioData.navigation.map(item => ({
-  id: item.id,
-  label: item.label,
-  icon: item.icon,
-  section: item.section,
-  folder: `0${portfolioData.navigation.indexOf(item)}_${item.section}`,
-  color: item.color || '#E53E3E'
-}));
-
-const STATIC_SOCIAL_MEDIA_ITEMS: SocialMediaItem[] = portfolioData.socialMedia.map(item => ({
+// Transform portfolio data to match ContentItem interface
+const STATIC_CONTENT_ITEMS: ContentItem[] = portfolioData.timeline.map(item => ({
   ...item,
-  color: item.color || '#E53E3E' // Ensure color is always defined
+  category: item.type.charAt(0).toUpperCase() + item.type.slice(1), // Convert 'experience' -> 'Experience'
+  order: item.order || 0, // Use order from data or default to 0
+  content: item.content || item.description, // Use content if available, fallback to description
 }));
+
+
+
+const STATIC_NAVIGATION_ITEMS: NavigationItem[] = [
+  {
+    id: 'about',
+    label: 'About',
+    icon: 'UserIcon',
+    section: 'about',
+    folder: '00_about',
+    color: '#E53E3E'
+  },
+  {
+    id: 'experience',
+    label: 'Experience',
+    icon: 'BriefcaseIcon',
+    section: 'experience',
+    folder: '01_experience',
+    color: '#E53E3E'
+  },
+  {
+    id: 'projects',
+    label: 'Projects',
+    icon: 'RocketLaunchIcon',
+    section: 'projects',
+    folder: '02_projects',
+    color: '#E53E3E'
+  },
+  {
+    id: 'research',
+    label: 'Research',
+    icon: 'BeakerIcon',
+    section: 'research',
+    folder: '03_research',
+    color: '#E53E3E'
+  },
+  {
+    id: 'awards',
+    label: 'Awards',
+    icon: 'TrophyIcon',
+    section: 'awards',
+    folder: '04_awards',
+    color: '#E53E3E'
+  },
+  {
+    id: 'community',
+    label: 'Community',
+    icon: 'UsersIcon',
+    section: 'community',
+    folder: '05_community',
+    color: '#E53E3E'
+  },
+  {
+    id: 'media',
+    label: 'Media',
+    icon: 'FilmIcon',
+    section: 'media',
+    folder: '06_media',
+    color: '#E53E3E'
+  },
+  {
+    id: 'contact',
+    label: 'Contact',
+    icon: 'EnvelopeIcon',
+    section: 'contact',
+    folder: '07_contact',
+    color: '#E53E3E'
+  }
+];
+
+const STATIC_SOCIAL_MEDIA_ITEMS: SocialMediaItem[] = portfolioData.socialMedia;
 
 const STATIC_ABOUT_DATA: AboutData = {
   title: 'About',
-  currentPosition: 'Engineer & Researcher',
-  location: 'Location',
-  description: 'I am an innovative engineer and researcher passionate about developing cutting-edge solutions.',
+  currentPosition: 'Creative Technologist at Zoox',
+  location: 'Foster City, CA',
+  description: 'Creative technologist specializing in cutting-edge human-computer interaction for autonomous vehicles and robotics.',
   tags: {
-    technical: ['JavaScript', 'TypeScript', 'React', 'Next.js', 'Node.js'],
-    project_management: ['Agile', 'Scrum', 'Project Leadership'],
-    research: ['Machine Learning', 'AI', 'Data Science'],
-    experience: ['Full Stack Development', 'System Design'],
-    community: ['Open Source', 'Mentoring', 'Community Building'],
-    awards: ['Innovation Award', 'Best Project Award']
+    technical: [
+      'Python', 'JavaScript', 'React', 'C++', 'C', 'MATLAB', 'Linux', 'Arduino', 'Raspberry Pi', 
+      '3D Modeling', '3D Printing', 'SolidWorks', 'AutoCAD', 'Google SketchUp', 'Blender', 'Unity', 
+      'ProtoPie', 'Figma', 'CorelDraw', 'CAD Design', 'Manufacturing', 'Mechanical Engineering', 
+      'Robotics', 'IoT', 'Computer Vision', 'Neural Networks', 'Machine Learning', 'Hardware Prototyping',
+      'Electro-mechanical Systems', 'Sensors', 'Audio Processing', 'User Interface Design', 'PCB Design',
+      'Embedded Systems', 'Automation', 'Material Science', 'Data Analysis', 'Algorithm Development', 'Signal Processing'
+    ],
+    project_management: [
+      'Agile', 'JIRA', 'Confluence', 'Smartsheets', 'Google Suite', 'Project Planning', 'Resource Allocation',
+      'Team Leadership', 'Cross-functional Collaboration', 'Process Improvement', 'Quality Systems', 'LEAN Manufacturing',
+      'PFMEA', 'Risk Management', 'Budget Planning', 'Vendor Management', 'Documentation', 'Technical Writing',
+      'Requirements Gathering', 'System Integration', 'Workflow Optimization', 'Data Migration', 'Testing Frameworks',
+      'Validation Processes', 'Change Management'
+    ],
+    research: [
+      'Academic Research', 'Peer Review', 'Scientific Writing', 'Literature Review', 'Experimental Design',
+      'Data Collection', 'Statistical Analysis', 'Research Methodology', 'Innovation', 'Technology Transfer',
+      'Patent Research', 'Competitive Analysis', 'Market Research', 'User Studies', 'Usability Testing',
+      'Human-Computer Interaction', 'User Experience Research', 'Accessibility', 'Design Thinking', 'Systematic Review',
+      'Grant Writing', 'Publication', 'Conference Presentations', 'Industry Collaboration', 'Technology Assessment'
+    ],
+    experience: [
+      'Autonomous Vehicles', 'Manufacturing Engineering', 'User Experience Design', 'Hardware Development',
+      'Supercharger Technology', 'Tesla Semi', 'Site Planning', 'Electrical Systems', 'Civil Engineering',
+      'Infrastructure Development', 'Visualization', 'Technical Documentation', 'Vendor Coordination', 'Cost Estimation',
+      'Route Planning', 'Logistics', 'Safety Systems', 'Quality Control', 'Production Planning', 'Assembly Fixtures',
+      'Test Automation', 'Field Testing', 'Prototyping', 'Design for Manufacturing', 'Technology Integration'
+    ],
+    community: [
+      'Mentorship', 'Team Building', 'Community Service', 'Leadership Development', 'Volunteer Work',
+      'Event Organization', 'Public Speaking', 'Workshop Facilitation', 'Knowledge Sharing', 'Peer Support',
+      'Collaborative Problem Solving', 'Social Impact', 'Diversity and Inclusion', 'Student Mentoring', 'Professional Development'
+    ],
+    awards: [
+      'Engineering Excellence', 'Innovation Recognition', 'Academic Achievement', 'Leadership Awards',
+      'Scholarship Recipient', 'Honor Society', 'Merit Recognition', 'Entrepreneurship', 'Hackathon Winner',
+      'Competition Success', 'Research Recognition', 'Technical Achievement', 'Community Impact', 'Professional Recognition', 'Academic Honors'
+    ]
   },
-  languages: ['English', 'Spanish', 'French'],
-  education: ['Bachelor of Science in Computer Science'],
-  strengths: ['Problem Solving', 'Team Leadership', 'Innovation'],
+  languages: ['English (Native)', 'Hindi (Fluent)', 'Marathi (Fluent)', 'German (Intermediate)', 'Marwari (Conversational)'],
+  education: ['B.S. Mechanical Engineering', 'Minor Computer Science', 'Minor Mathematics', 'Washington State University'],
+  strengths: ['Maximizer', 'Relator', 'Arranger', 'Harmony', 'Empathy'],
   content: 'Detailed about content would go here...'
 };
 
@@ -82,11 +158,10 @@ function PortfolioContent() {
   const [aboutData, setAboutData] = useState<AboutData | null>(STATIC_ABOUT_DATA);
   const [loading, setLoading] = useState(false);
 
-  // For static export, we don't need to load dynamic data
-  // All data is already loaded from portfolio-data.ts
+  // Using static portfolio data (no API calls needed)
   useEffect(() => {
-    // Static data is already loaded, no need to fetch from API
-    console.log('Using static data from portfolio-data.ts');
+    console.log('Loaded content items from portfolio-data.ts:', allContentItems.length);
+    console.log('Content types available:', [...new Set(allContentItems.map(item => item.type))]);
   }, []);
 
   // Filter content items based on current filter
@@ -152,111 +227,60 @@ function PortfolioContent() {
         onSectionClick={handleSectionClick}
       />
 
-      {/* Right Social Bar */}
-      <RightSocialBar items={socialMediaItems} />
+      {/* Right Social Bar - Moved outside main content flow */}
+      <div className="fixed z-50">
+        <RightSocialBar items={socialMediaItems} />
+      </div>
 
       {/* Main Content */}
       <main className="min-h-screen">
-        <div className="px-4 md:px-8 lg:px-16 xl:px-32 lg:ml-64 lg:mr-32">
+        <div className="px-4 md:px-8 lg:px-16 xl:px-32 lg:ml-64">
           {/* Hero Section */}
-          <section id="about" className="min-h-screen flex items-center justify-center">
-            <div className="text-center max-w-4xl mx-auto">
-              <LiquidGlass 
-                {...LiquidGlassPresets.primary}
-                className="p-8 md:p-12 rounded-3xl mb-8"
-              >
-                <div className="text-center">
-                  <div className="text-2xl md:text-3xl text-white/80 mb-4 font-secondary">
-                    Hi, my name is
-                  </div>
-                  <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 animate-fade-in font-title">
-                    Parth Chandak
-                  </h1>
-                  <div className="text-xl md:text-2xl text-white/90 mb-8 leading-relaxed font-secondary">
-                    I am a{' '}
-                    <TypewriterText
-                      roles={[
-                        'Engineer',
-                        'Researcher',
-                        'Creative Technologist',
-                        'Team Leader',
-                        'Innovator',
-                        'Problem Solver'
-                      ]}
-                      className="text-white font-medium font-secondary"
-                    />
-                  </div>
-                </div>
-                
-                {/* Dynamic Tags with Glass Morphism */}
-                <div className="mb-12">
-                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
-                    {aboutData?.tags && Object.entries(aboutData.tags).map(([category, items]) => (
-                      <div key={category} className="bg-white/5 backdrop-blur-sm rounded-xl p-3 border border-white/10">
-                        <h3 className="text-sm font-medium text-white/90 mb-2 capitalize font-title">
-                          {category.replace('_', ' ')}
-                        </h3>
-                        <div className="flex flex-wrap gap-1">
-                          {items.slice(0, 3).map((item, index) => (
-                            <span
-                              key={index}
-                              className="px-2 py-1 text-xs bg-white/10 text-white/80 rounded-full font-navigation"
-                            >
-                              {item}
-                            </span>
-                          ))}
-                          {items.length > 3 && (
-                            <span className="px-2 py-1 text-xs bg-white/10 text-white/80 rounded-full font-navigation">
-                              +{items.length - 3}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* About Content */}
-                <div className="text-white/80 text-lg leading-relaxed mb-8 max-w-3xl mx-auto font-secondary">
-                  <p className="mb-4">
-                    {aboutData?.description}
-                  </p>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
-                    <div>
-                      <h3 className="text-white font-medium mb-2 font-title">Current Position</h3>
-                      <p className="text-white/70 font-secondary">{aboutData?.currentPosition}</p>
-                    </div>
-                    <div>
-                      <h3 className="text-white font-medium mb-2 font-title">Location</h3>
-                      <p className="text-white/70 font-secondary">{aboutData?.location}</p>
-                    </div>
-                    <div>
-                      <h3 className="text-white font-medium mb-2 font-title">Languages</h3>
-                      <p className="text-white/70 font-secondary">{aboutData?.languages.join(', ')}</p>
-                    </div>
-                    <div>
-                      <h3 className="text-white font-medium mb-2 font-title">Education</h3>
-                      <p className="text-white/70 font-secondary">{aboutData?.education.join(', ')}</p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Call to Action */}
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <button 
-                    onClick={() => handleSectionClick('timeline')}
-                    className="px-8 py-3 bg-white/10 text-white rounded-full hover:bg-white/20 transition-all duration-300 backdrop-blur-sm font-navigation"
-                  >
-                    View My Work
-                  </button>
-                  <button 
-                    onClick={() => handleSectionClick('contact')}
-                    className="px-8 py-3 bg-white/10 text-white rounded-full hover:bg-white/20 transition-all duration-300 backdrop-blur-sm font-navigation"
-                  >
-                    Get In Touch
-                  </button>
-                </div>
-              </LiquidGlass>
+          <section id="about" className="min-h-screen flex items-center justify-center py-8 md:py-12">
+            <div className="max-w-4xl mx-auto px-4 text-center">
+              {/* Hero Content */}
+              <div className="text-2xl md:text-3xl text-white/80 mb-4 font-secondary">
+                Hi, my name is
+              </div>
+              <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 animate-fade-in font-title">
+                Parth Chandak
+              </h1>
+              <div className="text-xl md:text-2xl text-white/90 mb-12 leading-relaxed font-secondary">
+                I am a{' '}
+                <TypewriterText
+                  roles={[
+                    'Creative Technologist',
+                    'Engineer',
+                    'Researcher',
+                    'Team Leader',
+                    'Innovator',
+                    'Problem Solver'
+                  ]}
+                  className="text-white font-medium font-secondary"
+                />
+              </div>
+              {/* Tags Display - Now directly below typewriter text */}
+              <div className="max-w-3xl mx-auto mb-12">
+                <TagsDisplay 
+                  tags={tagsData}
+                  className="w-full"
+                />
+              </div>
+              {/* Call to Action */}
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <button 
+                  onClick={() => handleSectionClick('timeline')}
+                  className="px-8 py-3 bg-white/10 text-white rounded-full hover:bg-white/20 transition-all duration-300 backdrop-blur-sm font-navigation"
+                >
+                  View My Work
+                </button>
+                <button 
+                  onClick={() => handleSectionClick('contact')}
+                  className="px-8 py-3 bg-white/10 text-white rounded-full hover:bg-white/20 transition-all duration-300 backdrop-blur-sm font-navigation"
+                >
+                  Get In Touch
+                </button>
+              </div>
             </div>
           </section>
 
@@ -270,35 +294,19 @@ function PortfolioContent() {
           </section>
 
           {/* Contact Section */}
-          <section id="contact" className="py-20">
+          <section id="contact" className="py-20 mb-24 lg:mb-32">
             <div className="max-w-4xl mx-auto text-center">
-              <LiquidGlass 
-                {...LiquidGlassPresets.primary}
-                className="p-8 md:p-12 rounded-3xl"
-              >
-                <h2 className="text-3xl md:text-4xl font-bold text-white mb-6 font-title">
-                  Let&apos;s Work Together
-                </h2>
-                <p className="text-white/80 text-lg mb-8 max-w-2xl mx-auto font-secondary">
-                  I&apos;m always interested in new opportunities and collaborations. 
-                  Whether you have a project in mind or just want to connect, 
-                  I&apos;d love to hear from you.
-                </p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <button 
-                    onClick={() => window.open('mailto:your.email@example.com')}
-                    className="px-8 py-3 bg-white/10 text-white rounded-full hover:bg-white/20 transition-all duration-300 backdrop-blur-sm font-navigation"
-                  >
-                    Send Email
-                  </button>
-                  <button 
-                    onClick={() => window.open('https://calendly.com/username')}
-                    className="px-8 py-3 bg-white/10 text-white rounded-full hover:bg-white/20 transition-all duration-300 backdrop-blur-sm font-navigation"
-                  >
-                    Schedule Call
-                  </button>
-                </div>
-              </LiquidGlass>
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-6 font-title">
+                Let&apos;s Connect
+              </h2>
+              <p className="text-white/80 text-lg mb-8 max-w-2xl mx-auto font-secondary">
+                I&apos;m always interested in new opportunities and collaborations. 
+                Whether you have a project in mind or just want to connect, 
+                I&apos;d love to hear from you.
+              </p>
+              <div className="flex justify-center mt-8">
+                <ChevronDownIcon className="w-8 h-8 text-white/60 animate-bounce" />
+              </div>
             </div>
           </section>
         </div>

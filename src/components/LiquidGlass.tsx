@@ -14,6 +14,7 @@ interface LiquidGlassProps {
   noise?: boolean;
   style?: React.CSSProperties;
   onClick?: () => void;
+  title?: string;
 }
 
 export default function LiquidGlass({
@@ -27,6 +28,7 @@ export default function LiquidGlass({
   innerShadow = true,
   noise = true,
   style = {},
+  title,
   ...props
 }: LiquidGlassProps) {
   
@@ -99,6 +101,7 @@ export default function LiquidGlass({
     <div 
       className={`liquid-glass ${className}`}
       style={liquidGlassStyle}
+      title={title}
       {...props}
     >
       {/* Noise overlay (if enabled) */}
@@ -142,7 +145,10 @@ export default function LiquidGlass({
           position: 'relative',
           zIndex: 3,
           width: '100%',
-          height: '100%'
+          height: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
         }}
       >
         {children}
