@@ -15,6 +15,7 @@ interface LiquidGlassProps extends HTMLAttributes<HTMLDivElement> {
   style?: React.CSSProperties;
   onClick?: React.MouseEventHandler<HTMLDivElement>;
   title?: string;
+  align?: 'center' | 'stretch' | 'start' | 'end';
 }
 
 export default function LiquidGlass({
@@ -29,6 +30,7 @@ export default function LiquidGlass({
   noise = true,
   style = {},
   title,
+  align = 'center',
   ...props
 }: LiquidGlassProps) {
   
@@ -147,8 +149,8 @@ export default function LiquidGlass({
           width: '100%',
           height: '100%',
           display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center'
+          alignItems: align === 'stretch' ? 'stretch' : 'center',
+          justifyContent: align === 'stretch' ? 'flex-start' : align
         }}
       >
         {children}

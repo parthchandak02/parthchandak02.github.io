@@ -100,8 +100,7 @@ function PortfolioContent() {
 
   // Using static portfolio data (no API calls needed)
   useEffect(() => {
-    console.log('Loaded content items from portfolio-data.ts:', allContentItems.length);
-    console.log('Content types available:', [...new Set(allContentItems.map(item => item.type))]);
+    // Data loaded from portfolio-data.ts
   }, []);
 
   // Get unique types for filtering (now using organized data)
@@ -144,18 +143,34 @@ function PortfolioContent() {
     const timelineTypes = ['experience', 'projects', 'research', 'awards', 'community', 'media'];
     
     if (timelineTypes.includes(sectionId)) {
-      // For timeline sections, reset filter to show all and scroll to specific section
-      setFilteredType('all');
+      // For timeline sections, filter to show only that specific type
+      setFilteredType(sectionId);
       
-      // Wait for the timeline to render with all sections, then scroll to the specific section
+      // Scroll to the timeline section to show the filtered results
       setTimeout(() => {
-        const element = document.getElementById(sectionId);
-        if (element) {
-          element.scrollIntoView({ behavior: 'smooth' });
+        const timelineElement = document.getElementById('timeline');
+        if (timelineElement) {
+          timelineElement.scrollIntoView({ behavior: 'smooth' });
         }
       }, 100);
+    } else if (sectionId === 'about') {
+      // When clicking About, show all timeline items and scroll to about section
+      setFilteredType('all');
+      
+      const element = document.getElementById(sectionId);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    } else if (sectionId === 'timeline') {
+      // Special case for "View My Work" button - show all items and scroll to timeline
+      setFilteredType('all');
+      
+      const timelineElement = document.getElementById('timeline');
+      if (timelineElement) {
+        timelineElement.scrollIntoView({ behavior: 'smooth' });
+      }
     } else {
-      // For non-timeline sections (about, contact), show all items
+      // For other non-timeline sections (contact), show all items
       setFilteredType('all');
       
       const element = document.getElementById(sectionId);
@@ -244,16 +259,20 @@ function PortfolioContent() {
             <div className="max-w-6xl mx-auto">
               <PortfolioTimeline 
                 groupedItems={
-                  filteredType === 'all' 
-                    ? ORGANIZED_TIMELINE_DATA 
-                    : {
-                        experience: filteredType === 'experience' ? ORGANIZED_TIMELINE_DATA.experience : [],
-                        projects: filteredType === 'projects' ? ORGANIZED_TIMELINE_DATA.projects : [],
-                        research: filteredType === 'research' ? ORGANIZED_TIMELINE_DATA.research : [],
-                        awards: filteredType === 'awards' ? ORGANIZED_TIMELINE_DATA.awards : [],
-                        community: filteredType === 'community' ? ORGANIZED_TIMELINE_DATA.community : [],
-                        media: filteredType === 'media' ? ORGANIZED_TIMELINE_DATA.media : []
-                      }
+                  (() => {
+                    const result = filteredType === 'all' 
+                      ? ORGANIZED_TIMELINE_DATA 
+                      : {
+                          experience: filteredType === 'experience' ? ORGANIZED_TIMELINE_DATA.experience : [],
+                          projects: filteredType === 'projects' ? ORGANIZED_TIMELINE_DATA.projects : [],
+                          research: filteredType === 'research' ? ORGANIZED_TIMELINE_DATA.research : [],
+                          awards: filteredType === 'awards' ? ORGANIZED_TIMELINE_DATA.awards : [],
+                          community: filteredType === 'community' ? ORGANIZED_TIMELINE_DATA.community : [],
+                          media: filteredType === 'media' ? ORGANIZED_TIMELINE_DATA.media : []
+                        };
+                    
+                    return result;
+                  })()
                 }
                 onSectionInView={setActiveSection}
               />

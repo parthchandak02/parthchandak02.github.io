@@ -37,7 +37,7 @@ const SplineBackground: React.FC = () => {
     script.src = 'https://unpkg.com/@splinetool/viewer@1.10.22/build/spline-viewer.js';
     script.onload = () => {
       setSplineLoaded(true);
-      console.log('Spline viewer loaded successfully');
+                  // Spline viewer loaded successfully
     };
     script.onerror = () => {
       console.error('Failed to load Spline viewer');

@@ -9,9 +9,8 @@ import {
   UsersIcon,
   TrophyIcon
 } from '@heroicons/react/24/outline';
-import * as Si from 'react-icons/si';
-import * as Tb from 'react-icons/tb';
 import LiquidGlass, { LiquidGlassPresets } from './LiquidGlass';
+import ExpandableTag from './ExpandableTag';
 
 interface Tag {
   name: string;
@@ -54,18 +53,7 @@ const CATEGORY_CONFIG = {
   }
 };
 
-// Helper function to get the icon component from the icon string
-const getIconComponent = (iconName: string) => {
-  if (iconName.startsWith('Si')) {
-    return (Si as any)[iconName];
-  } else if (iconName.startsWith('Tb')) {
-    return (Tb as any)[iconName];
-  }
-  return null;
-};
-
 export default function TagsDisplay({ tags, className = '' }: TagsDisplayProps) {
-  const [expandedTag, setExpandedTag] = useState<string | null>(null);
   const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
 
   return (
@@ -115,44 +103,14 @@ export default function TagsDisplay({ tags, className = '' }: TagsDisplayProps) 
 
               {/* Tags Grid - Flexible Area */}
               <div className="flex flex-wrap gap-3 md:gap-4 min-w-0">
-                {categoryTags.map((tag) => {
-                  const IconComponent = getIconComponent(tag.icon);
-                  const isExpanded = expandedTag === tag.name;
-
-                  return IconComponent ? (
-                    <LiquidGlass
-                      key={tag.name}
-                      onMouseEnter={() => setExpandedTag(tag.name)}
-                      onMouseLeave={() => setExpandedTag(null)}
-                      onClick={() => setExpandedTag(isExpanded ? null : tag.name)}
-                      className={`relative inline-flex items-center h-10 md:h-12 transition-[width] duration-300 ease-in-out overflow-hidden cursor-pointer ${
-                        isExpanded
-                          ? 'w-auto pr-3'
-                          : 'w-10 md:w-12'
-                      }`}
-                      style={{
-                        borderRadius: '8px',
-                        display: 'flex',
-                        alignItems: 'center'
-                      }}
-                      title={tag.name}
-                    >
-                      {/* Icon Container - Always centered in fixed space */}
-                      <div 
-                        className="flex items-center justify-center flex-shrink-0 w-10 md:w-12 h-full"
-                      >
-                        <IconComponent className="w-5 h-5 md:w-6 md:h-6" />
-                      </div>
-                      
-                      {/* Text that appears on expansion */}
-                      <span className={`text-white text-sm md:text-base transition-all duration-300 ease-in-out whitespace-nowrap ${
-                        isExpanded ? 'opacity-100 max-w-none' : 'opacity-0 max-w-0 overflow-hidden'
-                      }`}>
-                        {tag.name}
-                      </span>
-                    </LiquidGlass>
-                  ) : null;
-                })}
+                {categoryTags.map((tag) => (
+                  <ExpandableTag
+                    key={tag.name}
+                    name={tag.name}
+                    icon={tag.icon}
+                    size="medium"
+                  />
+                ))}
               </div>
             </div>
           </div>

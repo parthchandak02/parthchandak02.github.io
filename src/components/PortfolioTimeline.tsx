@@ -20,6 +20,7 @@ import {
   ChevronUpIcon
 } from '@heroicons/react/24/outline';
 import LiquidGlass, { LiquidGlassPresets } from './LiquidGlass';
+import ExpandableTag from './ExpandableTag';
 import { ContentItem } from '../types/portfolio';
 
 interface PortfolioTimelineProps {
@@ -79,59 +80,42 @@ const TimelineCard: React.FC<{ item: ContentItem; isLast: boolean; showConnector
   
   return (
     <div className={`relative flex items-start ${isLast ? '' : 'pb-8 md:pb-12'}`}>
-      {/* Left column - Timeline track with icon */}
-      <div className="flex flex-col items-center flex-shrink-0 relative">
-        {/* Glass morphism icon container - mobile optimized */}
-        <div className="relative z-10 mb-2">
+      {/* Left column - Timeline track with icon - Fixed width for consistent alignment */}
+      <div className="flex flex-col items-center flex-shrink-0 relative w-12 md:w-14 lg:w-16">
+        {/* Glass morphism icon container - Fixed positioning */}
+        <div className="relative z-10">
           <LiquidGlass
             {...LiquidGlassPresets.primary}
-            className="
-              w-12 h-12 rounded-full 
-              border border-white/10
-              md:w-14 md:h-14 
-              lg:w-16 lg:h-16
-              relative
-            "
+            className="w-12 h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 rounded-lg border border-white/10 relative"
           >
             {/* Icon/Logo positioned absolutely in center */}
-            <div className="
-              absolute inset-0 
-              flex items-center justify-center
-            ">
+            <div className="absolute inset-0 flex items-center justify-center">
               {item.iconOverride ? (
                 <img 
                   src={`/images/${item.iconOverride}`}
                   alt={`${item.company} logo`}
-                  className="
-                    w-6 h-6 object-contain
-                    md:w-8 md:h-8
-                    lg:w-10 lg:h-10
-                  "
+                  className="w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 object-contain"
                 />
               ) : (
-                <IconComponent className="
-                  w-5 h-5 text-white
-                  md:w-6 md:h-6
-                  lg:w-7 lg:h-7
-                " />
+                <IconComponent className="w-5 h-5 md:w-6 md:h-6 lg:w-7 lg:h-7 text-white" />
               )}
             </div>
           </LiquidGlass>
         </div>
       </div>
       
-      {/* Content Card - Mobile optimized */}
-      <div className="flex-1 min-w-0 ml-4 md:ml-8">
+      {/* Content Card - Consistent left margin */}
+      <div className="flex-1 min-w-0 ml-6 md:ml-8 lg:ml-10">
         <LiquidGlass 
           {...styles.preset}
-          className={`timeline-card group rounded-2xl cursor-pointer relative p-6 hover:shadow-lg`}
-          onClick={toggleExpanded}
+          className={`timeline-card group rounded-lg relative p-4 md:p-6 hover:shadow-lg`}
           id={item.id}
+          align="stretch"
         >
-          <div className="relative">
+          <div className="relative w-full">
             {/* --- Compact, Always Visible Content --- */}
             {/* This part has a stable structure and is all left-aligned */}
-            <div className="space-y-3">
+            <div className="space-y-3 w-full">
               <h3 className="font-semibold text-white font-title text-base md:text-lg break-words leading-tight">
                 {item.title}
               </h3>
@@ -186,8 +170,22 @@ const TimelineCard: React.FC<{ item: ContentItem; isLast: boolean; showConnector
                   </p>
                 </div>
                 
-                {/* Technologies */}
-                {item.technologies && (
+                {/* Tags */}
+                {item.tags && item.tags.length > 0 && (
+                  <div className="flex flex-wrap gap-2">
+                    {item.tags.map((tag, index) => (
+                      <ExpandableTag
+                        key={`${tag.name}-${index}`}
+                        name={tag.name}
+                        icon={tag.icon}
+                        size="small"
+                      />
+                    ))}
+                  </div>
+                )}
+                
+                {/* Technologies (fallback for items without tags) */}
+                {item.technologies && item.technologies.length > 0 && (!item.tags || item.tags.length === 0) && (
                   <div className="flex flex-wrap gap-2">
                     {(Array.isArray(item.technologies) ? item.technologies : [item.technologies]).map((tech: string) => (
                       <span key={tech} className="px-2 py-1 text-xs bg-white/10 text-white/90 rounded-md backdrop-blur-sm font-navigation">
@@ -210,7 +208,10 @@ const TimelineCard: React.FC<{ item: ContentItem; isLast: boolean; showConnector
             
             {/* --- Expand/Collapse Indicator --- */}
             {/* Positioned at bottom right of the card */}
-            <div className="absolute bottom-0 right-0">
+            <div 
+              className="absolute bottom-0 right-0 p-2 cursor-pointer hover:text-white/80 transition-colors"
+              onClick={toggleExpanded}
+            >
                 {isExpanded ? (
                   <ChevronUpIcon className="w-5 h-5 text-white/60" />
                 ) : (
@@ -232,6 +233,8 @@ export const PortfolioTimeline: React.FC<PortfolioTimelineProps> = ({
   className = '',
   onSectionInView
 }) => {
+  // No debug logging needed
+
   // Set up intersection observer for auto-highlighting navigation
   useEffect(() => {
     if (!onSectionInView || !groupedItems) return;

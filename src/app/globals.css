@@ -802,7 +802,6 @@ html {
   .timeline-card {
     margin-bottom: 1rem;
     min-height: 100px;
-    padding: 0.75rem;
   }
   
   .timeline-card h3 {
@@ -905,8 +904,7 @@ html {
 /* Improved mobile layout for timeline structure */
 @media (max-width: 480px) {
   .timeline-card {
-    margin-left: 0.5rem;
-    margin-right: 0.5rem;
+    /* Consistent alignment - no extra margins */
   }
   
   .timeline-card h3 {
