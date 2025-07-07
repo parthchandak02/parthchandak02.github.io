@@ -235,9 +235,9 @@ export const PortfolioTimeline: React.FC<PortfolioTimelineProps> = ({
 
   return (
     <div className={`max-w-4xl mx-auto px-4 md:px-6 py-8 md:py-12 ${className}`}>
-      <div className="space-y-4 md:space-y-8">
+      <div>
         {items.map((item, index) => (
-          <div key={index} className={isAtBottom ? 'at-bottom' : ''}>
+          <div key={index} className={`py-0 ${isAtBottom ? 'at-bottom' : ''}`}>
             <TimelineCard 
               item={item} 
               isLast={index === items.length - 1} 
