@@ -1,8 +1,8 @@
 "use client";
 
-import React, { ReactNode } from 'react';
+import React, { ReactNode, HTMLAttributes } from 'react';
 
-interface LiquidGlassProps {
+interface LiquidGlassProps extends HTMLAttributes<HTMLDivElement> {
   children: ReactNode;
   className?: string;
   variant?: 'subtle' | 'medium' | 'strong' | 'liquid';
@@ -13,7 +13,7 @@ interface LiquidGlassProps {
   innerShadow?: boolean;
   noise?: boolean;
   style?: React.CSSProperties;
-  onClick?: () => void;
+  onClick?: React.MouseEventHandler<HTMLDivElement>;
   title?: string;
 }
 

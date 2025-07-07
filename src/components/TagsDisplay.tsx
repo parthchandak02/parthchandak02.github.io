@@ -25,6 +25,7 @@ interface TagsDisplayProps {
     research: Tag[];
     experience: Tag[];
     community: Tag[];
+    team: Tag[];
     media: Tag[];
     awards: Tag[];
   };
@@ -53,14 +54,9 @@ const CATEGORY_CONFIG = {
     label: 'Experience',
     maxTagsPerRow: 4
   },
-  community: {
+  team: {
     icon: UsersIcon,
-    label: 'Community',
-    maxTagsPerRow: 4
-  },
-  media: {
-    icon: TrophyIcon,
-    label: 'Media',
+    label: 'Team',
     maxTagsPerRow: 4
   }
 };
@@ -77,10 +73,10 @@ const getIconComponent = (iconName: string) => {
 
 export default function TagsDisplay({ tags, className = '' }: TagsDisplayProps) {
   const [expandedTag, setExpandedTag] = useState<string | null>(null);
-  const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
+  const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
 
   return (
-    <div className={`flex flex-col gap-4 md:gap-6 ${className}`}>
+    <div className={`flex flex-col gap-6 md:gap-8 ${className}`}>
       {Object.entries(tags).map(([category, categoryTags]) => {
         if (!categoryTags?.length || !CATEGORY_CONFIG[category as keyof typeof CATEGORY_CONFIG]) {
           return null;
@@ -88,62 +84,82 @@ export default function TagsDisplay({ tags, className = '' }: TagsDisplayProps) 
 
         const config = CATEGORY_CONFIG[category as keyof typeof CATEGORY_CONFIG];
         const CategoryIcon = config.icon;
-        const isCategoryExpanded = expandedCategory === category;
+        const isCategoryHovered = hoveredCategory === category;
 
         return (
-          <div key={category} className="flex flex-col md:flex-row items-start md:items-center gap-2 md:gap-4">
-            {/* Category Icon */}
-            <div 
-              className="flex items-center gap-2 cursor-pointer"
-              onClick={() => setExpandedCategory(isCategoryExpanded ? null : category)}
-            >
-              <LiquidGlass 
-                className={`flex items-center justify-center w-10 h-10 md:w-12 md:h-12 shrink-0 transition-all duration-300 ${
-                  isCategoryExpanded ? 'scale-110' : ''
-                }`}
-                title={config.label}
-              >
-                <CategoryIcon className="w-5 h-5 md:w-6 md:h-6" />
-              </LiquidGlass>
-              <span className={`text-white/80 text-sm md:text-base font-medium font-navigation transition-all duration-300 ${
-                isCategoryExpanded ? 'opacity-100' : 'opacity-0 md:opacity-100'
-              }`}>
-                {config.label}
-              </span>
-            </div>
+          <div key={category} className="flex flex-col gap-3">
+            {/* Category Section - Using CSS Grid to anchor category icon */}
+            <div className="grid grid-cols-[auto_1fr] gap-3 items-start">
+              {/* Category Icon with Tooltip - Fixed Position */}
+              <div className="relative flex-shrink-0">
+                <LiquidGlass
+                  className={`w-12 h-12 md:w-14 md:h-14 transition-all duration-300 ${
+                    isCategoryHovered ? 'scale-110' : ''
+                  }`}
+                  style={{ 
+                    borderRadius: '8px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}
+                  onMouseEnter={() => setHoveredCategory(category)}
+                  onMouseLeave={() => setHoveredCategory(null)}
+                  title={config.label}
+                >
+                  <div className="flex items-center justify-center w-full h-full">
+                    <CategoryIcon className="w-6 h-6 md:w-7 md:h-7" />
+                  </div>
+                </LiquidGlass>
+                
+                {/* Tooltip - positioned above the icon */}
+                {isCategoryHovered && (
+                  <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-1 bg-black/80 text-white text-sm rounded-lg whitespace-nowrap z-30 backdrop-blur-sm">
+                    {config.label}
+                    <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-black/80"></div>
+                  </div>
+                )}
+              </div>
 
-            {/* Tags Grid */}
-            <div className="flex flex-wrap gap-2 md:gap-3">
-              {categoryTags.map((tag) => {
-                const IconComponent = getIconComponent(tag.icon);
-                const isExpanded = expandedTag === tag.name;
+              {/* Tags Grid - Flexible Area */}
+              <div className="flex flex-wrap gap-3 md:gap-4 min-w-0">
+                {categoryTags.map((tag) => {
+                  const IconComponent = getIconComponent(tag.icon);
+                  const isExpanded = expandedTag === tag.name;
 
-                return IconComponent ? (
-                  <div 
-                    key={tag.name}
-                    className="relative"
-                    onMouseEnter={() => setExpandedTag(tag.name)}
-                    onMouseLeave={() => setExpandedTag(null)}
-                    onClick={() => setExpandedTag(isExpanded ? null : tag.name)}
-                  >
-                    <LiquidGlass 
-                      className={`flex items-center h-8 md:h-10 transition-all duration-300 ${
-                        isExpanded 
-                          ? 'px-3 scale-105' 
-                          : 'w-8 md:w-10 justify-center'
+                  return IconComponent ? (
+                    <LiquidGlass
+                      key={tag.name}
+                      onMouseEnter={() => setExpandedTag(tag.name)}
+                      onMouseLeave={() => setExpandedTag(null)}
+                      onClick={() => setExpandedTag(isExpanded ? null : tag.name)}
+                      className={`relative inline-flex items-center h-10 md:h-12 transition-[width] duration-300 ease-in-out overflow-hidden cursor-pointer ${
+                        isExpanded
+                          ? 'w-auto pr-3'
+                          : 'w-10 md:w-12'
                       }`}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center'
+                      }}
                       title={tag.name}
                     >
-                      <IconComponent className="w-4 h-4 md:w-5 md:h-5 flex-shrink-0" />
-                      <span className={`text-white text-sm whitespace-nowrap transition-all duration-300 ml-2 ${
-                        isExpanded ? 'opacity-100 max-w-[200px]' : 'opacity-0 max-w-0 overflow-hidden'
+                      {/* Icon Container - Always centered in fixed space */}
+                      <div 
+                        className="flex items-center justify-center flex-shrink-0 w-10 md:w-12 h-full"
+                      >
+                        <IconComponent className="w-5 h-5 md:w-6 md:h-6" />
+                      </div>
+                      
+                      {/* Text that appears on expansion */}
+                      <span className={`text-white text-sm md:text-base transition-all duration-300 ease-in-out whitespace-nowrap ${
+                        isExpanded ? 'opacity-100 max-w-none' : 'opacity-0 max-w-0 overflow-hidden'
                       }`}>
                         {tag.name}
                       </span>
                     </LiquidGlass>
-                  </div>
-                ) : null;
-              })}
+                  ) : null;
+                })}
+              </div>
             </div>
           </div>
         );

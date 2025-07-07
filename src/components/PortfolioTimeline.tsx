@@ -129,20 +129,18 @@ const TimelineCard: React.FC<{ item: ContentItem; isLast: boolean }> = ({ item, 
                   <span>{item.date}</span>
               </div>
 
-              <div className="flex items-center gap-2 flex-wrap text-sm">
+              <div className="text-sm">
                 <span className="text-white/90 font-medium font-title">
                   {item.company}
                 </span>
-                {item.location && item.location.trim() !== '' && (
-                  <>
-                    <span className="text-white/60">•</span>
-                    <div className="flex items-center gap-1 text-white/70">
-                      <MapPinIcon className="w-3 h-3 flex-shrink-0" />
-                      <span className="break-words">{item.location}</span>
-                    </div>
-                  </>
-                )}
               </div>
+
+              {item.location && item.location.trim() !== '' && (
+                <div className="flex items-center gap-1 text-white/70 text-sm">
+                  <MapPinIcon className="w-3 h-3 flex-shrink-0" />
+                  <span className="break-words">{item.location}</span>
+                </div>
+              )}
 
               <div>
                 <span className={`px-2 py-1 text-xs font-medium text-white rounded-full ${styles.badgeColor} font-navigation`}>

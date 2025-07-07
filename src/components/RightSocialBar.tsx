@@ -86,24 +86,24 @@ export const RightSocialBar: React.FC<RightSocialBarProps> = ({
   return (
     <div className={`
       fixed z-50 transition-all duration-500 ease-in-out
-      /* Mobile: Always bottom center horizontal pill */
+      /* Mobile: bottom-center pill for all sizes */
       bottom-4 left-1/2 transform -translate-x-1/2 w-auto
-      /* Desktop: Conditional positioning based on contact section */
-      ${isInContactSection 
-        ? 'lg:bottom-6 lg:left-1/2 lg:top-auto lg:transform lg:-translate-x-1/2 lg:translate-y-0' 
-        : 'lg:right-6 lg:top-1/2 lg:bottom-auto lg:left-auto lg:transform lg:-translate-y-1/2 lg:translate-x-0'
+      /* Desktop: right side normally, or bottom-center nudged right in contact */
+      ${isInContactSection
+        ? 'lg:bottom-6 lg:top-auto lg:left-1/2 lg:transform lg:translate-x-[calc(-50%+5rem)]'
+        : 'lg:right-6 lg:top-1/2 lg:left-auto lg:transform lg:-translate-y-1/2 lg:translate-x-0'
       }
       ${className}
     `}>
-      <LiquidGlass 
+      <LiquidGlass
         {...LiquidGlassPresets.primary}
         className={`
           transition-all duration-500 ease-in-out
           /* Mobile: horizontal pill shape with proper padding */
           px-4 py-2.5 rounded-full
           /* Desktop: Conditional styling based on contact section */
-          ${isInContactSection 
-            ? 'lg:px-4 lg:py-2.5 lg:rounded-full' 
+          ${isInContactSection
+            ? 'lg:px-4 lg:py-2.5 lg:rounded-full'
             : 'lg:p-4 lg:rounded-2xl'
           }
         `}
@@ -113,14 +113,14 @@ export const RightSocialBar: React.FC<RightSocialBarProps> = ({
           /* Mobile: horizontal flex with proper spacing */
           flex flex-row space-x-4 items-center
           /* Desktop: Conditional layout based on contact section */
-          ${isInContactSection 
-            ? 'lg:flex-row lg:space-x-4 lg:space-y-0' 
+          ${isInContactSection
+            ? 'lg:flex-row lg:space-x-4 lg:space-y-0'
             : 'lg:flex-col lg:space-x-0 lg:space-y-4'
           }
         `}>
           {items.map((item) => {
             const IconComponent = getIconComponent(item.icon);
-            
+
             return (
               <button
                 key={item.id}
@@ -144,4 +144,4 @@ export const RightSocialBar: React.FC<RightSocialBarProps> = ({
       </LiquidGlass>
     </div>
   );
-}; 
+};

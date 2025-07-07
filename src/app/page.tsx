@@ -204,6 +204,25 @@ function PortfolioContent() {
 
   const handleSectionClick = (sectionId: string) => {
     setActiveSection(sectionId);
+    
+    // Map navigation sections to timeline item types for filtering
+    const sectionToTypeMap: { [key: string]: string } = {
+      'experience': 'experience',
+      'projects': 'project',
+      'research': 'research', 
+      'awards': 'award',
+      'community': 'community',
+      'media': 'media'
+    };
+    
+    // Update filter based on selected section
+    if (sectionToTypeMap[sectionId]) {
+      setFilteredType(sectionToTypeMap[sectionId]);
+    } else {
+      // For 'about' and 'contact', show all items
+      setFilteredType('all');
+    }
+    
     const element = document.getElementById(sectionId);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
