@@ -1,0 +1,89 @@
+{
+  "glyphs": {
+    "P": {
+      "ha": 600,
+      "x_min": 0,
+      "x_max": 600,
+      "o": "m 80 0 l 80 700 l 340 700 q 478 691 531 700 q 609 646 575 677 q 671 560 643 615 q 700 442 700 505 q 670 323 700 378 q 585 234 640 268 q 448 190 531 201 q 312 180 365 180 l 180 180 l 180 0 l 80 0 m 180 260 l 330 260 q 432 271 398 260 q 493 301 466 281 q 532 354 520 322 q 545 425 545 387 q 527 500 545 468 q 476 548 510 531 q 384 570 442 566 q 280 575 327 575 l 180 575 l 180 260 "
+    },
+    "a": {
+      "ha": 500,
+      "x_min": 0,
+      "x_max": 500,
+      "o": "m 414 0 l 414 81 q 365 24 394 45 q 302 -5 336 3 q 231 -14 268 -14 q 133 5 174 -14 q 67 61 93 25 q 42 143 42 98 q 111 275 42 232 q 319 318 181 318 l 414 318 l 414 350 q 378 424 414 400 q 285 449 341 449 q 159 392 201 449 l 85 447 q 285 514 162 514 q 436 465 379 514 q 493 348 493 417 l 493 0 l 414 0 m 416 128 l 416 260 l 335 260 q 154 232 200 260 q 109 159 109 204 q 142 94 109 117 q 229 72 176 72 q 340 103 294 72 q 416 184 387 134 l 416 128 "
+    },
+    "r": {
+      "ha": 400,
+      "x_min": 0,
+      "x_max": 400,
+      "o": "m 133 0 l 133 500 l 212 500 l 212 420 q 294 491 247 469 q 373 514 342 514 q 400 512 390 514 l 400 428 q 361 433 382 433 q 269 402 307 433 q 212 312 230 370 l 212 0 l 133 0 "
+    },
+    "t": {
+      "ha": 400,
+      "x_min": 0,
+      "x_max": 400,
+      "o": "m 120 500 l 120 645 l 199 645 l 199 500 l 350 500 l 350 430 l 199 430 l 199 139 q 223 84 199 103 q 290 66 248 66 q 350 76 327 66 l 350 6 q 264 -14 313 -14 q 152 28 190 -14 q 120 139 120 65 l 120 430 l 25 430 l 25 500 l 120 500 "
+    },
+    "h": {
+      "ha": 550,
+      "x_min": 0,
+      "x_max": 550,
+      "o": "m 79 0 l 79 700 l 158 700 l 158 429 q 248 491 194 469 q 350 514 303 514 q 465 478 417 514 q 513 383 513 443 l 513 0 l 434 0 l 434 350 q 404 416 434 392 q 323 441 374 441 q 214 397 260 441 q 158 284 169 354 l 158 0 l 79 0 "
+    },
+    " ": {
+      "ha": 250,
+      "x_min": 0,
+      "x_max": 0,
+      "o": ""
+    },
+    "C": {
+      "ha": 700,
+      "x_min": 0,
+      "x_max": 700,
+      "o": "m 670 499 l 580 454 q 502 529 548 503 q 403 555 456 555 q 276 520 331 555 q 194 428 220 485 q 168 301 168 372 q 238 127 168 188 q 401 66 309 66 q 502 92 456 66 q 580 169 548 119 l 670 124 q 559 27 624 62 q 401 -8 493 -8 q 204 72 283 -8 q 89 301 125 151 q 123 465 89 395 q 226 585 158 535 q 401 636 294 636 q 559 601 493 636 q 670 499 624 566 "
+    },
+    "d": {
+      "ha": 550,
+      "x_min": 0,
+      "x_max": 550,
+      "o": "m 471 0 l 471 81 q 380 12 434 36 q 276 -12 326 -12 q 118 58 183 -12 q 54 255 54 129 q 120 452 54 382 q 280 523 187 523 q 386 499 339 523 q 471 432 434 475 l 471 700 l 550 700 l 550 0 l 471 0 m 471 255 q 427 382 471 332 q 310 432 384 432 q 189 383 235 432 q 144 255 144 334 q 189 127 144 177 q 310 78 235 78 q 427 127 384 78 q 471 255 471 177 "
+    },
+    "k": {
+      "ha": 550,
+      "x_min": 0,
+      "x_max": 550,
+      "o": "m 76 0 l 76 700 l 157 700 l 157 335 l 351 500 l 456 500 l 292 365 l 485 0 l 384 0 l 234 301 l 157 232 l 157 0 l 76 0 "
+    }
+  },
+  "familyName": "Inter",
+  "ascender": 800,
+  "descender": -200,
+  "underlinePosition": -100,
+  "underlineThickness": 50,
+  "boundingBox": {
+    "yMin": -200,
+    "xMin": -50,
+    "yMax": 800,
+    "xMax": 1000
+  },
+  "resolution": 1000,
+  "original_font_information": {
+    "format": 0,
+    "copyright": "Copyright (c) 2020 The Inter Project Authors",
+    "fontFamily": "Inter",
+    "fontSubfamily": "Bold",
+    "uniqueID": "3.19;RSMS;Inter-Bold",
+    "fullName": "Inter Bold",
+    "version": "3.19",
+    "postScriptName": "Inter-Bold",
+    "trademark": "Inter is a trademark of Rasmus Andersson.",
+    "manufacturer": "The Inter Project Authors",
+    "designer": "Rasmus Andersson",
+    "manufacturerURL": "https://github.com/rsms/inter",
+    "designerURL": "https://rsms.me/",
+    "licence": "This Font Software is licensed under the SIL Open Font License, Version 1.1. This license is available with a FAQ at: https://scripts.sil.org/OFL",
+    "licenceURL": "https://scripts.sil.org/OFL"
+  },
+  "cssFontWeight": "bold",
+  "cssFontStyle": "normal"
+} 

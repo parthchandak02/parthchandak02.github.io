@@ -1,29 +1,33 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, ReactNode, useState, useEffect, useContext } from 'react';
+import dynamic from 'next/dynamic';
+
+// Dynamically import the ThreeBackground component with no SSR
+const ThreeBackground = dynamic(() => import('./ThreeBackground'), { ssr: false });
+
+// Define background type
+export type BackgroundType = 'line-glass';
 
 interface BackgroundContextType {
-  initialized: boolean;
-  useSplineBackground: boolean;
-  setUseSplineBackground: (use: boolean) => void;
+  backgroundVisible: boolean;
+  setBackgroundVisible: (visible: boolean) => void;
 }
 
-const BackgroundContext = createContext<BackgroundContextType | undefined>(undefined);
-
-export const useBackground = () => {
-  const context = useContext(BackgroundContext);
-  if (!context) {
-    throw new Error('useBackground must be used within a BackgroundProvider');
-  }
-  return context;
-};
+export const BackgroundContext = createContext<BackgroundContextType>({
+  backgroundVisible: true,
+  setBackgroundVisible: () => {},
+});
 
 interface BackgroundProviderProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
-// Static background fallback
-const STATIC_BACKGROUND_URL = '/images/background-pattern/background-pattern.png';
+// Static background fallback - using CSS black background instead of image
+const STATIC_BACKGROUND_URL = null;
+
+// Spline background URL
+const SPLINE_URL = 'https://prod.spline.design/G7OypgfWCWHxpZRt/scene.splinecode';
 
 // Spline Background Component using the web component approach
 const SplineBackground: React.FC = () => {
@@ -31,13 +35,19 @@ const SplineBackground: React.FC = () => {
   const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
+    // Check if script is already loaded to avoid duplicate loading
+    const existingScript = document.querySelector('script[src*="spline-viewer.js"]');
+    if (existingScript) {
+      setSplineLoaded(true);
+      return;
+    }
+
     // Load the Spline viewer script
     const script = document.createElement('script');
     script.type = 'module';
     script.src = 'https://unpkg.com/@splinetool/viewer@1.10.22/build/spline-viewer.js';
     script.onload = () => {
       setSplineLoaded(true);
-                  // Spline viewer loaded successfully
     };
     script.onerror = () => {
       console.error('Failed to load Spline viewer');
@@ -46,17 +56,13 @@ const SplineBackground: React.FC = () => {
     document.head.appendChild(script);
 
     return () => {
-      // Clean up script on unmount
-      const existingScript = document.querySelector('script[src*="spline-viewer.js"]');
-      if (existingScript) {
-        existingScript.remove();
-      }
+      // Don't remove script on unmount - keep it for other backgrounds
     };
   }, []);
 
   // Fallback to static background if Spline fails
   if (hasError) {
-    return null;
+    return null; // Return null to use the CSS black background
   }
 
   if (!splineLoaded) {
@@ -70,8 +76,8 @@ const SplineBackground: React.FC = () => {
   return (
     <div className="fixed inset-0 z-0">
       {React.createElement('spline-viewer', {
-        url: "https://prod.spline.design/bp4iPiqmdxML9k9I/scene.splinecode",
-        loading: "eager",
+        url: SPLINE_URL,
+        loading: "lazy",
         'mouse-events': "global",
         style: {
           width: '100%',
@@ -92,50 +98,22 @@ const SplineBackground: React.FC = () => {
   );
 };
 
-export function BackgroundProvider({ children }: BackgroundProviderProps) {
-  const [useSplineBackground, setUseSplineBackground] = useState(true);
+export const BackgroundProvider: React.FC<BackgroundProviderProps> = ({ children }) => {
+  const [backgroundVisible, setBackgroundVisible] = useState<boolean>(true);
+  const [mounted, setMounted] = useState<boolean>(false);
 
   useEffect(() => {
-    const body = document.body;
-    
-    if (!useSplineBackground) {
-      // Fallback to static background
-      body.style.backgroundImage = `url(${STATIC_BACKGROUND_URL})`;
-      body.style.backgroundSize = '600px 600px';
-      body.style.backgroundPosition = 'center';
-      body.style.backgroundRepeat = 'repeat';
-      body.style.backgroundAttachment = 'fixed';
-    } else {
-      // Clear static background when using Spline
-      body.style.backgroundImage = 'none';
-      body.style.backgroundSize = '';
-      body.style.backgroundPosition = '';
-      body.style.backgroundRepeat = '';
-      body.style.backgroundAttachment = '';
-    }
-    
-    return () => {
-      // Clean up on unmount
-      body.style.backgroundImage = 'none';
-      body.style.backgroundSize = '';
-      body.style.backgroundPosition = '';
-      body.style.backgroundRepeat = '';
-      body.style.backgroundAttachment = '';
-    };
-  }, [useSplineBackground]);
+    setMounted(true);
+  }, []);
 
   return (
-    <BackgroundContext.Provider value={{ 
-      initialized: true, 
-      useSplineBackground, 
-      setUseSplineBackground 
-    }}>
-      {useSplineBackground && <SplineBackground />}
-      <div className="relative z-10">
-        {children}
-      </div>
+    <BackgroundContext.Provider value={{ backgroundVisible, setBackgroundVisible }}>
+      {mounted && backgroundVisible && <ThreeBackground />}
+      {children}
     </BackgroundContext.Provider>
   );
-}
+};
+
+export const useBackground = () => useContext(BackgroundContext);
 
 export default BackgroundProvider; 

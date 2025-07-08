@@ -930,42 +930,42 @@ export const portfolioData: PortfolioData = {
         {
           "name": "Python",
           "icon": "SiPython",
-          "category": "Technical"
+          "category": "technical"
         },
         {
           "name": "React",
           "icon": "SiReact",
-          "category": "Technical"
+          "category": "technical"
         },
         {
           "name": "C++",
           "icon": "SiCplusplus",
-          "category": "Technical"
+          "category": "technical"
         },
         {
           "name": "SolidWorks",
-          "icon": "SiSolidworks",
-          "category": "Technical"
+          "icon": "TbCube",
+          "category": "technical"
         },
         {
           "name": "User Experience Design",
           "icon": "TbUserHeart",
-          "category": "Experience"
+          "category": "experience"
         },
         {
           "name": "Autonomous Vehicles",
           "icon": "TbCar",
-          "category": "Experience"
+          "category": "experience"
         },
         {
           "name": "Hardware Development",
           "icon": "TbCircuitCell",
-          "category": "Experience"
+          "category": "experience"
         },
         {
           "name": "Innovation",
           "icon": "TbBulb",
-          "category": "Research"
+          "category": "research"
         }
       ],
       "color": "#E53E3E",
@@ -1219,7 +1219,7 @@ export const portfolioData: PortfolioData = {
       },
       {
         "name": "SolidWorks",
-        "icon": "SiSolidworks"
+        "icon": "TbCube"
       }
     ],
     "experience": [
@@ -1253,43 +1253,52 @@ export const portfolioData: PortfolioData = {
     "description": "Creative technologist specializing in cutting-edge human-computer interaction for autonomous vehicles and robotics.",
     "tags": {
       "technical": [
-        "Python", "JavaScript", "React", "C++", "C", "MATLAB", "Linux", "Arduino", "Raspberry Pi", 
-        "3D Modeling", "3D Printing", "SolidWorks", "AutoCAD", "Google SketchUp", "Blender", "Unity", 
-        "ProtoPie", "Figma", "CorelDraw", "CAD Design", "Manufacturing", "Mechanical Engineering", 
-        "Robotics", "IoT", "Computer Vision", "Neural Networks", "Machine Learning", "Hardware Prototyping",
-        "Electro-mechanical Systems", "Sensors", "Audio Processing", "User Interface Design", "PCB Design",
-        "Embedded Systems", "Automation", "Material Science", "Data Analysis", "Algorithm Development", "Signal Processing"
+        { "name": "Python", "icon": "SiPython" },
+        { "name": "React", "icon": "SiReact" },
+        { "name": "C++", "icon": "SiCplusplus" },
+        { "name": "SolidWorks", "icon": "TbCube" },
+        { "name": "Arduino", "icon": "SiArduino" },
+        { "name": "Raspberry Pi", "icon": "SiRaspberrypi" }
       ],
       "project_management": [
-        "Agile", "JIRA", "Confluence", "Smartsheets", "Google Suite", "Project Planning", "Resource Allocation",
-        "Team Leadership", "Cross-functional Collaboration", "Process Improvement", "Quality Systems", "LEAN Manufacturing",
-        "PFMEA", "Risk Management", "Budget Planning", "Vendor Management", "Documentation", "Technical Writing",
-        "Requirements Gathering", "System Integration", "Workflow Optimization", "Data Migration", "Testing Frameworks",
-        "Validation Processes", "Change Management"
+        { "name": "Agile", "icon": "TbChartInfographic" },
+        { "name": "JIRA", "icon": "SiJira" },
+        { "name": "Google Suite", "icon": "SiGoogle" },
+        { "name": "Team Leadership", "icon": "TbUserShield" },
+        { "name": "Cross-functional Collaboration", "icon": "TbUsersGroup" },
+        { "name": "Process Improvement", "icon": "TbArrowsSort" }
       ],
       "research": [
-        "Academic Research", "Peer Review", "Scientific Writing", "Literature Review", "Experimental Design",
-        "Data Collection", "Statistical Analysis", "Research Methodology", "Innovation", "Technology Transfer",
-        "Patent Research", "Competitive Analysis", "Market Research", "User Studies", "Usability Testing",
-        "Human-Computer Interaction", "User Experience Research", "Accessibility", "Design Thinking", "Systematic Review",
-        "Grant Writing", "Publication", "Conference Presentations", "Industry Collaboration", "Technology Assessment"
+        { "name": "Academic Research", "icon": "TbBook" },
+        { "name": "Scientific Writing", "icon": "TbFileText" },
+        { "name": "Literature Review", "icon": "TbBooks" },
+        { "name": "Experimental Design", "icon": "TbTestPipe" },
+        { "name": "User Experience Research", "icon": "TbUserSearch" },
+        { "name": "Innovation", "icon": "TbBulb" }
       ],
       "experience": [
-        "Autonomous Vehicles", "Manufacturing Engineering", "User Experience Design", "Hardware Development",
-        "Supercharger Technology", "Tesla Semi", "Site Planning", "Electrical Systems", "Civil Engineering",
-        "Infrastructure Development", "Visualization", "Technical Documentation", "Vendor Coordination", "Cost Estimation",
-        "Route Planning", "Logistics", "Safety Systems", "Quality Control", "Production Planning", "Assembly Fixtures",
-        "Test Automation", "Field Testing", "Prototyping", "Design for Manufacturing", "Technology Integration"
+        { "name": "Autonomous Vehicles", "icon": "TbCar" },
+        { "name": "User Experience Design", "icon": "TbUserHeart" },
+        { "name": "Hardware Development", "icon": "TbCircuitCell" },
+        { "name": "Manufacturing Engineering", "icon": "TbBuildingFactory" },
+        { "name": "Prototyping", "icon": "TbCube" },
+        { "name": "Robotics", "icon": "TbRobot" }
       ],
       "community": [
-        "Mentorship", "Team Building", "Community Service", "Leadership Development", "Volunteer Work",
-        "Event Organization", "Public Speaking", "Workshop Facilitation", "Knowledge Sharing", "Peer Support",
-        "Collaborative Problem Solving", "Social Impact", "Diversity and Inclusion", "Student Mentoring", "Professional Development"
+        { "name": "Mentorship", "icon": "TbUserStar" },
+        { "name": "Team Building", "icon": "TbUsersPlus" },
+        { "name": "Community Service", "icon": "TbHeartHandshake" },
+        { "name": "Leadership Development", "icon": "TbUserShield" },
+        { "name": "Volunteering", "icon": "TbHandStop" },
+        { "name": "Social Impact", "icon": "TbWorld" }
       ],
       "awards": [
-        "Engineering Excellence", "Innovation Recognition", "Academic Achievement", "Leadership Awards",
-        "Scholarship Recipient", "Honor Society", "Merit Recognition", "Entrepreneurship", "Hackathon Winner",
-        "Competition Success", "Research Recognition", "Technical Achievement", "Community Impact", "Professional Recognition", "Academic Honors"
+        { "name": "Engineering Excellence", "icon": "TbAward" },
+        { "name": "Academic Achievement", "icon": "TbSchool" },
+        { "name": "Leadership Awards", "icon": "TbMedal" },
+        { "name": "Scholarship Recipient", "icon": "TbCertificate" },
+        { "name": "Hackathon Winner", "icon": "TbTrophy" },
+        { "name": "Merit Recognition", "icon": "TbStar" }
       ]
     },
     "languages": ["English (Native)", "Hindi (Fluent)", "Marathi (Fluent)", "German (Intermediate)", "Marwari (Conversational)"],

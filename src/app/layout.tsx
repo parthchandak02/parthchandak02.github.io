@@ -1,4 +1,7 @@
 import type { Metadata } from "next";
+import { BackgroundProvider } from "@/components/BackgroundProvider";
+import BackgroundSwitcher from "@/components/BackgroundSwitcher";
+import { TagHighlightProvider } from "@/components/TagHighlightContext";
 import "./globals.css";
 
 // Font Configuration System - Modern, Technical Typography with Array & Outfit
@@ -6,16 +9,12 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Parth Chandak | Portfolio",
-  description: "Interactive portfolio showcasing engineering, research, and creative work",
+  description: "Creative technologist specializing in cutting-edge human-computer interaction for autonomous vehicles and robotics.",
   icons: {
     icon: {
-      url: '/favicon.svg',
-      type: 'image/svg+xml',
+      url: "/favicon.svg",
+      type: "image/svg+xml",
     },
-    apple: {
-      url: '/favicon.svg',
-      type: 'image/svg+xml',
-    }
   },
 };
 
@@ -26,8 +25,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="antialiased">
-        {children}
+      <body className="antialiased bg-black text-white">
+        <BackgroundProvider>
+          <TagHighlightProvider>
+            {children}
+            <BackgroundSwitcher />
+          </TagHighlightProvider>
+        </BackgroundProvider>
       </body>
     </html>
   );

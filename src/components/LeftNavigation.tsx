@@ -45,6 +45,9 @@ export const LeftNavigation: React.FC<LeftNavigationProps> = ({
         <LiquidGlass
           {...LiquidGlassPresets.primary}
           className="w-48 p-4"
+          style={{
+            borderRadius: '16px', // Slightly less rounded for larger containers
+          }}
         >
           <div className="space-y-4">
             {items.map((item) => {
@@ -60,6 +63,9 @@ export const LeftNavigation: React.FC<LeftNavigationProps> = ({
                       ? 'bg-white/20 text-white shadow-lg' 
                       : 'text-white/80 hover:text-white'
                   }`}
+                  style={{
+                    borderRadius: '12px', // Consistent rounded corners for buttons
+                  }}
                 >
                   <IconComponent className="w-5 h-5 flex-shrink-0" />
                   <span className="text-sm font-medium truncate font-navigation">{item.label}</span>
@@ -75,6 +81,9 @@ export const LeftNavigation: React.FC<LeftNavigationProps> = ({
         <LiquidGlass
           {...LiquidGlassPresets.primary}
           className="w-full p-3"
+          style={{
+            borderRadius: '16px', // Slightly less rounded for larger containers
+          }}
         >
           <div className="grid grid-cols-4 gap-2">
             {items.map((item) => {
@@ -90,6 +99,9 @@ export const LeftNavigation: React.FC<LeftNavigationProps> = ({
                       ? 'bg-white/20 text-white shadow-lg' 
                       : 'text-white/80 hover:text-white'
                   }`}
+                  style={{
+                    borderRadius: '12px', // Consistent rounded corners for buttons
+                  }}
                 >
                   <IconComponent className="w-4 h-4 flex-shrink-0" />
                   <span className="text-xs font-medium text-center leading-tight font-navigation">

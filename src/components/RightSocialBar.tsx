@@ -1,16 +1,16 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   EnvelopeIcon, 
-  CalendarDaysIcon,
-  DocumentTextIcon
+  CalendarDaysIcon, 
+  DocumentTextIcon,
+  UserIcon 
 } from '@heroicons/react/24/outline';
-import LiquidGlass, { LiquidGlassPresets } from './LiquidGlass';
 import { SocialMediaItem } from '../types/portfolio';
 
 interface RightSocialBarProps {
-  items: SocialMediaItem[];
+  links: SocialMediaItem[];
   className?: string;
 }
 
@@ -18,130 +18,110 @@ const iconMap = {
   EnvelopeIcon,
   CalendarDaysIcon,
   DocumentTextIcon,
+  UserIcon,
 };
 
-// Custom LinkedIn and GitHub icons as SVG
-const LinkedInIcon = ({ className }: { className?: string }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="currentColor">
-    <path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93A1.74 1.74 0 0013 14.19a.66.66 0 000 .14V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.4c1.55 0 3.36.86 3.36 3.66z"/>
-  </svg>
-);
-
-const GitHubIcon = ({ className }: { className?: string }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="currentColor">
-    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-  </svg>
-);
-
-const customIconMap = {
-  linkedin: LinkedInIcon,
-  github: GitHubIcon,
+const getSocialIcon = (icon: string) => {
+  // Check if it's a Heroicons icon
+  if (iconMap[icon as keyof typeof iconMap]) {
+    return iconMap[icon as keyof typeof iconMap];
+  }
+  
+  // Handle custom social media icons
+  switch (icon) {
+    case 'linkedin':
+      return ({ className }: { className?: string }) => (
+        <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+          <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+        </svg>
+      );
+    case 'github':
+      return ({ className }: { className?: string }) => (
+        <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+        </svg>
+      );
+    default:
+      return iconMap.UserIcon;
+  }
 };
 
 export const RightSocialBar: React.FC<RightSocialBarProps> = ({
-  items,
+  links,
   className = ''
 }) => {
-  const [isInContactSection, setIsInContactSection] = useState(false);
+  const [isNearBottom, setIsNearBottom] = useState(false);
+  const socialBarRef = useRef<HTMLDivElement>(null);
 
-  // Intersection Observer for contact section detection
+  // Check if we're near the bottom of the page
   useEffect(() => {
-    const observerOptions = {
-      root: null,
-      rootMargin: '-50px 0px -50px 0px',
-      threshold: 0.3
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY + window.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight;
+      const isNearBottom = scrollPosition > documentHeight - 200; // 200px from bottom
+      setIsNearBottom(isNearBottom);
     };
 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.target.id === 'contact') {
-          setIsInContactSection(entry.isIntersecting);
-        }
-      });
-    }, observerOptions);
-
-    const contactSection = document.getElementById('contact');
-    if (contactSection) {
-      observer.observe(contactSection);
-    }
+    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('resize', handleScroll);
+    handleScroll(); // Check initial position
 
     return () => {
-      if (contactSection) {
-        observer.unobserve(contactSection);
-      }
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
     };
   }, []);
 
-  const handleLinkClick = (url: string) => {
-    window.open(url, '_blank', 'noopener,noreferrer');
-  };
-
-  const getIconComponent = (icon: string) => {
-    if (customIconMap[icon as keyof typeof customIconMap]) {
-      return customIconMap[icon as keyof typeof customIconMap];
-    }
-    return iconMap[icon as keyof typeof iconMap] || EnvelopeIcon;
-  };
-
   return (
-    <div className={`
-      fixed z-50 transition-all duration-500 ease-in-out
-      /* Mobile: bottom-center pill for all sizes */
-      bottom-4 left-1/2 transform -translate-x-1/2 w-auto
-      /* Desktop: right side normally, or bottom-center nudged right in contact */
-      ${isInContactSection
-        ? 'lg:bottom-6 lg:top-auto lg:left-1/2 lg:transform lg:translate-x-[calc(-50%+5rem)]'
-        : 'lg:right-6 lg:top-1/2 lg:left-auto lg:transform lg:-translate-y-1/2 lg:translate-x-0'
-      }
-      ${className}
-    `}>
-      <LiquidGlass
-        {...LiquidGlassPresets.primary}
-        className={`
-          transition-all duration-500 ease-in-out
-          /* Mobile: horizontal pill shape with proper padding */
-          px-4 py-2.5 rounded-full
-          /* Desktop: Conditional styling based on contact section */
-          ${isInContactSection
-            ? 'lg:px-4 lg:py-2.5 lg:rounded-full'
-            : 'lg:p-4 lg:rounded-2xl'
-          }
-        `}
+    <>
+      {/* Desktop Social Bar - Right Side */}
+      <div 
+        ref={socialBarRef}
+        className={`hidden lg:flex fixed right-6 top-1/2 -translate-y-1/2 flex-col space-y-4 z-20 ${className}`}
       >
-        <nav className={`
-          transition-all duration-500 ease-in-out
-          /* Mobile: horizontal flex with proper spacing */
-          flex flex-row space-x-4 items-center
-          /* Desktop: Conditional layout based on contact section */
-          ${isInContactSection
-            ? 'lg:flex-row lg:space-x-4 lg:space-y-0'
-            : 'lg:flex-col lg:space-x-0 lg:space-y-4'
-          }
-        `}>
-          {items.map((item) => {
-            const IconComponent = getIconComponent(item.icon);
-
+        <div className="glass p-3 rounded-xl">
+          {links.map((item) => {
+            const IconComponent = getSocialIcon(item.icon);
+            
             return (
-              <button
+              <a
                 key={item.id}
-                onClick={() => handleLinkClick(item.url)}
-                className="
-                  relative rounded-xl transition-all duration-300
-                  text-white/80 hover:text-white hover:bg-white/10
-                  hover:scale-105 transform
-                  flex-shrink-0
-                  /* Mobile: compact padding for pill shape */
-                  p-2
-                  /* Desktop: larger padding when vertical, compact when horizontal in contact */
-                  lg:p-3
-                "
+                href={item.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-10 h-10 flex items-center justify-center text-white/80 hover:text-white hover:bg-white/10 rounded-full transition-all duration-300 hover:scale-110 my-2"
+                title={item.label}
               >
-                <IconComponent className="w-5 h-5 lg:w-6 lg:h-6" />
-              </button>
+                <IconComponent className="w-5 h-5" />
+              </a>
             );
           })}
-        </nav>
-      </LiquidGlass>
-    </div>
+        </div>
+      </div>
+
+      {/* Mobile Social Bar - Bottom Center */}
+      <div 
+        className={`lg:hidden fixed bottom-4 left-1/2 -translate-x-1/2 z-20 ${className}`}
+      >
+        <div className="glass flex flex-row items-center space-x-2 p-3 rounded-xl">
+          {links.map((item) => {
+            const IconComponent = getSocialIcon(item.icon);
+            
+            return (
+              <a
+                key={item.id}
+                href={item.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-9 h-9 flex items-center justify-center text-white/80 hover:text-white hover:bg-white/10 rounded-full transition-all duration-300"
+                title={item.label}
+              >
+                <IconComponent className="w-4 h-4" />
+              </a>
+            );
+          })}
+        </div>
+      </div>
+    </>
   );
-};
+}

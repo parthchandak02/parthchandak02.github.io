@@ -1,25 +1,18 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { BackgroundProvider } from '../components/BackgroundProvider';
 import { PortfolioTimeline } from '../components/PortfolioTimeline';
 import { LeftNavigation } from '../components/LeftNavigation';
 import { RightSocialBar } from '../components/RightSocialBar';
-import { 
-  ContentItem,
-  NavigationItem,
-  SocialMediaItem,
-  AboutData
-} from '../types/portfolio';
 import TypewriterText from '../components/TypewriterText';
-import LiquidGlass, { LiquidGlassPresets } from '../components/LiquidGlass';
 import TagsDisplay from '../components/TagsDisplay';
 import { portfolioData } from '../content/portfolio-data';
 import { getOrganizedTimeline, organizeTimelineData } from '../utils/organizePortfolioData';
-import { ChevronDownIcon } from '@heroicons/react/24/outline';
+import { useTagHighlight } from '../components/TagHighlightContext';
+import { validatePortfolioTagsOrThrow } from '../utils/validateTags';
 
 // Transform and organize portfolio data by category and date
-const STATIC_CONTENT_ITEMS: ContentItem[] = getOrganizedTimeline(
+const STATIC_CONTENT_ITEMS = getOrganizedTimeline(
   portfolioData.timeline.map(item => ({
     ...item,
     category: item.type.charAt(0).toUpperCase() + item.type.slice(1), // Convert 'experience' -> 'Experience'
@@ -31,84 +24,22 @@ const STATIC_CONTENT_ITEMS: ContentItem[] = getOrganizedTimeline(
 // Get organized data for grouped display
 const ORGANIZED_TIMELINE_DATA = organizeTimelineData(STATIC_CONTENT_ITEMS);
 
+// Validate portfolio tags (will throw error if invalid icons are found)
+if (typeof window !== 'undefined') {
+  // Only run on client-side to avoid SSR issues
+  try {
+    validatePortfolioTagsOrThrow(portfolioData);
+  } catch (error) {
+    console.error(error);
+  }
+}
 
-
-const STATIC_NAVIGATION_ITEMS: NavigationItem[] = portfolioData.navigation;
-
-const STATIC_SOCIAL_MEDIA_ITEMS: SocialMediaItem[] = portfolioData.socialMedia;
-
-const STATIC_ABOUT_DATA: AboutData = {
-  title: 'About',
-  currentPosition: 'Creative Technologist at Zoox',
-  location: 'Foster City, CA',
-  description: 'Creative technologist specializing in cutting-edge human-computer interaction for autonomous vehicles and robotics.',
-  tags: {
-    technical: [
-      'Python', 'JavaScript', 'React', 'C++', 'C', 'MATLAB', 'Linux', 'Arduino', 'Raspberry Pi', 
-      '3D Modeling', '3D Printing', 'SolidWorks', 'AutoCAD', 'Google SketchUp', 'Blender', 'Unity', 
-      'ProtoPie', 'Figma', 'CorelDraw', 'CAD Design', 'Manufacturing', 'Mechanical Engineering', 
-      'Robotics', 'IoT', 'Computer Vision', 'Neural Networks', 'Machine Learning', 'Hardware Prototyping',
-      'Electro-mechanical Systems', 'Sensors', 'Audio Processing', 'User Interface Design', 'PCB Design',
-      'Embedded Systems', 'Automation', 'Material Science', 'Data Analysis', 'Algorithm Development', 'Signal Processing'
-    ],
-    project_management: [
-      'Agile', 'JIRA', 'Confluence', 'Smartsheets', 'Google Suite', 'Project Planning', 'Resource Allocation',
-      'Team Leadership', 'Cross-functional Collaboration', 'Process Improvement', 'Quality Systems', 'LEAN Manufacturing',
-      'PFMEA', 'Risk Management', 'Budget Planning', 'Vendor Management', 'Documentation', 'Technical Writing',
-      'Requirements Gathering', 'System Integration', 'Workflow Optimization', 'Data Migration', 'Testing Frameworks',
-      'Validation Processes', 'Change Management'
-    ],
-    research: [
-      'Academic Research', 'Peer Review', 'Scientific Writing', 'Literature Review', 'Experimental Design',
-      'Data Collection', 'Statistical Analysis', 'Research Methodology', 'Innovation', 'Technology Transfer',
-      'Patent Research', 'Competitive Analysis', 'Market Research', 'User Studies', 'Usability Testing',
-      'Human-Computer Interaction', 'User Experience Research', 'Accessibility', 'Design Thinking', 'Systematic Review',
-      'Grant Writing', 'Publication', 'Conference Presentations', 'Industry Collaboration', 'Technology Assessment'
-    ],
-    experience: [
-      'Autonomous Vehicles', 'Manufacturing Engineering', 'User Experience Design', 'Hardware Development',
-      'Supercharger Technology', 'Tesla Semi', 'Site Planning', 'Electrical Systems', 'Civil Engineering',
-      'Infrastructure Development', 'Visualization', 'Technical Documentation', 'Vendor Coordination', 'Cost Estimation',
-      'Route Planning', 'Logistics', 'Safety Systems', 'Quality Control', 'Production Planning', 'Assembly Fixtures',
-      'Test Automation', 'Field Testing', 'Prototyping', 'Design for Manufacturing', 'Technology Integration'
-    ],
-    community: [
-      'Mentorship', 'Team Building', 'Community Service', 'Leadership Development', 'Volunteer Work',
-      'Event Organization', 'Public Speaking', 'Workshop Facilitation', 'Knowledge Sharing', 'Peer Support',
-      'Collaborative Problem Solving', 'Social Impact', 'Diversity and Inclusion', 'Student Mentoring', 'Professional Development'
-    ],
-    awards: [
-      'Engineering Excellence', 'Innovation Recognition', 'Academic Achievement', 'Leadership Awards',
-      'Scholarship Recipient', 'Honor Society', 'Merit Recognition', 'Entrepreneurship', 'Hackathon Winner',
-      'Competition Success', 'Research Recognition', 'Technical Achievement', 'Community Impact', 'Professional Recognition', 'Academic Honors'
-    ]
-  },
-  languages: ['English (Native)', 'Hindi (Fluent)', 'Marathi (Fluent)', 'German (Intermediate)', 'Marwari (Conversational)'],
-  education: ['B.S. Mechanical Engineering', 'Minor Computer Science', 'Minor Mathematics', 'Washington State University'],
-  strengths: ['Maximizer', 'Relator', 'Arranger', 'Harmony', 'Empathy'],
-  content: 'Detailed about content would go here...'
-};
-
-function PortfolioContent() {
+export default function Home() {
   const [activeSection, setActiveSection] = useState('about');
   const [filteredType, setFilteredType] = useState<string>('all');
-  const [allContentItems, setAllContentItems] = useState<ContentItem[]>(STATIC_CONTENT_ITEMS);
-  const [navigationItems, setNavigationItems] = useState<NavigationItem[]>(STATIC_NAVIGATION_ITEMS);
-  const [socialMediaItems, setSocialMediaItems] = useState<SocialMediaItem[]>(STATIC_SOCIAL_MEDIA_ITEMS);
-  const [aboutData, setAboutData] = useState<AboutData | null>(STATIC_ABOUT_DATA);
-  const [loading, setLoading] = useState(false);
+  const { highlightedTags } = useTagHighlight();
 
-  // Using static portfolio data (no API calls needed)
-  useEffect(() => {
-    // Data loaded from portfolio-data.ts
-  }, []);
-
-  // Get unique types for filtering (now using organized data)
-  const getUniqueTypes = () => {
-    return ['experience', 'projects', 'research', 'awards', 'community', 'media'];
-  };
-
-  // Intersection Observer for main sections (about, contact)
+  // Intersection Observer for main sections
   useEffect(() => {
     const observerOptions = {
       root: null,
@@ -119,7 +50,6 @@ function PortfolioContent() {
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          // Only handle main sections (about, contact), timeline sections handled by PortfolioTimeline
           const sectionId = entry.target.id;
           if (sectionId === 'about' || sectionId === 'contact') {
             setActiveSection(sectionId);
@@ -136,175 +66,50 @@ function PortfolioContent() {
     };
   }, []);
 
-    const handleSectionClick = (sectionId: string) => {
-    setActiveSection(sectionId);
-    
-    // Timeline sections are in the timeline section, so we need to scroll to them
-    const timelineTypes = ['experience', 'projects', 'research', 'awards', 'community', 'media'];
-    
-    if (timelineTypes.includes(sectionId)) {
-      // For timeline sections, filter to show only that specific type
-      setFilteredType(sectionId);
-      
-      // Scroll to the timeline section to show the filtered results
-      setTimeout(() => {
-        const timelineElement = document.getElementById('timeline');
-        if (timelineElement) {
-          timelineElement.scrollIntoView({ behavior: 'smooth' });
-        }
-      }, 100);
-    } else if (sectionId === 'about') {
-      // When clicking About, show all timeline items and scroll to about section
-      setFilteredType('all');
-      
-      const element = document.getElementById(sectionId);
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
-      }
-    } else if (sectionId === 'timeline') {
-      // Special case for "View My Work" button - show all items and scroll to timeline
-      setFilteredType('all');
-      
-      const timelineElement = document.getElementById('timeline');
-      if (timelineElement) {
-        timelineElement.scrollIntoView({ behavior: 'smooth' });
-      }
-    } else {
-      // For other non-timeline sections (contact), show all items
-      setFilteredType('all');
-      
-      const element = document.getElementById(sectionId);
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
-      }
-    }
-  };
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-white text-xl">Loading...</div>
-      </div>
-    );
-  }
-
   return (
-    <div className="min-h-screen relative">
-      {/* Left Navigation */}
-      <LeftNavigation
-        items={navigationItems}
-        activeSection={activeSection}
-        onSectionClick={handleSectionClick}
-      />
-
-      {/* Right Social Bar - Moved outside main content flow */}
-      <div className="fixed z-50">
-        <RightSocialBar items={socialMediaItems} />
-      </div>
-
-      {/* Main Content */}
-      <main className="min-h-screen">
-        <div className="px-4 md:px-8 lg:px-16 xl:px-32 lg:ml-64 lg:mr-24">
-          {/* Hero Section */}
-          <section id="about" className="min-h-screen flex items-center justify-center py-8 md:py-12">
-            <div className="max-w-4xl mx-auto px-4 text-center">
-              {/* Hero Content */}
-              <div className="text-2xl md:text-3xl text-white/80 mb-4 font-secondary">
-                Hi, my name is
-              </div>
-              <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 animate-fade-in font-title">
-                Parth Chandak
+    <main className="flex min-h-screen flex-col items-center justify-between relative">
+      <div className="content-container w-full">
+        <LeftNavigation 
+          items={portfolioData.navigation} 
+          activeSection={activeSection} 
+          onSectionClick={(sectionId) => setActiveSection(sectionId)} 
+        />
+        
+        <RightSocialBar links={portfolioData.socialMedia} />
+        
+        <div className="px-4 md:px-12 lg:px-24 py-16 md:py-24 lg:py-32 max-w-7xl mx-auto">
+          <section id="about" className="min-h-[80vh] flex flex-col justify-center">
+            <div className="glass p-6 md:p-8 lg:p-10 rounded-2xl">
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
+                <TypewriterText text="Parth Chandak" />
               </h1>
-              <div className="text-xl md:text-2xl text-white/90 mb-12 leading-relaxed font-secondary">
-                I am {' '}
-                <TypewriterText
-                  roles={[
-                    'a Creative Technologist',
-                    'an Engineer',
-                    'a Researcher',
-                    'a Team Leader',
-                    'an Innovator',
-                    'a Tinkerer'
-                  ]}
-                  className="text-white font-medium font-secondary"
-                />
-              </div>
-              {/* Tags Display - Now directly below typewriter text */}
-              <div className="max-w-3xl mx-auto mb-12">
-                <TagsDisplay 
-                  tags={portfolioData.tags || {}}
-                  className="w-full"
-                />
-              </div>
-              {/* Call to Action */}
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <button 
-                  onClick={() => handleSectionClick('timeline')}
-                  className="px-8 py-3 bg-white/10 text-white rounded-full hover:bg-white/20 transition-all duration-300 backdrop-blur-sm font-navigation"
-                >
-                  View My Work
-                </button>
-                <button 
-                  onClick={() => handleSectionClick('contact')}
-                  className="px-8 py-3 bg-white/10 text-white rounded-full hover:bg-white/20 transition-all duration-300 backdrop-blur-sm font-navigation"
-                >
-                  Get In Touch
-                </button>
-              </div>
-            </div>
-          </section>
-
-          {/* Timeline Section */}
-          <section id="timeline" className="py-20">
-            <div className="max-w-6xl mx-auto">
-              <PortfolioTimeline 
-                groupedItems={
-                  (() => {
-                    const result = filteredType === 'all' 
-                      ? ORGANIZED_TIMELINE_DATA 
-                      : {
-                          experience: filteredType === 'experience' ? ORGANIZED_TIMELINE_DATA.experience : [],
-                          projects: filteredType === 'projects' ? ORGANIZED_TIMELINE_DATA.projects : [],
-                          research: filteredType === 'research' ? ORGANIZED_TIMELINE_DATA.research : [],
-                          awards: filteredType === 'awards' ? ORGANIZED_TIMELINE_DATA.awards : [],
-                          community: filteredType === 'community' ? ORGANIZED_TIMELINE_DATA.community : [],
-                          media: filteredType === 'media' ? ORGANIZED_TIMELINE_DATA.media : []
-                        };
-                    
-                    return result;
-                  })()
-                }
-                onSectionInView={setActiveSection}
-              />
-            </div>
-          </section>
-
-          {/* Contact Section */}
-          <section id="contact" className="pb-10 mb-24 lg:mb-32">
-            <div className="max-w-4xl mx-auto text-center">
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-6 font-title">
-                Let&apos;s Connect
+              <h2 className="text-xl md:text-2xl text-white/80 mb-6">
+                {portfolioData.about.currentPosition} | {portfolioData.about.location}
               </h2>
-              <p className="text-white/80 text-lg mb-8 max-w-2xl mx-auto font-secondary">
-                I&apos;m always interested in new opportunities and collaborations. 
-                Whether you have a project in mind or just want to connect, 
-                I&apos;d love to hear from you.
+              <p className="text-lg text-white/70 max-w-3xl mb-8">
+                {portfolioData.about.content}
               </p>
-              <div className="flex justify-center mt-8">
-                <ChevronDownIcon className="w-8 h-8 text-white/60 animate-bounce" />
+              
+              <div className="mt-8">
+                <h3 className="text-xl font-semibold mb-4">Skills & Expertise</h3>
+                <TagsDisplay 
+                  tags={Object.values(portfolioData.about.tags).flat()} 
+                  highlightedTags={highlightedTags}
+                />
               </div>
             </div>
+          </section>
+          
+          <section id="timeline" className="py-16 md:py-24">
+            <PortfolioTimeline 
+              items={STATIC_CONTENT_ITEMS} 
+              organizedData={ORGANIZED_TIMELINE_DATA}
+              filteredType={filteredType}
+              setActiveSection={setActiveSection}
+            />
           </section>
         </div>
-      </main>
-    </div>
-  );
-}
-
-export default function Home() {
-  return (
-    <BackgroundProvider>
-      <PortfolioContent />
-    </BackgroundProvider>
+      </div>
+    </main>
   );
 }

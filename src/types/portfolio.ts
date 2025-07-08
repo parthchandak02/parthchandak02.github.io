@@ -2,7 +2,7 @@
 export interface Tag {
   name: string;
   icon: string;
-  category: string;
+  category?: string;
 }
 
 export interface ContentItem {
@@ -51,12 +51,12 @@ export interface AboutData {
   location: string;
   description: string;
   tags: {
-    technical: string[];
-    project_management: string[];
-    research: string[];
-    experience: string[];
-    community: string[];
-    awards: string[];
+    technical: Tag[] | string[];
+    project_management: Tag[] | string[];
+    research: Tag[] | string[];
+    experience: Tag[] | string[];
+    community: Tag[] | string[];
+    awards: Tag[] | string[];
   };
   languages: string[];
   education: string[];
